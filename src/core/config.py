@@ -9,8 +9,8 @@ from typing import Annotated, Any, Literal
 from pydantic import (
     AnyUrl,
     BeforeValidator,
-    HttpUrl,
     EmailStr,
+    HttpUrl,
     PostgresDsn,
     computed_field,
     model_validator,

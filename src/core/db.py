@@ -7,9 +7,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
 from src.core import settings
+from src.crud import create_user
 from src.models import Base, User
 from src.schemas import UserCreate
-from src.crud import create_user
 
 engine = create_engine(
     str(settings.sql_alchemy_db_uri), connect_args=settings.sql_conn_args

@@ -5,7 +5,7 @@ Login routes
 from datetime import timedelta
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Depends, HTTPException, Response, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from fastapi.security import OAuth2PasswordRequestForm
 
 from src.api.deps import CurrentUser, SessionDep
@@ -13,9 +13,7 @@ from src.core import security, settings
 from src.core.security import get_password_hash
 from src.crud import authenticate, get_user_by_email
 from src.schemas import Message, NewPassword, Token, UserPublic
-from src.utils import (
-    verify_password_reset_token,
-)
+from src.utils import verify_password_reset_token
 
 router = APIRouter(prefix="/login", tags=["Login"])
 
