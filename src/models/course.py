@@ -2,10 +2,11 @@
 Course model for disc golf courses
 """
 
-from sqlalchemy import Integer, String, Float
-from sqlalchemy.orm import relationship, Mapped, mapped_column
-from src.models.course_layout import CourseLayout
+from sqlalchemy import Float, Integer, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from src.models.base import Base
+from src.models.course_layout import CourseLayout
 
 
 class Course(Base):

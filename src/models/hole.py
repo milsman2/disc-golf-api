@@ -2,8 +2,9 @@
 Hole model for disc golf course holes
 """
 
-from sqlalchemy import Integer, ForeignKey
-from sqlalchemy.orm import relationship, Mapped, mapped_column
+from sqlalchemy import ForeignKey, Integer
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from src.models.base import Base
 from src.models.course_layout import CourseLayout
 

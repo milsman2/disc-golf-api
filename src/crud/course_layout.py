@@ -3,6 +3,7 @@ CRUD for Course Layout
 """
 
 from sqlalchemy.orm import Session
+
 from src.models.course_layout import CourseLayout
 from src.schemas.course_layouts import CourseLayoutCreate, CourseLayoutUpdate
 

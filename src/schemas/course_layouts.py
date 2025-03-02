@@ -2,8 +2,10 @@
 Schema for Course Layouts
 """
 
+from typing import List, Optional
+
 from pydantic import BaseModel
-from typing import Optional, List
+
 from src.schemas.holes import Hole
 
 

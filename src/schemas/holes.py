@@ -2,8 +2,9 @@
 Schema for the Hole model.
 """
 
-from pydantic import BaseModel
 from typing import Optional
+
+from pydantic import BaseModel
 
 
 class HoleBase(BaseModel):
