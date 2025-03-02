@@ -1,20 +1,18 @@
 """
-Schema for the Hole model.
+This file contains the Pydantic models for the Hole model.
 """
 
-from typing import Optional
-
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class HoleBase(BaseModel):
     hole_number: int
-    par: int
-    distance: Optional[int] = None
+    par: int | None = None
+    distance: int | None = None
 
 
 class HoleCreate(HoleBase):
-    layout_id: int
+    pass
 
 
 class HoleUpdate(HoleBase):
@@ -22,11 +20,9 @@ class HoleUpdate(HoleBase):
 
 
 class HoleInDBBase(HoleBase):
-    id: int
-    layout_id: int
-
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
+    id: int | None = None
+    layout_id: int | None = None
 
 
 class Hole(HoleInDBBase):

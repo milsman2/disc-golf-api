@@ -16,6 +16,10 @@ from src.schemas.users import (
     UserUpdateMe,
 )
 
+from src.schemas.course_layouts import CourseLayoutCreate
+from src.schemas.courses import CourseCreate, Course
+from src.schemas.holes import HoleCreate, HoleUpdate
+
 __all__ = [
     "UserCreate",
     "UserPublic",
@@ -28,4 +32,9 @@ __all__ = [
     "Message",
     "UsersPublic",
     "NewPassword",
+    "CourseCreate",
+    "CourseLayoutCreate",
+    "HoleCreate",
+    "HoleUpdate",
+    "Course",
 ]

@@ -1,11 +1,16 @@
 """
-Course model for disc golf courses
+SQL model for disc golf courses
 """
 
 from sqlalchemy import Float, Integer, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models.base import Base
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from src.models.course_layout import CourseLayout
 
 
 class Course(Base):
@@ -27,3 +32,7 @@ class Course(Base):
     holes: Mapped[int | None] = mapped_column(Integer, nullable=True)
     rating: Mapped[float | None] = mapped_column(Float, nullable=True)
     reviews_count: Mapped[int | None] = mapped_column(Integer, nullable=True)
+
+    layouts: Mapped[list["CourseLayout"]] = relationship(
+        "CourseLayout", back_populates="course", cascade="all, delete-orphan"
+    )

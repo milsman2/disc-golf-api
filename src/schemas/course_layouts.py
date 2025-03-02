@@ -1,12 +1,11 @@
 """
-Schema for Course Layouts
+This file contains the Pydantic models for the CourseLayout model.
 """
 
-from typing import List, Optional
+from typing import Optional, List
 
-from pydantic import BaseModel
-
-from src.schemas.holes import Hole
+from pydantic import BaseModel, ConfigDict
+from src.schemas.holes import Hole, HoleCreate
 
 
 class CourseLayoutBase(BaseModel):
@@ -17,24 +16,14 @@ class CourseLayoutBase(BaseModel):
 
 
 class CourseLayoutCreate(CourseLayoutBase):
-    course_id: int
-
-
-class CourseLayoutUpdate(CourseLayoutBase):
-    pass
+    holes: List[HoleCreate] = []
 
 
 class CourseLayoutInDBBase(CourseLayoutBase):
-    id: int
-    course_id: int
-
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
+    id: Optional[int] = None
+    course_id: Optional[int] = None
 
 
 class CourseLayout(CourseLayoutInDBBase):
     holes: List[Hole] = []
-
-
-class CourseLayoutInDB(CourseLayoutInDBBase):
-    pass

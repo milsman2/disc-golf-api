@@ -1,37 +1,33 @@
 """
-This file contains the Pydantic models for the Hole model.
+This file contains the Pydantic models for the Course model.
 """
 
-from typing import Optional
+from typing import Optional, List
 
-from pydantic import BaseModel
-
-
-class HoleBase(BaseModel):
-    hole_number: int
-    par: int
-    distance: Optional[int] = None
+from pydantic import BaseModel, ConfigDict
+from src.schemas.course_layouts import CourseLayout, CourseLayoutCreate
 
 
-class HoleCreate(HoleBase):
-    layout_id: int
+class CourseBase(BaseModel):
+    name: str
+    location: Optional[str] = None
+    description: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    country: Optional[str] = None
+    holes: Optional[int] = None
+    rating: Optional[float] = None
+    reviews_count: Optional[int] = None
 
 
-class HoleUpdate(HoleBase):
-    pass
+class CourseCreate(CourseBase):
+    layouts: List[CourseLayoutCreate] = []
 
 
-class HoleInDBBase(HoleBase):
+class CourseInDBBase(CourseBase):
+    model_config = ConfigDict(from_attributes=True)
     id: int
-    layout_id: int
-
-    class Config:
-        orm_mode = True
 
 
-class Hole(HoleInDBBase):
-    pass
-
-
-class HoleInDB(HoleInDBBase):
-    pass
+class Course(CourseInDBBase):
+    layouts: List[CourseLayout] = []
