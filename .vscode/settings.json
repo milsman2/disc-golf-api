@@ -1,5 +1,6 @@
 {
   "python.analysis.autoImportCompletions": true,
   "python.analysis.typeCheckingMode": "standard",
-  "pylint.args": ["--load-plugins", "pylint_pydantic"]
+  "pylint.args": ["--load-plugins", "pylint_pydantic"],
+  "editor.defaultFormatter": "ms-python.black-formatter"
 }

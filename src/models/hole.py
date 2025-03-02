@@ -23,7 +23,7 @@ class Hole(Base):
         Integer, ForeignKey("course_layouts.id"), nullable=False
     )
     hole_number: Mapped[int] = mapped_column(Integer, nullable=False)
-    par: Mapped[int] = mapped_column(Integer, nullable=False)
+    par: Mapped[int | None] = mapped_column(Integer, nullable=False)
     distance: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
     layout: Mapped["CourseLayout"] = relationship(

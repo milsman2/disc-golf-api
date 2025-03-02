@@ -26,6 +26,5 @@ class CourseLayout(Base):
     par: Mapped[int | None] = mapped_column(Integer, nullable=True)
     length: Mapped[float | None] = mapped_column(Float, nullable=True)
     difficulty: Mapped[str | None] = mapped_column(String, nullable=True)
-
     course: Mapped["CourseLayout"] = relationship("Course", back_populates="layouts")
     holes: Mapped[list["Hole"]] = relationship("Hole", back_populates="layout")
