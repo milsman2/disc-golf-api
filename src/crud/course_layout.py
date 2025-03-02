@@ -19,7 +19,7 @@ def get_course_layouts(db: Session, skip: int = 0, limit: int = 100):
 def create_course_layout(
     db: Session, course_layout: CourseLayoutCreate
 ) -> CourseLayout:
-    db_course_layout = CourseLayout(**course_layout.dict())
+    db_course_layout = CourseLayout(**course_layout.model_dump())
     db.add(db_course_layout)
     db.commit()
     db.refresh(db_course_layout)
