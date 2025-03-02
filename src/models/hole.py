@@ -3,10 +3,9 @@ Hole model for disc golf course holes
 """
 
 from sqlalchemy import ForeignKey, Integer
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 
 from src.models.base import Base
-from src.models.course_layout import CourseLayout
 
 
 class Hole(Base):
@@ -20,12 +19,8 @@ class Hole(Base):
         Integer, primary_key=True, index=True, nullable=False, autoincrement=True
     )
     layout_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("course_layouts.id"), nullable=False
+        Integer, ForeignKey("course_layout.id"), nullable=False
     )
     hole_number: Mapped[int] = mapped_column(Integer, nullable=False)
     par: Mapped[int | None] = mapped_column(Integer, nullable=False)
     distance: Mapped[int | None] = mapped_column(Integer, nullable=True)
-
-    layout: Mapped["CourseLayout"] = relationship(
-        "CourseLayout", back_populates="holes"
-    )
