@@ -26,5 +26,5 @@ def init_db(session: Session) -> None:
             is_superuser=True,
             password=settings.FIRST_SUPERUSER_PASSWORD,
         )
-        create_user(session=session, user_create=user)
+        create_user(db=session, user_create=user)
         ic("Superuser created")
