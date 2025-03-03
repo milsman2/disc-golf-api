@@ -144,7 +144,9 @@ disable=R,
         xrange-builtin,
         zip-builtin-not-iterating,
         bad-continuation,
-        bad-whitespace
+        bad-whitespace,
+        E203,
+        E701
 
 [REPORTS]
 

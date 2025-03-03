@@ -51,8 +51,8 @@ def test_create_course_from_file(session: Session):
     assert data["name"] == "T.C. Jester Park"
     assert data["location"] == "Houston, TX"
     assert (
-        data["description"]
-        == "Dual tees, short White tees have concrete pads, long Blue tees are on the grass. "
+        data["description"] == "Dual tees, short White tees have concrete pads, "
+        "long Blue tees are on the grass. "
         "Mostly flat, lightly wooded. Good shade. New trees planted in early 2020."
     )
     assert data["city"] == "Houston"

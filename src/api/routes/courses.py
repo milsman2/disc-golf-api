@@ -5,6 +5,7 @@ Courses API routes
 from typing import List
 
 from fastapi import APIRouter, HTTPException
+
 from src.api.deps import SessionDep
 from src.crud.course import create_course, delete_course, get_course, get_courses
 from src.schemas.courses import Course, CourseCreate
