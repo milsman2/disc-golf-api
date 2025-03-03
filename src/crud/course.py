@@ -1,3 +1,7 @@
+"""
+CRUD operations for the Course model
+"""
+
 from sqlalchemy.orm import Session, joinedload
 
 from src.models.course import Course
