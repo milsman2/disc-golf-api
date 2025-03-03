@@ -33,8 +33,7 @@ jobs:
           src: './src'
       - name: Analysing the code with pylint
         run: |
-          pylint --rcfile=.pylintrc --load-plugins pylint_pydantic $(git
-          ls-files '**/*.py' | grep -v '^migrations/')
+          pylint --rcfile=.pylintrc --load-plugins pylint_pydantic $(git ls-files '**/*.py' | grep -v '^migrations/')
       - name: Set Environment Variables
         run: |
           echo "FIRST_SUPERUSER=${{ secrets.FIRST_SUPERUSER }}" >> "$GITHUB_ENV"
