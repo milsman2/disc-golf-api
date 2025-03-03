@@ -2,22 +2,20 @@
 Routes for Course Layouts
 """
 
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
 from typing import List
 
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+
 from src.api.deps import get_db
-from src.schemas.course_layouts import (
-    CourseLayout,
-    CourseLayoutCreate,
-)
+from src.crud.course import get_course_by_name
 from src.crud.course_layout import (
-    get_course_layout,
-    get_course_layouts,
     create_course_layout,
     delete_course_layout,
+    get_course_layout,
+    get_course_layouts,
 )
-from src.crud.course import get_course_by_name
+from src.schemas.course_layouts import CourseLayout, CourseLayoutCreate
 
 router = APIRouter(prefix="/course_layouts", tags=["Course Layouts"])
 

@@ -8,7 +8,6 @@ from src.models.course_layout import CourseLayout
 from src.models.hole import Hole
 from src.models.user import User
 
-
 __all__ = [
     "Base",
     "User",

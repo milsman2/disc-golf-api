@@ -2,18 +2,14 @@
 Courses API routes
 """
 
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
 from typing import List
 
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+
 from src.api.deps import get_db
+from src.crud.course import create_course, delete_course, get_course, get_courses
 from src.schemas.courses import Course, CourseCreate
-from src.crud.course import (
-    get_course,
-    get_courses,
-    create_course,
-    delete_course,
-)
 
 router = APIRouter(prefix="/courses", tags=["Courses"])
 

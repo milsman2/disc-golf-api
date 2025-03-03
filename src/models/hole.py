@@ -2,12 +2,12 @@
 Hole model for disc golf course holes
 """
 
+from typing import TYPE_CHECKING
+
 from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models.base import Base
-
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from src.models.course_layout import CourseLayout

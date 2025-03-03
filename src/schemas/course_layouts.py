@@ -2,9 +2,10 @@
 This file contains the Pydantic models for the CourseLayout model.
 """
 
-from typing import Optional, List
+from typing import List, Optional
 
 from pydantic import BaseModel, ConfigDict
+
 from src.schemas.holes import Hole, HoleCreate
 
 
