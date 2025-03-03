@@ -23,14 +23,24 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r ./requirements.txt
-      - name: Analysing the code with pylint
+      - name: Run Python isort
         run: |
-          pylint --rcfile=.pylintrc --load-plugins pylint_pydantic $(git ls-files '**/*.py' | grep -v '^migrations/')
+          isort ./src
       - name: Run Python black
         uses: psf/black@stable
         with:
           options: '--check --verbose'
           src: './src'
+      - name: Analysing the code with pylint
+        run: |
+          pylint --rcfile=.pylintrc --load-plugins pylint_pydantic $(git ls-files '**/*.py' | grep -v '^migrations/')
+      - name: Set Environment Variables
+        run: |
+          echo "FIRST_SUPERUSER=${{ secrets.FIRST_SUPERUSER }}" >> "$GITHUB_ENV"
+          echo "FIRST_SUPERUSER_PASSWORD=${{ secrets.FIRST_SUPERUSER_PASSWORD }}" >> "$GITHUB_ENV"
+      - name: Test with pytest
+        run: |
+          pytest pytests/test_courses_layouts.py
   Docker-Build-Push:
     needs: [Python-Build-Test]
     runs-on: ubuntu-latest

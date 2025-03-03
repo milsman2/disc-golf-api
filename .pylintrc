@@ -20,7 +20,7 @@
 # limitations under the License.
 
 [MAIN]
-
+extension-pkg-whitelist=pydantic
 # Files or directories to be skipped. They should be base names, not paths.
 ignore=third_party
 
@@ -143,7 +143,10 @@ disable=R,
         wrong-import-order,
         xrange-builtin,
         zip-builtin-not-iterating,
-
+        bad-continuation,
+        bad-whitespace,
+        E203,
+        E701
 
 [REPORTS]
 
@@ -413,3 +416,10 @@ valid-classmethod-first-arg=cls,
 
 # List of valid names for the first argument in a metaclass class method.
 valid-metaclass-classmethod-first-arg=mcs
+[EXCEPTIONS]
+
+# Exceptions that will emit a warning when being caught. Defaults to
+# "Exception"
+overgeneral-exceptions=builtins.StandardError,
+                       builtins.Exception,
+                       builtins.BaseException

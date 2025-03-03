@@ -1,0 +1,271 @@
+{
+  "name": "T.C. Jester Park",
+  "location": "Houston, TX",
+  "description": "Dual tees, short White tees have concrete pads, long Blue tees are on the grass. Mostly flat, lightly wooded. Good shade. New trees planted in early 2020.",
+  "city": "Houston",
+  "state": "Texas",
+  "country": "USA",
+  "holes": 21,
+  "rating": 4.3,
+  "reviews_count": 3834,
+  "layouts": [
+    {
+      "id": 1,
+      "name": "Full 21 - White Tees",
+      "course_id": 1,
+      "par": 64,
+      "length": 6619,
+      "difficulty": "Moderate",
+      "holes": [
+        {
+          "id": 1,
+          "layout_id": 1,
+          "hole_number": 1,
+          "par": 3,
+          "distance": 330
+        },
+        {
+          "id": 2,
+          "layout_id": 1,
+          "hole_number": 2,
+          "par": 3,
+          "distance": 367
+        },
+        {
+          "id": 3,
+          "layout_id": 1,
+          "hole_number": 3,
+          "par": 3,
+          "distance": 240
+        },
+        {
+          "id": 4,
+          "layout_id": 1,
+          "hole_number": 4,
+          "par": 3,
+          "distance": 254
+        },
+        {
+          "id": 5,
+          "layout_id": 1,
+          "hole_number": 5,
+          "par": 3,
+          "distance": 267
+        },
+        {
+          "id": 6,
+          "layout_id": 1,
+          "hole_number": 6,
+          "par": 3,
+          "distance": 267
+        },
+        {
+          "id": 7,
+          "layout_id": 1,
+          "hole_number": 7,
+          "par": 3,
+          "distance": 333
+        },
+        {
+          "id": 8,
+          "layout_id": 1,
+          "hole_number": 8,
+          "par": 3,
+          "distance": 432
+        },
+        {
+          "id": 9,
+          "layout_id": 1,
+          "hole_number": 9,
+          "par": 3,
+          "distance": 210
+        },
+        {
+          "id": 10,
+          "layout_id": 1,
+          "hole_number": 10,
+          "par": 3,
+          "distance": 253
+        },
+        {
+          "id": 11,
+          "layout_id": 1,
+          "hole_number": 11,
+          "par": 3,
+          "distance": 502
+        },
+        {
+          "id": 12,
+          "layout_id": 1,
+          "hole_number": 12,
+          "par": 3,
+          "distance": 276
+        },
+        {
+          "id": 13,
+          "layout_id": 1,
+          "hole_number": 13,
+          "par": 3,
+          "distance": 414
+        },
+        {
+          "id": 14,
+          "layout_id": 1,
+          "hole_number": 14,
+          "par": 3,
+          "distance": 311
+        },
+        {
+          "id": 15,
+          "layout_id": 1,
+          "hole_number": 15,
+          "par": 3,
+          "distance": 264
+        },
+        {
+          "id": 16,
+          "layout_id": 1,
+          "hole_number": 16,
+          "par": 3,
+          "distance": 297
+        },
+        {
+          "id": 17,
+          "layout_id": 1,
+          "hole_number": 17,
+          "par": 3,
+          "distance": 327
+        },
+        {
+          "id": 18,
+          "layout_id": 1,
+          "hole_number": 18,
+          "par": 3,
+          "distance": 384
+        },
+        {
+          "id": 19,
+          "layout_id": 1,
+          "hole_number": 19,
+          "par": 3,
+          "distance": 267
+        },
+        {
+          "id": 20,
+          "layout_id": 1,
+          "hole_number": 20,
+          "par": 3,
+          "distance": 261
+        },
+        {
+          "id": 21,
+          "layout_id": 1,
+          "hole_number": 21,
+          "par": 3,
+          "distance": 361
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "North 13 - White Tees",
+      "course_id": 1,
+      "par": 40,
+      "length": 4204,
+      "difficulty": "Moderate",
+      "holes": [
+        {
+          "id": 1,
+          "layout_id": 1,
+          "hole_number": 1,
+          "par": 3,
+          "distance": 330
+        },
+        {
+          "id": 2,
+          "layout_id": 1,
+          "hole_number": 2,
+          "par": 3,
+          "distance": 367
+        },
+        {
+          "id": 3,
+          "layout_id": 1,
+          "hole_number": 3,
+          "par": 3,
+          "distance": 240
+        },
+        {
+          "id": 4,
+          "layout_id": 1,
+          "hole_number": 4,
+          "par": 3,
+          "distance": 254
+        },
+        {
+          "id": 5,
+          "layout_id": 1,
+          "hole_number": 5,
+          "par": 3,
+          "distance": 267
+        },
+        {
+          "id": 6,
+          "layout_id": 1,
+          "hole_number": 6,
+          "par": 3,
+          "distance": 267
+        },
+        {
+          "id": 7,
+          "layout_id": 1,
+          "hole_number": 7,
+          "par": 3,
+          "distance": 333
+        },
+        {
+          "id": 8,
+          "layout_id": 1,
+          "hole_number": 8,
+          "par": 3,
+          "distance": 432
+        },
+        {
+          "id": 9,
+          "layout_id": 1,
+          "hole_number": 9,
+          "par": 3,
+          "distance": 210
+        },
+        {
+          "id": 10,
+          "layout_id": 1,
+          "hole_number": 10,
+          "par": 3,
+          "distance": 253
+        },
+        {
+          "id": 11,
+          "layout_id": 1,
+          "hole_number": 11,
+          "par": 3,
+          "distance": 502
+        },
+        {
+          "id": 12,
+          "layout_id": 1,
+          "hole_number": 12,
+          "par": 3,
+          "distance": 276
+        },
+        {
+          "id": 13,
+          "layout_id": 1,
+          "hole_number": 13,
+          "par": 3,
+          "distance": 414
+        }
+      ]
+    }
+  ]
+}
