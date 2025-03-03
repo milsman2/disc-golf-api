@@ -36,7 +36,7 @@ jobs:
           pylint --rcfile=.pylintrc --load-plugins pylint_pydantic $(git ls-files '**/*.py' | grep -v '^migrations/')
       - name: Test with pytest
         run: |
-          pytest pytests/test_courses_layout.py
+          pytest pytests/test_courses_layouts.py 
   Docker-Build-Push:
     needs: [Python-Build-Test]
     runs-on: ubuntu-latest
