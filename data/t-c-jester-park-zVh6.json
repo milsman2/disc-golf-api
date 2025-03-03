@@ -1,16 +1,13 @@
 {
-  "course": {
-    "id": 1,
-    "name": "T.C. Jester Park",
-    "location": "Houston, TX",
-    "description": "Dual tees, short White tees have concrete pads, long Blue tees are on the grass. Mostly flat, lightly wooded. Good shade. New trees planted in early 2020.",
-    "city": "Houston",
-    "state": "Texas",
-    "country": "USA",
-    "holes": 21,
-    "rating": 4.3,
-    "reviews_count": 3834
-  },
+  "name": "T.C. Jester Park",
+  "location": "Houston, TX",
+  "description": "Dual tees, short White tees have concrete pads, long Blue tees are on the grass. Mostly flat, lightly wooded. Good shade. New trees planted in early 2020.",
+  "city": "Houston",
+  "state": "Texas",
+  "country": "USA",
+  "holes": 21,
+  "rating": 4.3,
+  "reviews_count": 3834,
   "layouts": [
     {
       "id": 1,
