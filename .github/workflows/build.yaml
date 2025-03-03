@@ -23,14 +23,17 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r ./requirements.txt
-      - name: Analysing the code with pylint
+      - name: Run Python isort
         run: |
-          pylint --rcfile=.pylintrc --load-plugins pylint_pydantic $(git ls-files '**/*.py' | grep -v '^migrations/')
+          isort ./src
       - name: Run Python black
         uses: psf/black@stable
         with:
           options: '--check --verbose'
           src: './src'
+      - name: Analysing the code with pylint
+        run: |
+          pylint --rcfile=.pylintrc --load-plugins pylint_pydantic $(git ls-files '**/*.py' | grep -v '^migrations/')
       - name: Test with pytest
         run: |
           pyest tests/test_courses_layout.pt
