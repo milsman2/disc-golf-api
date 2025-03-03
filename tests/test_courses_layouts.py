@@ -61,5 +61,10 @@ def test_create_course_from_file(session: Session):
     assert data["holes"] == 21
     assert data["rating"] == 4.3
     assert data["reviews_count"] == 3834
-    assert len(data["layouts"]) == 1
+    assert len(data["layouts"]) == 2
     assert data["layouts"][0]["name"] == "Full 21 - White Tees"
+    assert data["layouts"][0]["par"] == 64
+    assert data["layouts"][0]["length"] == 6619
+    assert data["layouts"][1]["name"] == "North 13 - White Tees"
+    assert data["layouts"][1]["par"] == 40
+    assert data["layouts"][1]["length"] == 4204
