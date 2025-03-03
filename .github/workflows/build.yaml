@@ -31,6 +31,9 @@ jobs:
         with:
           options: '--check --verbose'
           src: './src'
+      - name: Test with pytest
+        run: |
+          pyest tests/test_courses_layout.pt
   Docker-Build-Push:
     needs: [Python-Build-Test]
     runs-on: ubuntu-latest
