@@ -6,43 +6,34 @@ import pytest
 from fastapi.testclient import TestClient
 from icecream import ic
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
 import json
 from src.api.deps import get_db
 from src.main import app
 from src.models.base import Base
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL,
-    connect_args={"check_same_thread": False},
-    poolclass=StaticPool,
-)
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-
-def override_get_db():
+@pytest.fixture(name="session")
+def session_fixture():
     ic()
-    db = TestingSessionLocal()
-    yield db
+    engine = create_engine(
+        "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
+    )
+    Base.metadata.create_all(engine)
+    with Session(engine) as session:
+        yield session
 
 
-app.dependency_overrides[get_db] = override_get_db
-
-client = TestClient(app)
-
-
-@pytest.fixture(scope="module")
-def test_db_setup():
+def test_create_course_from_file(session: Session):
     ic()
-    Base.metadata.create_all(bind=engine)
-    yield
-    Base.metadata.drop_all(bind=engine)
 
+    def get_session_override():
+        return session
 
-def test_create_course_from_file(test_db_setup):
-    ic(test_db_setup)
+    app.dependency_overrides[get_db] = get_session_override
+    client = TestClient(app)
+
     with open("data/t-c-jester-park-zVh6.json", encoding="utf-8") as f:
         course_data = json.load(f)
 
@@ -61,7 +52,8 @@ def test_create_course_from_file(test_db_setup):
     assert data["location"] == "Houston, TX"
     assert (
         data["description"]
-        == "Dual tees, short White tees have concrete pads, long Blue tees are on the grass. Mostly flat, lightly wooded. Good shade. New trees planted in early 2020."
+        == "Dual tees, short White tees have concrete pads, long Blue tees are on the grass. "
+        "Mostly flat, lightly wooded. Good shade. New trees planted in early 2020."
     )
     assert data["city"] == "Houston"
     assert data["state"] == "Texas"
