@@ -21,13 +21,13 @@ router = APIRouter(prefix="/login", tags=["Login"])
 @router.post("/access-token")
 def login_access_token(
     response: Response,
-    db: SessionDep,
+    session: SessionDep,
     data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ) -> Token:
     """
     OAuth2 compatible token login, get an access token for future requests
     """
-    user = authenticate(session=db, email=data.username, password=data.password)
+    user = authenticate(db=session, email=data.username, password=data.password)
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect email/password")
     elif not user.is_active:
@@ -69,7 +69,7 @@ def reset_password(session: SessionDep, body: NewPassword) -> Message:
     email = verify_password_reset_token(token=body.token)
     if not email:
         raise HTTPException(status_code=400, detail="Invalid token")
-    user = get_user_by_email(session=session, email=email)
+    user = get_user_by_email(db=session, email=email)
     if not user:
         raise HTTPException(
             status_code=404,

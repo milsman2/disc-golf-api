@@ -4,10 +4,8 @@ Courses API routes
 
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
-
-from src.api.deps import get_db
+from fastapi import APIRouter, HTTPException
+from src.api.deps import SessionDep
 from src.crud.course import create_course, delete_course, get_course, get_courses
 from src.schemas.courses import Course, CourseCreate
 
@@ -15,27 +13,30 @@ router = APIRouter(prefix="/courses", tags=["Courses"])
 
 
 @router.get("/", response_model=List[Course])
-def read_courses(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    courses = get_courses(db, skip=skip, limit=limit)
+def read_courses(session: SessionDep, skip: int = 0, limit: int = 100):
+    courses = get_courses(db=session, skip=skip, limit=limit)
     return courses
 
 
 @router.get("/{course_id}", response_model=Course)
-def read_course(course_id: int, db: Session = Depends(get_db)):
-    db_course = get_course(db, course_id=course_id)
+def read_course(session: SessionDep, course_id: int):
+    db_course = get_course(db=session, course_id=course_id)
     if db_course is None:
         raise HTTPException(status_code=404, detail="Course not found")
     return db_course
 
 
 @router.post("/", response_model=Course)
-def create_new_course(course: CourseCreate, db: Session = Depends(get_db)):
-    return create_course(db=db, course=course)
+def create_new_course(
+    session: SessionDep,
+    course: CourseCreate,
+):
+    return create_course(db=session, course=course)
 
 
 @router.delete("/{course_id}", response_model=Course)
-def delete_existing_course(course_id: int, db: Session = Depends(get_db)):
-    db_course = delete_course(db, course_id=course_id)
+def delete_existing_course(session: SessionDep, course_id: int):
+    db_course = delete_course(db=session, course_id=course_id)
     if db_course is None:
         raise HTTPException(status_code=404, detail="Course not found")
     return db_course
