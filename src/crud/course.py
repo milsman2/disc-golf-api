@@ -49,6 +49,7 @@ def create_course(db: Session, course: CourseCreate) -> Course:
         holes=course.holes,
         rating=course.rating,
         reviews_count=course.reviews_count,
+        link=course.link,
     )
     db.add(db_course)
     db.commit()
