@@ -9,11 +9,17 @@ from src.api.routes import (
     courses_router,
     healthcheck_router,
     login_router,
+    private_router,
 )
+from src.core import settings
 
-router = APIRouter()
+api_router = APIRouter()
 
-router.include_router(healthcheck_router)
-router.include_router(login_router)
-router.include_router(courses_layouts_router)
-router.include_router(courses_router)
+api_router.include_router(healthcheck_router)
+api_router.include_router(login_router)
+api_router.include_router(courses_layouts_router)
+api_router.include_router(courses_router)
+api_router.include_router(private_router)
+
+if settings.ENVIRONMENT == "local":
+    api_router.include_router(private_router)

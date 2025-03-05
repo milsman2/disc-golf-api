@@ -5,37 +5,36 @@ Login routes
 from datetime import timedelta
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Depends, HTTPException, Request, Response
+from fastapi import APIRouter, Depends, HTTPException, Response
 from fastapi.security import OAuth2PasswordRequestForm
 
-from src.api.deps import CurrentUser, SessionDep
-from src.core import security, settings
-from src.core.security import get_password_hash
 from src.crud import authenticate, get_user_by_email
+from src.api.deps import CurrentUser, SessionDep
+from src.core import settings, get_password_hash, create_access_token
 from src.schemas import Message, NewPassword, Token, UserPublic
 from src.utils import verify_password_reset_token
 
 router = APIRouter(prefix="/login", tags=["Login"])
 
 
-@router.post("/access-token")
+@router.post("/login/access-token")
 def login_access_token(
     response: Response,
     session: SessionDep,
-    data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ) -> Token:
     """
     OAuth2 compatible token login, get an access token for future requests
     """
-    user = authenticate(db=session, email=data.username, password=data.password)
+    user = authenticate(
+        db=session, email=form_data.username, password=form_data.password
+    )
     if not user:
-        raise HTTPException(status_code=400, detail="Incorrect email/password")
+        raise HTTPException(status_code=400, detail="Incorrect email or password")
     elif not user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
     access_token_exp = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = security.create_access_token(
-        subject=user.id, expires_delta=access_token_exp
-    )
+    access_token = create_access_token(subject=user.id, expires_delta=access_token_exp)
     response.set_cookie(
         key="access_token",
         value=access_token,
@@ -45,19 +44,15 @@ def login_access_token(
         samesite="lax",
     )
     return Token(
-        access_token=access_token,
-        token_type="bearer",
+        access_token=create_access_token(user.id, expires_delta=access_token_exp)
     )
 
 
-@router.post("/test-token", response_model=UserPublic)
-def test_token(request: Request, current_user: CurrentUser) -> Any:
+@router.post("/login/test-token", response_model=UserPublic)
+def test_token(current_user: CurrentUser) -> Any:
     """
     Test access token
     """
-    token = request.cookies.get("access_token")
-    if not token:
-        raise HTTPException(status_code=403, detail="Not authenticated")
     return current_user
 
 
