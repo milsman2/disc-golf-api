@@ -32,6 +32,7 @@ class Course(Base):
     holes: Mapped[int | None] = mapped_column(Integer, nullable=True)
     rating: Mapped[float | None] = mapped_column(Float, nullable=True)
     reviews_count: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    link: Mapped[str | None] = mapped_column(String, nullable=True)
 
     layouts: Mapped[list["CourseLayout"]] = relationship(
         "CourseLayout", back_populates="course", cascade="all, delete-orphan"

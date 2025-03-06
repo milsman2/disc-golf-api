@@ -19,6 +19,7 @@ class CourseBase(BaseModel):
     holes: Optional[int] = None
     rating: Optional[float] = None
     reviews_count: Optional[int] = None
+    link: str | None = None
 
 
 class CourseCreate(CourseBase):
