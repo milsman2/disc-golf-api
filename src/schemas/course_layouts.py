@@ -26,5 +26,10 @@ class CourseLayoutInDBBase(CourseLayoutBase):
     course_id: Optional[int] = None
 
 
-class CourseLayout(CourseLayoutInDBBase):
+class CourseLayoutPublic(CourseLayoutInDBBase):
     holes: List[Hole] = []
+
+
+class CourseLayoutsPublic(BaseModel):
+    course_layouts: List[CourseLayoutPublic] = []
+    count: int

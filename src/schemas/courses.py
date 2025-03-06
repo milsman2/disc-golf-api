@@ -6,7 +6,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel, ConfigDict
 
-from src.schemas.course_layouts import CourseLayout, CourseLayoutCreate
+from src.schemas.course_layouts import CourseLayoutPublic, CourseLayoutCreate
 
 
 class CourseBase(BaseModel):
@@ -30,5 +30,10 @@ class CourseInDBBase(CourseBase):
     id: int
 
 
-class Course(CourseInDBBase):
-    layouts: List[CourseLayout] = []
+class CoursePublic(CourseInDBBase):
+    layouts: List[CourseLayoutPublic] = []
+
+
+class CoursesPublic(CourseInDBBase):
+    courses: List[CoursePublic] = []
+    count: int
