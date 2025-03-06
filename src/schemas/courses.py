@@ -2,7 +2,7 @@
 This file contains the Pydantic models for the Course model.
 """
 
-from typing import List, Optional
+from typing import List
 
 from pydantic import BaseModel, ConfigDict
 
@@ -11,14 +11,14 @@ from src.schemas.course_layouts import CourseLayoutPublic, CourseLayoutCreate
 
 class CourseBase(BaseModel):
     name: str
-    location: Optional[str] = None
-    description: Optional[str] = None
-    city: Optional[str] = None
-    state: Optional[str] = None
-    country: Optional[str] = None
-    holes: Optional[int] = None
-    rating: Optional[float] = None
-    reviews_count: Optional[int] = None
+    location: str | None = None
+    description: str | None = None
+    city: str | None = None
+    state: str | None = None
+    country: str | None = None
+    holes: int | None = None
+    rating: float | None = None
+    reviews_count: int | None = None
     link: str | None = None
 
 
@@ -28,6 +28,7 @@ class CourseCreate(CourseBase):
 
 class CourseInDBBase(CourseBase):
     model_config = ConfigDict(from_attributes=True)
+
     id: int
 
 
@@ -35,6 +36,5 @@ class CoursePublic(CourseInDBBase):
     layouts: List[CourseLayoutPublic] = []
 
 
-class CoursesPublic(CourseInDBBase):
+class CoursesPublic(BaseModel):
     courses: List[CoursePublic] = []
-    count: int
