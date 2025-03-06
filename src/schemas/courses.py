@@ -28,6 +28,7 @@ class CourseCreate(CourseBase):
 
 class CourseInDBBase(CourseBase):
     model_config = ConfigDict(from_attributes=True)
+
     id: int
 
 
@@ -35,6 +36,5 @@ class CoursePublic(CourseInDBBase):
     layouts: List[CourseLayoutPublic] = []
 
 
-class CoursesPublic(CourseInDBBase):
+class CoursesPublic(BaseModel):
     courses: List[CoursePublic] = []
-    count: int

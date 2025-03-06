@@ -13,8 +13,10 @@ router = APIRouter(prefix="/courses", tags=["Courses"])
 
 @router.get("/", response_model=CoursesPublic)
 def read_courses(session: SessionDep, skip: int = 0, limit: int = 100):
-    courses = get_courses(db=session, skip=skip, limit=limit)
-    return courses
+    courses_data = get_courses(db=session, skip=skip, limit=limit)
+    return CoursesPublic(
+        courses=[CoursePublic.model_validate(course) for course in courses_data]
+    )
 
 
 @router.get("/{course_id}", response_model=CoursePublic)

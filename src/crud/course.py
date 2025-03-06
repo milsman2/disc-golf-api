@@ -4,10 +4,10 @@ CRUD operations for the Course model
 
 from sqlalchemy.orm import Session, joinedload
 
-from src.models.course import Course
-from src.models.course_layout import CourseLayout
+from src.models import Course, CourseLayout
 from src.models.hole import Hole
 from src.schemas.courses import CourseCreate
+from typing import List
 
 
 def get_course(db: Session, course_id: int) -> Course | None:
@@ -19,14 +19,15 @@ def get_course(db: Session, course_id: int) -> Course | None:
     )
 
 
-def get_courses(db: Session, skip: int = 0, limit: int = 100):
-    return (
+def get_courses(db: Session, skip: int = 0, limit: int = 100) -> List[Course]:
+    courses = (
         db.query(Course)
         .options(joinedload(Course.layouts).joinedload(CourseLayout.holes))
         .offset(skip)
         .limit(limit)
         .all()
     )
+    return courses
 
 
 def get_course_by_name(db: Session, name: str) -> Course | None:
@@ -85,4 +86,5 @@ def delete_course(db: Session, course_id: int) -> Course | None:
     if db_course:
         db.delete(db_course)
         db.commit()
-    return db_course
+        return db_course
+    return None
