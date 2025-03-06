@@ -2,8 +2,12 @@
 Export Pydantic schemas for use in other modules.
 """
 
-from src.schemas.course_layouts import CourseLayoutCreate
-from src.schemas.courses import Course, CourseCreate
+from src.schemas.course_layouts import (
+    CourseLayoutCreate,
+    CourseLayoutPublic,
+    CourseLayoutsPublic,
+)
+from src.schemas.courses import CoursePublic, CourseCreate, CoursesPublic
 from src.schemas.holes import HoleCreate, HoleUpdate
 from src.schemas.users import (
     Message,
@@ -32,8 +36,12 @@ __all__ = [
     "UsersPublic",
     "NewPassword",
     "CourseCreate",
+    "CourseLayoutPublic",
     "CourseLayoutCreate",
+    "CourseLayoutsPublic",
+    "CoursesPublic",
     "HoleCreate",
     "HoleUpdate",
-    "Course",
+    "CoursePublic",
+    "CourseLayoutsPublic",
 ]

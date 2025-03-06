@@ -2,8 +2,6 @@
 Routes for Course Layouts
 """
 
-from typing import List
-
 from fastapi import APIRouter, HTTPException
 
 from src.api.deps import SessionDep
@@ -14,12 +12,16 @@ from src.crud.course_layout import (
     get_course_layout,
     get_course_layouts,
 )
-from src.schemas.course_layouts import CourseLayout, CourseLayoutCreate
+from src.schemas.course_layouts import (
+    CourseLayoutPublic,
+    CourseLayoutCreate,
+    CourseLayoutsPublic,
+)
 
 router = APIRouter(prefix="/course_layouts", tags=["Course Layouts"])
 
 
-@router.get("/", response_model=List[CourseLayout])
+@router.get("/", response_model=CourseLayoutsPublic)
 def read_course_layouts(
     session: SessionDep,
     skip: int = 0,
@@ -29,7 +31,7 @@ def read_course_layouts(
     return course_layouts
 
 
-@router.get("/{course_layout_id}", response_model=CourseLayout)
+@router.get("/{course_layout_id}", response_model=CourseLayoutPublic)
 def read_course_layout(session: SessionDep, course_layout_id: int):
     db_course_layout = get_course_layout(db=session, course_layout_id=course_layout_id)
     if db_course_layout is None:
@@ -37,12 +39,12 @@ def read_course_layout(session: SessionDep, course_layout_id: int):
     return db_course_layout
 
 
-@router.post("/", response_model=CourseLayout)
+@router.post("/", response_model=CourseLayoutPublic)
 def create_new_course_layout(session: SessionDep, course_layout: CourseLayoutCreate):
     return create_course_layout(db=session, course_layout=course_layout)
 
 
-@router.delete("/{course_layout_id}", response_model=CourseLayout)
+@router.delete("/{course_layout_id}", response_model=CourseLayoutPublic)
 def delete_existing_course_layout(session: SessionDep, course_layout_id: int):
     db_course_layout = delete_course_layout(
         db=session, course_layout_id=course_layout_id
@@ -52,7 +54,7 @@ def delete_existing_course_layout(session: SessionDep, course_layout_id: int):
     return db_course_layout
 
 
-@router.get("/search", response_model=List[CourseLayout])
+@router.get("/search", response_model=CourseLayoutsPublic)
 def search_course_layouts(session: SessionDep, name: str):
     if name:
         db_course = get_course_by_name(db=session, name=name)
