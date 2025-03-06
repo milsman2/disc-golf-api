@@ -40,7 +40,7 @@ jobs:
           echo "FIRST_SUPERUSER_PASSWORD=${{ secrets.FIRST_SUPERUSER_PASSWORD }}" >> "$GITHUB_ENV"
       - name: Test with pytest
         run: |
-          pytest pytests/test_courses_layouts.py
+          pytest pytests/test_courses.py
   Docker-Build-Push:
     needs: [Python-Build-Test]
     runs-on: ubuntu-latest
