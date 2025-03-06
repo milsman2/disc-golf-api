@@ -25,7 +25,7 @@ def session_fixture():
         yield session
 
 
-def test_create_course_from_file(session: Session):
+def test_create_and_get_course(session: Session):
     ic()
 
     def get_session_override():
@@ -34,18 +34,15 @@ def test_create_course_from_file(session: Session):
     app.dependency_overrides[get_db] = get_session_override
     client = TestClient(app)
 
+    # Create the course
     with open("data/t-c-jester-park-zVh6.json", encoding="utf-8") as f:
         course_data = json.load(f)
 
-    course_data.pop("id", None)
-    for layout in course_data["layouts"]:
-        layout.pop("id", None)
-        layout.pop("course_id", None)
-        for hole in layout["holes"]:
-            hole.pop("id", None)
-            hole.pop("layout_id", None)
-
     response = client.post("/api/v1/courses/", json=course_data)
+    assert response.status_code == 200
+
+    # Get the course
+    response = client.get("/api/v1/courses/1")
     assert response.status_code == 200
     data = response.json()
     assert data["name"] == "T.C. Jester Park"
