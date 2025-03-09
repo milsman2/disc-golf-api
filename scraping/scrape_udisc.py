@@ -5,9 +5,11 @@ Scrape UDisc for a list of disc golf courses.
 import asyncio
 from playwright.async_api import async_playwright
 from icecream import ic
+from scraping.schemas import generated_url
 
 
 async def scrape_course_details(browser, course_link):
+    ic()
     page = await browser.new_page()
     await page.goto(f"https://udisc.com{course_link}")
     await asyncio.sleep(5)
@@ -22,12 +24,8 @@ async def scrape_course_details(browser, course_link):
     return None
 
 
-async def scrape_udisc_courses():
+async def scrape_udisc_courses(url: str):
     ic()
-    url = (
-        "https://udisc.com/courses?zoom=10&lat=29.76328&lng=-95.36327&swLat=29.6319106"
-        "&swLng=-95.6599009&neLat=29.8944774&neLng=-95.0666391"
-    )
 
     async with async_playwright() as p:
         courses = []
@@ -45,13 +43,20 @@ async def scrape_udisc_courses():
             for course_link in course_links:
                 href = await course_link.get_attribute("href")
                 courses.append(href)
+        return courses
+
+
+async def fetch_course_details(courses):
+    ic()
+
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
 
         course_details = []
         tasks = []
         for course_link in courses:
             task = scrape_course_details(browser, course_link)
             tasks.append(task)
-
         course_details = await asyncio.gather(*tasks)
 
         await browser.close()
@@ -59,8 +64,10 @@ async def scrape_udisc_courses():
 
 
 async def main():
-    course_details_data = await scrape_udisc_courses()
-    ic(course_details_data)
+    ic()
+    courses_list = await scrape_udisc_courses(url=generated_url)
+    course_details = await fetch_course_details(courses_list)
+    ic(course_details)
 
 
 if __name__ == "__main__":
