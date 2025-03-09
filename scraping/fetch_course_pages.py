@@ -7,7 +7,7 @@ from playwright.async_api import async_playwright
 import asyncio
 
 
-async def scrape_udisc_courses(url: str):
+async def get_course_list(url: str):
     ic()
 
     async with async_playwright() as p:
