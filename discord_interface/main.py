@@ -5,6 +5,7 @@ Sample bot using discord.py
 import discord
 from discord.ext import commands
 import random
+from icecream import ic
 
 description = """An example bot to showcase the discord.ext.commands extension
 module.
@@ -20,8 +21,9 @@ bot = commands.Bot(command_prefix="?", description=description, intents=intents)
 
 @bot.event
 async def on_ready():
-    print(f"Logged in as {bot.user} (ID: {bot.user.id})")
-    print("------")
+    if bot.user is not None:
+        ic(f"Logged in as {bot.user} (ID: {bot.user.id})")
+        ic("------")
 
 
 @bot.command()
@@ -35,7 +37,9 @@ async def roll(ctx, dice: str):
     """Rolls a dice in NdN format."""
     try:
         rolls, limit = map(int, dice.split("d"))
-    except Exception as e:
+        if rolls <= 0 or limit <= 0:
+            raise ValueError("Both numbers must be positive")
+    except ValueError as e:
         await ctx.send(e)
         return
 
@@ -53,13 +57,17 @@ async def choose(ctx, *choices: str):
 async def repeat(ctx, times: int, content="repeating..."):
     """Repeats a message multiple times."""
     for i in range(times):
+        ic(i)
         await ctx.send(content)
 
 
 @bot.command()
 async def joined(ctx, member: discord.Member):
     """Says when a member joined."""
-    await ctx.send(f"{member.name} joined {discord.utils.format_dt(member.joined_at)}")
+    if member.joined_at is not None:
+        await ctx.send(
+            f"{member.name} joined {discord.utils.format_dt(member.joined_at)}"
+        )
 
 
 @bot.group()
