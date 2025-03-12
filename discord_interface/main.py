@@ -6,7 +6,10 @@ import discord
 from discord.ext import commands
 import random
 from icecream import ic
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 description = """An example bot to showcase the discord.ext.commands extension
 module.
 
@@ -86,4 +89,4 @@ async def _bot(ctx):
     await ctx.send("Yes, the bot is cool.")
 
 
-bot.run("token")
+bot.run(os.getenv("DISCORD_TOKEN", "change_me"))
