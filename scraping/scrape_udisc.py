@@ -17,8 +17,14 @@ async def main():
     course_details = await get_course_details(courses_list)
     for course in course_details:
         try:
-            course_out = CourseCreate(name=course["name"])
-            ic(course_out)
+            rating = None if course["rating"] == "-" else course["rating"]
+            course_out = CourseCreate(
+                name=course["name"],
+                location=course["location"],
+                rating=rating,
+                reviews_count=course["reviews_count"],
+            )
+            ic(course_out.model_dump_json(indent=2))
         except ValidationError as e:
             ic(e)
 
