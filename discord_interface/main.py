@@ -26,7 +26,8 @@ bot = commands.Bot(command_prefix="?", description=description, intents=intents)
 async def on_ready():
     if bot.user is not None:
         ic(f"Logged in as {bot.user} (ID: {bot.user.id})")
-        ic("------")
+    else:
+        ic(bot.user)
 
 
 @bot.command()
