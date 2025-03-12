@@ -2,12 +2,13 @@
 Sample bot using discord.py
 """
 
+import os
+import random
+
 import discord
 from discord.ext import commands
-import random
-from icecream import ic
-import os
 from dotenv import load_dotenv
+from icecream import ic
 
 load_dotenv()
 description = """An example bot to showcase the discord.ext.commands extension
