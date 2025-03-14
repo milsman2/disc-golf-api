@@ -10,6 +10,10 @@ from src.schemas.course_layouts import CourseLayoutPublic, CourseLayoutCreate
 
 
 class CourseBase(BaseModel):
+    """
+    Course base schema
+    """
+
     name: str
     location: str | None = None
     description: str | None = None
@@ -20,6 +24,8 @@ class CourseBase(BaseModel):
     rating: float | None = None
     reviews_count: int | None = None
     link: str | None = None
+    conditions: str | None = None
+    conditions_updated: str | None = None
 
 
 class CourseCreate(CourseBase):
