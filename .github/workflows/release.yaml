@@ -1,4 +1,4 @@
-name: Automated Releases with Pip Updates
+name: Automated Releases with GPG Signing
 
 on:
   schedule:
@@ -32,8 +32,24 @@ jobs:
           pip install --upgrade pip
           pip install --upgrade -r requirements.txt
 
-      - name: Run Tests
-        run: pytest
+          - name: Run Python isort
+          run: |
+            isort ./src
+      - name: Run Python black
+        uses: psf/black@stable
+        with:
+          options: '--check --verbose'
+          src: './src'
+      - name: Analysing the code with pylint
+        run: |
+          pylint --rcfile=.pylintrc --load-plugins pylint_pydantic $(git ls-files '**/*.py' | grep -v '^migrations/')
+      - name: Set Environment Variables
+        run: |
+          echo "FIRST_SUPERUSER=${{ secrets.FIRST_SUPERUSER }}" >> "$GITHUB_ENV"
+          echo "FIRST_SUPERUSER_PASSWORD=${{ secrets.FIRST_SUPERUSER_PASSWORD }}" >> "$GITHUB_ENV"
+      - name: Test with pytest
+        run: |
+          pytest pytests/test_courses.py
 
       - name: Commit updated dependencies if tests pass
         run: |
@@ -52,15 +68,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
       - name: Set up GPG signing
         run: |
           echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
-          git config --global user.signingkey "$(gpg --list-secret-keys --keyid-format=long | grep sec | awk '{print $2}' | cut -d'/' -f2)"
+          KEY_ID=$(gpg --list-secret-keys --keyid-format=long | grep sec | awk '{print $2}' | cut -d'/' -f2)
+          git config --global user.signingkey "$KEY_ID"
           git config --global commit.gpgsign true
           git config --global tag.gpgsign true
 
@@ -76,10 +88,10 @@ jobs:
             echo "RELEASE_TYPE=${{ github.event.inputs.release_type }}" >> $GITHUB_ENV
           fi
 
-      - name: Run Semantic Release
+      - name: Run Semantic Release (Signed Tags & Commits)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: semantic-release version --${{ env.RELEASE_TYPE }}
+        run: semantic-release version --no-ci --${{ env.RELEASE_TYPE }}
 
       - name: Publish GitHub Release
         env:
@@ -92,21 +104,23 @@ jobs:
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Check out repository code
         uses: actions/checkout@v4
-      - name: Build and push Docker image
+
+      - name: Build and push
         uses: docker/build-push-action@v6
         with:
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: |
-            milsman2/disc_golf_api:latest
-            milsman2/disc_golf_api:${{ env.NEW_VERSION }}
+          tags: milsman2/disc_golf_api:latest
           context: ./
