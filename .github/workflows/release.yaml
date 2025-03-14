@@ -32,21 +32,25 @@ jobs:
           pip install --upgrade pip
           pip install --upgrade -r requirements.txt
 
-          - name: Run Python isort
-          run: |
-            isort ./src
+      - name: Run Python isort
+        run: |
+          isort ./src
+
       - name: Run Python black
         uses: psf/black@stable
         with:
           options: '--check --verbose'
           src: './src'
+
       - name: Analysing the code with pylint
         run: |
           pylint --rcfile=.pylintrc --load-plugins pylint_pydantic $(git ls-files '**/*.py' | grep -v '^migrations/')
+
       - name: Set Environment Variables
         run: |
           echo "FIRST_SUPERUSER=${{ secrets.FIRST_SUPERUSER }}" >> "$GITHUB_ENV"
           echo "FIRST_SUPERUSER_PASSWORD=${{ secrets.FIRST_SUPERUSER_PASSWORD }}" >> "$GITHUB_ENV"
+
       - name: Test with pytest
         run: |
           pytest pytests/test_courses.py
