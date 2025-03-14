@@ -51,6 +51,8 @@ def create_course(db: Session, course: CourseCreate) -> Course:
         rating=course.rating,
         reviews_count=course.reviews_count,
         link=course.link,
+        conditions=course.conditions,
+        conditions_updated=course.conditions_updated,
     )
     db.add(db_course)
     db.commit()
