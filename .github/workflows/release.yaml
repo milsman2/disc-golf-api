@@ -88,6 +88,8 @@ jobs:
         run: |
           if [[ "${{ github.event_name }}" == "schedule" ]]; then
             echo "RELEASE_TYPE=patch" >> $GITHUB_ENV
+          elif [[ -z "${{ github.event.inputs.release_type }}" ]]; then
+            echo "RELEASE_TYPE=patch" >> $GITHUB_ENV
           else
             echo "RELEASE_TYPE=${{ github.event.inputs.release_type }}" >> $GITHUB_ENV
           fi
