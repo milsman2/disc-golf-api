@@ -45,6 +45,7 @@ jobs:
       - name: Run Semantic Release (Signed Tags & Commits)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TYPE: ${{ env.RELEASE_TYPE }}
         run: semantic-release version --no-ci --${{ env.RELEASE_TYPE }}
         if: steps.determine_version.outcome == 'success'
 
