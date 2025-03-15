@@ -1,12 +1,6 @@
 name: Automated Releases with GPG Signing
 
 on:
-  schedule:
-    - cron: '0 0 * * *'
-  push:
-    branches:
-      - main
-      - 'feature/**'
   workflow_dispatch:
     inputs:
       release_type:
@@ -14,60 +8,14 @@ on:
         required: true
         default: 'patch'
 
+  workflow_run:
+    workflows: ['Python-Build-And-Test']
+    types:
+      - completed
+
 jobs:
-  pip-update:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'schedule'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
-      - name: Upgrade pip and dependencies
-        run: |
-          pip install --upgrade pip
-          pip install --upgrade -r requirements.txt
-
-      - name: Run Python isort
-        run: |
-          isort ./src
-
-      - name: Run Python black
-        uses: psf/black@stable
-        with:
-          options: '--check --verbose'
-          src: './src'
-
-      - name: Analysing the code with pylint
-        run: |
-          pylint --rcfile=.pylintrc --load-plugins pylint_pydantic $(git ls-files '**/*.py' | grep -v '^migrations/')
-
-      - name: Set Environment Variables
-        run: |
-          echo "FIRST_SUPERUSER=${{ secrets.FIRST_SUPERUSER }}" >> "$GITHUB_ENV"
-          echo "FIRST_SUPERUSER_PASSWORD=${{ secrets.FIRST_SUPERUSER_PASSWORD }}" >> "$GITHUB_ENV"
-
-      - name: Test with pytest
-        run: |
-          pytest pytests/test_courses.py
-
-      - name: Commit updated dependencies if tests pass
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add requirements.txt
-          git commit -m "chore(deps): automated daily pip updates"
-          git push origin main
-        continue-on-error: true
-
   release:
-    needs: pip-update
     runs-on: ubuntu-latest
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
