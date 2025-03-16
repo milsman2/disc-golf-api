@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       release_type:
-        description: 'Type of release (patch/minor)'
+        description: 'Type of release (patch/minor/major)'
         required: true
         default: 'patch'
 
@@ -27,32 +27,6 @@ jobs:
           git config --global user.signingkey "$KEY_ID"
           git config --global commit.gpgsign true
           git config --global tag.gpgsign true
-
-      - name: Install dependencies
-        run: pip install python-semantic-release
-
-      - name: Determine Release Type
-        id: determine_version
-        run: |
-          if [[ "${{ github.event_name }}" == "schedule" ]]; then
-            echo "RELEASE_TYPE=patch" >> $GITHUB_ENV
-          elif [[ -z "${{ github.event.inputs.release_type }}" ]]; then
-            echo "RELEASE_TYPE=patch" >> $GITHUB_ENV
-          else
-            echo "RELEASE_TYPE=${{ github.event.inputs.release_type }}" >> $GITHUB_ENV
-          fi
-
-      - name: Run Semantic Release (Signed Tags & Commits)
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_TYPE: ${{ env.RELEASE_TYPE }}
-        run: semantic-release version --no-ci --${{ env.RELEASE_TYPE }}
-        if: steps.determine_version.outcome == 'success'
-
-      - name: Publish GitHub Release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: semantic-release publish
 
   Docker-Build-Push:
     needs: release
