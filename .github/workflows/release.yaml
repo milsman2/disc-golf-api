@@ -1,4 +1,4 @@
-name: Automated Releases with GPG Signing
+name: Automated Release
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ on:
         default: 'patch'
 
   workflow_run:
-    workflows: ['Python-Build-And-Test']
+    workflows: ['Back End Build']
     types:
       - completed
 
@@ -19,6 +19,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.outputs.commit_sha }}
+          fetch-depth: 0
 
       - name: Set up GPG signing
         run: |
@@ -46,11 +49,14 @@ jobs:
 
       - name: Check out repository code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.outputs.commit_sha }}
+          fetch-depth: 0
 
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: milsman2/disc_golf_api:latest
+          tags: milsman2/disc_golf_api:${{ github.event.workflow_run.outputs.commit_sha }}
           context: ./
