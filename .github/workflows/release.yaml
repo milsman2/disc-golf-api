@@ -20,7 +20,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_commit.id }}
+          ref: ${{ github.event.workflow_run.outputs.commit_sha }}
           fetch-depth: 0
 
       - name: Set up GPG signing
@@ -50,7 +50,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_commit.id }}
+          ref: ${{ github.event.workflow_run.outputs.commit_sha }}
           fetch-depth: 0
 
       - name: Build and push
@@ -58,5 +58,5 @@ jobs:
         with:
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: milsman2/disc_golf_api:${{ github.event.workflow_run.head_commit.id }}
+          tags: milsman2/disc_golf_api:${{ github.event.workflow_run.outputs.commit_sha }}
           context: ./
