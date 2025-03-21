@@ -3,12 +3,10 @@ name: Back End Build
 on:
   push:
     branches-ignore:
-      - main
-      - 'feature/**'
+      - "*"
   pull_request:
     branches-ignore:
-      - main
-      - 'feature/**'
+      - "*"
   workflow_dispatch:
 
 jobs:
