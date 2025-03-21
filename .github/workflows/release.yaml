@@ -9,7 +9,7 @@ on:
         default: 'patch'
 
   workflow_run:
-    workflows: ['Python-Build-And-Test']
+    workflows: ['Back End Build']
     types:
       - completed
 
