@@ -1,4 +1,4 @@
-name: Automated Releases with GPG Signing
+name: Automated Release
 
 on:
   workflow_dispatch:
