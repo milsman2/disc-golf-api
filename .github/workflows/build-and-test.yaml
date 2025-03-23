@@ -24,6 +24,10 @@ jobs:
         id: get_commit
         run: echo "commit_sha=${GITHUB_SHA}" >> $GITHUB_OUTPUT
 
+      - name: Debug Commit SHA
+        run: |
+          echo "Commit SHA: ${GITHUB_SHA}"
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
