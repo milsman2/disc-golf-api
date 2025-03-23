@@ -17,6 +17,10 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
+      - name: Check commmit
+        run: |
+          echo "Commit: ${{ github.event.workflow_run.head_commit.message }}"
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
