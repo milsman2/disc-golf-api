@@ -17,9 +17,10 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - name: Check commmit
+      - name: Check parameters
         run: |
-          echo "Commit: ${{ github.event.workflow_run.head_commit.message }}"
+          echo "Commit: ${{ github.event.workflow_run.outputs.commit_sha }}"
+          echo "Release type: ${{ github.event.inputs.release_type }}"
 
       - name: Checkout code
         uses: actions/checkout@v4
