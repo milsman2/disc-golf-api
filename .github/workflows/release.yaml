@@ -9,12 +9,14 @@ on:
         default: 'patch'
 
 jobs:
-  Python-Release:
+  Python-Build-And-Test:
     uses: ./.github/workflows/build-and-test.yaml
     secrets: inherit
+    with:
+      python_version: '3.10'
 
   Docker-Build-Push:
-    needs: Python-Release
+    needs: Python-Build-And-Test
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
