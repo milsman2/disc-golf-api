@@ -1,32 +1,14 @@
 name: Back End Build
 
 on:
-  push:
-    branches-ignore:
-      - main
-      - 'feature/**'
-  pull_request:
-    branches-ignore:
-      - main
-      - 'feature/**'
-  workflow_dispatch:
+  workflow_call:
 
 jobs:
   Python-Build-And-Test:
     runs-on: ubuntu-latest
-    outputs:
-      commit_sha: ${{ steps.get_commit.outputs.commit_sha }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
-
-      - name: Get Commit SHA
-        id: get_commit
-        run: echo "commit_sha=${GITHUB_SHA}" >> $GITHUB_OUTPUT
-
-      - name: Debug Commit SHA
-        run: |
-          echo "Commit SHA Output: ${{ steps.get_commit.outputs.commit_sha }}"
 
       - name: Set up Python
         uses: actions/setup-python@v5
