@@ -12,6 +12,9 @@ jobs:
   API-Build-And-Test:
     runs-on: ubuntu-latest
     steps:
+      - name: Echo Pyton Version
+        run: echo ${{ github.event.inputs.python_version }}
+
       - name: Check out repository code
         uses: actions/checkout@v4
 
