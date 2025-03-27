@@ -12,8 +12,8 @@ jobs:
   API-Build-And-Test:
     runs-on: ubuntu-latest
     steps:
-      - name: Echo Pyton Version
-        run: echo ${{ github.event.inputs.python_version }}
+      - name: Echo Python Version
+        run: echo ${{ inputs.python_version}}
 
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -21,7 +21,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ github.event.inputs.python_version }}
+          python-version: ${{ inputs.python_version }}
 
       - name: Upgrade pip
         run: |
