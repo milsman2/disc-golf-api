@@ -18,6 +18,9 @@ jobs:
   Python-Release:
     needs: Python-Build-And-Test
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.release.outputs.tag }}
+
     concurrency:
       group: ${{ github.workflow }}-release-${{ github.ref_name }}
       cancel-in-progress: false
@@ -110,5 +113,5 @@ jobs:
         with:
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: milsman2/disc_golf_api:latest
+          tags: milsman2/disc_golf_api:${{ needs.Python-Release.outputs.tag }}
           context: ./
