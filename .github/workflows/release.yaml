@@ -85,7 +85,9 @@ jobs:
           tag: ${{ steps.release.outputs.tag }}
 
   Docker-Build-Push:
-    needs: Python-Build-And-Test
+    needs:
+      - Python-Build-And-Test
+      - Python-Release
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
