@@ -22,6 +22,7 @@ from src.schemas.users import (
     UserUpdate,
     UserUpdateMe,
 )
+from src.schemas.event_results import EventResultBase, EventResultCreate, EventResult
 
 __all__ = [
     "UserCreate",
@@ -44,4 +45,7 @@ __all__ = [
     "HoleUpdate",
     "CoursePublic",
     "CourseLayoutsPublic",
+    "EventResultBase",
+    "EventResultCreate",
+    "EventResult",
 ]
