@@ -7,6 +7,13 @@ on:
         description: 'Python version'
         required: true
         type: string
+  workflow_dispatch:
+    inputs:
+      python_version:
+        description: 'Python version'
+        required: true
+        default: '3.10'
+        type: string
 
 jobs:
   API-Build-And-Test:
