@@ -12,9 +12,9 @@ Schemas:
   Course and CourseLayout.
 """
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from src.schemas.courses import CoursePublic
-from schemas.course_layouts import CourseLayoutPublic
+from src.schemas.course_layouts import CourseLayoutPublic
 
 
 class EventResultBase(BaseModel):
@@ -24,7 +24,7 @@ class EventResultBase(BaseModel):
 
     division: str
     position: str
-    position_raw: int
+    position_raw: int | None = None
     name: str
     event_relative_score: int
     event_total_score: int
@@ -49,9 +49,8 @@ class EventResult(EventResultBase):
     Schema for returning an EventResult, including relationships.
     """
 
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     course: CoursePublic
     layout: CourseLayoutPublic
-
-    class Config:
-        orm_mode = True

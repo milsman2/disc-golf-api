@@ -1,0 +1,92 @@
+"""
+Unit tests for the EventResultCreate schema.
+
+This module contains tests to validate that data from a CSV file fits the
+EventResultCreate schema. It ensures that valid data passes schema validation
+and invalid data raises appropriate errors.
+
+Tests:
+- test_valid_event_result: Validates rows from the CSV file against the schema.
+- test_invalid_event_result: Ensures invalid data raises validation errors.
+
+Dependencies:
+- pandas: Used to read and process the CSV file.
+- pytest: Used as the testing framework.
+"""
+
+import pytest
+import pandas as pd
+from src.schemas.event_results import EventResultCreate
+
+
+@pytest.fixture(name="sample_csv_path")
+def get_sample():
+    """
+    Fixture to provide the path to the sample CSV file for testing.
+    """
+    return "./data/tc-jester-hfds-league-tc-jester-hfds-league-2025-03-19.csv"
+
+
+def test_valid_event_result(sample_csv_path):
+    """
+    Test that valid rows from the CSV file fit the EventResultCreate schema.
+    """
+    df = pd.read_csv(sample_csv_path)
+
+    for _, row in df.iterrows():
+        data = {
+            "division": row["division"],
+            "position": row["position"],
+            "position_raw": (
+                float(row["position_raw"]) if not pd.isna(row["position_raw"]) else None
+            ),
+            "name": row["name"],
+            "event_relative_score": int(row["event_relative_score"]),
+            "event_total_score": int(row["event_total_score"]),
+            "pdga_number": (
+                float(row["pdga_number"]) if not pd.isna(row["pdga_number"]) else None
+            ),
+            "username": row["username"],
+            "round_relative_score": int(row["round_relative_score"]),
+            "round_total_score": int(row["round_total_score"]),
+            "course_id": 1,
+            "layout_id": 1,
+        }
+
+        event_result = EventResultCreate(**data)
+
+        assert event_result.division == data["division"]
+        assert event_result.position == data["position"]
+        assert event_result.position_raw == data["position_raw"]
+        assert event_result.name == data["name"]
+        assert event_result.event_relative_score == data["event_relative_score"]
+        assert event_result.event_total_score == data["event_total_score"]
+        assert event_result.pdga_number == data["pdga_number"]
+        assert event_result.username == data["username"]
+        assert event_result.round_relative_score == data["round_relative_score"]
+        assert event_result.round_total_score == data["round_total_score"]
+        assert event_result.course_id == data["course_id"]
+        assert event_result.layout_id == data["layout_id"]
+
+
+def test_invalid_event_result():
+    """
+    Test that invalid rows raise validation errors.
+    """
+    invalid_data = {
+        "division": "GOLD",
+        "position": "1",
+        "position_raw": "invalid",
+        "name": "Andrew Zinck",
+        "event_relative_score": -6,
+        "event_total_score": 49,
+        "pdga_number": "invalid",
+        "username": "zinckles",
+        "round_relative_score": -6,
+        "round_total_score": 49,
+        "course_id": 1,
+        "layout_id": 2,
+    }
+
+    with pytest.raises(ValueError):
+        EventResultCreate(**invalid_data)
