@@ -10,6 +10,7 @@ from src.api.routes import (
     healthcheck_router,
     login_router,
     private_router,
+    event_result_router,
 )
 from src.core import settings
 
@@ -20,6 +21,7 @@ api_router.include_router(login_router)
 api_router.include_router(courses_layouts_router)
 api_router.include_router(courses_router)
 api_router.include_router(private_router)
+api_router.include_router(event_result_router)
 
 if settings.ENVIRONMENT == "local":
     api_router.include_router(private_router)
