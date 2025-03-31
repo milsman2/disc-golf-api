@@ -2,7 +2,6 @@ from typing import TYPE_CHECKING
 from sqlalchemy import Integer, String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.models.base import Base
-from src.schemas import holes
 
 if TYPE_CHECKING:
     from src.models.event_result import EventResult
