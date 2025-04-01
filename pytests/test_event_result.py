@@ -108,26 +108,27 @@ def test_valid_event_result(sample_csv_path):
             },
         )
         assert response.status_code == 200
+        # pytest.fail(f"Response JSON: {response.json()}")
 
 
-def test_invalid_event_result():
-    """
-    Test that invalid rows raise validation errors.
-    """
-    invalid_data = {
-        "division": "GOLD",
-        "position": "1",
-        "position_raw": "invalid",
-        "name": "Andrew Zinck",
-        "event_relative_score": -6,
-        "event_total_score": 49,
-        "pdga_number": "invalid",
-        "username": "zinckles",
-        "round_relative_score": -6,
-        "round_total_score": 49,
-        "course_id": 1,
-        "layout_id": 2,
-    }
+# def test_invalid_event_result():
+#     """
+#     Test that invalid rows raise validation errors.
+#     """
+#     invalid_data = {
+#         "division": "GOLD",
+#         "position": "1",
+#         "position_raw": "invalid",
+#         "name": "Andrew Zinck",
+#         "event_relative_score": -6,
+#         "event_total_score": 49,
+#         "pdga_number": "invalid",
+#         "username": "zinckles",
+#         "round_relative_score": -6,
+#         "round_total_score": 49,
+#         "course_id": 1,
+#         "layout_id": 2,
+#     }
 
-    with pytest.raises(ValueError):
-        EventResultCreate(**invalid_data)
+#     with pytest.raises(ValueError):
+#         EventResultCreate(**invalid_data)

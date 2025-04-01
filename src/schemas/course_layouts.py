@@ -15,6 +15,8 @@ class CourseLayoutBase(BaseModel):
     length: Optional[float] = None
     difficulty: Optional[str] = None
 
+    model_config = ConfigDict(extra="forbid")
+
 
 class CourseLayoutCreate(CourseLayoutBase):
     holes: List[HoleCreate] = []

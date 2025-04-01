@@ -10,6 +10,8 @@ class HoleBase(BaseModel):
     par: int | None = None
     distance: int | None = None
 
+    model_config = ConfigDict(extra="forbid")
+
 
 class HoleCreate(HoleBase):
     pass

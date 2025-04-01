@@ -35,6 +35,8 @@ class EventResultBase(BaseModel):
     course_id: int
     layout_id: int
 
+    model_config = ConfigDict(extra="forbid")
+
 
 class EventResultCreate(EventResultBase):
     """
