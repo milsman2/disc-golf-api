@@ -14,9 +14,31 @@ Dependencies:
 - pytest: Used as the testing framework.
 """
 
-import pytest
 import pandas as pd
+import pytest
+from fastapi.testclient import TestClient
+from icecream import ic
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
+from sqlalchemy.pool import StaticPool
+
+from src.main import app
+from src.models.base import Base
 from src.schemas.event_results import EventResultCreate
+
+
+@pytest.fixture(name="session")
+def session_fixture():
+    ic()
+    engine = create_engine(
+        "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
+    )
+    Base.metadata.create_all(engine)
+    with Session(engine) as session:
+        yield session
+
+
+client = TestClient(app)
 
 
 @pytest.fixture(name="sample_csv_path")
@@ -67,6 +89,25 @@ def test_valid_event_result(sample_csv_path):
         assert event_result.round_total_score == data["round_total_score"]
         assert event_result.course_id == data["course_id"]
         assert event_result.layout_id == data["layout_id"]
+
+        response = client.post(
+            "/api/v1/courses/",
+            json={
+                "division": event_result.division,
+                "position": event_result.position,
+                "position_raw": event_result.position_raw,
+                "name": event_result.name,
+                "event_relative_score": event_result.event_relative_score,
+                "event_total_score": event_result.event_total_score,
+                "pdga_number": event_result.pdga_number,
+                "username": event_result.username,
+                "round_relative_score": event_result.round_relative_score,
+                "round_total_score": event_result.round_total_score,
+                "course_id": event_result.course_id,
+                "layout_id": event_result.layout_id,
+            },
+        )
+        assert response.status_code == 200
 
 
 def test_invalid_event_result():
