@@ -1,3 +1,26 @@
+"""
+SQLAlchemy model for course layouts.
+
+This module defines the `CourseLayout` model, which represents different layouts
+of a disc golf course. Each layout belongs to a specific course and can have
+multiple holes and event results associated with it.
+
+Classes:
+- CourseLayout: Represents a layout of a disc golf course.
+
+Relationships:
+- `course`: Links the layout to its parent course.
+- `event_results`: Links the layout to the event results played on it.
+- `holes`: Links the layout to the holes it contains.
+
+Dependencies:
+- SQLAlchemy ORM: Used for defining the model and relationships.
+- src.models.base: Base class for all SQLAlchemy models.
+- src.models.course: Defines the `Course` model.
+- src.models.event_result: Defines the `EventResult` model.
+- src.models.hole: Defines the `Hole` model.
+"""
+
 from typing import TYPE_CHECKING
 from sqlalchemy import Integer, String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
