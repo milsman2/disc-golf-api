@@ -8,7 +8,7 @@ from alembic import context
 from sqlalchemy import create_engine, pool
 
 from src.core import Base, settings
-
+from icecream import ic
 import re
 
 config = context.config
@@ -40,7 +40,8 @@ def run_migrations_offline() -> None:
 
     """
     db_url = config.get_main_option("sqlalchemy.url")
-    if re.search(r"\sqlite", url, re.IGNORECASE):
+    if db_url is not None and re.search(r"sqlite", db_url, re.IGNORECASE):
+        ic("SQLite detected, enabling batch mode (offline).")
         context.configure(
             url=db_url,
             target_metadata=target_metadata,
@@ -49,6 +50,7 @@ def run_migrations_offline() -> None:
             render_as_batch=True,
         )
     else:
+        ic("No SQLite detected. (offline).")
         context.configure(
             url=db_url,
             target_metadata=target_metadata,
@@ -73,13 +75,15 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as conn:
-        if re.search(r"\sqlite", url, re.IGNORECASE):
+        if re.search(r"sqlite", url, re.IGNORECASE):
+            ic("SQLite detected, enabling batch mode ONLINE.")
             context.configure(
                 connection=conn,
                 target_metadata=target_metadata,
                 render_as_batch=True,
             )
         else:
+            ic("No SQLite detected. Running ONLINE.")
             context.configure(
                 connection=conn,
                 target_metadata=target_metadata,
