@@ -9,7 +9,6 @@ contains information about a player's performance in the event.
 from sqlalchemy import Integer, String, ForeignKey
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from src.models.base import Base
-from src.models.course import Course
 from src.models.course_layout import CourseLayout
 
 
@@ -49,20 +48,9 @@ class EventResult(Base):
     round_relative_score: Mapped[int] = mapped_column(Integer, nullable=False)
     round_total_score: Mapped[int] = mapped_column(Integer, nullable=False)
 
-    course_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("courses.id"), nullable=False
-    )
     layout_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("course_layouts.id"), nullable=False
     )
-
-    course: Mapped["Course"] = relationship("Course", back_populates="event_results")
-    """
-    Relationship to the Course model.
-
-    This establishes a many-to-one relationship between EventResult and Course,
-    where each event result is associated with a specific course.
-    """
 
     layout: Mapped["CourseLayout"] = relationship(
         "CourseLayout", back_populates="event_results"

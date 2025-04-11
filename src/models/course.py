@@ -11,7 +11,6 @@ from src.models.base import Base
 
 if TYPE_CHECKING:
     from src.models.course_layout import CourseLayout
-    from src.models.event_result import EventResult
 
 
 class Course(Base):
@@ -39,7 +38,4 @@ class Course(Base):
 
     layouts: Mapped[list["CourseLayout"]] = relationship(
         "CourseLayout", back_populates="course", cascade="all, delete-orphan"
-    )
-    event_results: Mapped[list["EventResult"]] = relationship(
-        "EventResult", back_populates="course", cascade="all, delete-orphan"
     )

@@ -13,7 +13,6 @@ Schemas:
 """
 
 from pydantic import BaseModel, ConfigDict
-from src.schemas.courses import CoursePublic
 from src.schemas.course_layouts import CourseLayoutPublic
 
 
@@ -32,8 +31,6 @@ class EventResultBase(BaseModel):
     username: str
     round_relative_score: int
     round_total_score: int
-    course_id: int
-    layout_id: int
 
     model_config = ConfigDict(extra="forbid")
 
@@ -43,16 +40,22 @@ class EventResultCreate(EventResultBase):
     Schema for creating a new EventResult.
     """
 
-    pass
+    layout_id: int
 
 
-class EventResult(EventResultBase):
+class EventResultInDBBase(EventResultBase):
     """
-    Schema for returning an EventResult, including relationships.
+    Base schema for EventResult in the database.
     """
 
     model_config = ConfigDict(from_attributes=True)
 
     id: int
-    course: CoursePublic
+
+
+class EventResultPublic(EventResultBase):
+    """
+    Schema for returning an EventResult, including relationships.
+    """
+
     layout: CourseLayoutPublic

@@ -17,7 +17,7 @@ def get_holes(db: Session, skip: int = 0, limit: int = 100):
 
 
 def create_hole(db: Session, hole: HoleCreate) -> Hole:
-    db_hole = Hole(**hole.dict())
+    db_hole = Hole(**hole.model_dump())
     db.add(db_hole)
     db.commit()
     db.refresh(db_hole)

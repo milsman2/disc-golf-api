@@ -21,7 +21,6 @@ from icecream import ic
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
-
 from src.main import app
 from src.models.base import Base
 from src.schemas.event_results import EventResultCreate
@@ -71,7 +70,6 @@ def test_valid_event_result(sample_csv_path):
             "username": row["username"],
             "round_relative_score": int(row["round_relative_score"]),
             "round_total_score": int(row["round_total_score"]),
-            "course_id": 1,
             "layout_id": 1,
         }
 
@@ -87,28 +85,10 @@ def test_valid_event_result(sample_csv_path):
         assert event_result.username == data["username"]
         assert event_result.round_relative_score == data["round_relative_score"]
         assert event_result.round_total_score == data["round_total_score"]
-        assert event_result.course_id == data["course_id"]
         assert event_result.layout_id == data["layout_id"]
 
-        response = client.post(
-            "/api/v1/courses/",
-            json={
-                "division": event_result.division,
-                "position": event_result.position,
-                "position_raw": event_result.position_raw,
-                "name": event_result.name,
-                "event_relative_score": event_result.event_relative_score,
-                "event_total_score": event_result.event_total_score,
-                "pdga_number": event_result.pdga_number,
-                "username": event_result.username,
-                "round_relative_score": event_result.round_relative_score,
-                "round_total_score": event_result.round_total_score,
-                "course_id": event_result.course_id,
-                "layout_id": event_result.layout_id,
-            },
-        )
-        assert response.status_code == 200
-        # pytest.fail(f"Response JSON: {response.json()}")
+        response = client.post("/api/v1/event-results/", json=event_result)
+        pytest.fail(f"Response JSON: {response.json()}")
 
 
 # def test_invalid_event_result():

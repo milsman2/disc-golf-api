@@ -30,7 +30,7 @@ Modules Used:
 from fastapi import APIRouter, HTTPException
 from typing import List
 
-from src.schemas.event_results import EventResult, EventResultCreate
+from src.schemas.event_results import EventResultPublic, EventResultCreate
 from src.crud import (
     create_event_result,
     get_event_result,
@@ -46,7 +46,7 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=EventResult)
+@router.post("/", response_model=EventResultPublic)
 def create_event_result_route(event_result: EventResultCreate, session: SessionDep):
     """
     Create a new EventResult.
@@ -54,7 +54,7 @@ def create_event_result_route(event_result: EventResultCreate, session: SessionD
     return create_event_result(session, event_result)
 
 
-@router.get("/", response_model=List[EventResult])
+@router.get("/", response_model=List[EventResultPublic])
 def get_event_results_route(
     session: SessionDep,
     skip: int = 0,
@@ -66,7 +66,7 @@ def get_event_results_route(
     return get_event_results(session, skip, limit)
 
 
-@router.get("/{event_result_id}", response_model=EventResult)
+@router.get("/{event_result_id}", response_model=EventResultPublic)
 def get_event_result_route(event_result_id: int, session: SessionDep):
     """
     Retrieve a single EventResult by ID.
@@ -77,7 +77,7 @@ def get_event_result_route(event_result_id: int, session: SessionDep):
     return db_event_result
 
 
-@router.put("/{event_result_id}", response_model=EventResult)
+@router.put("/{event_result_id}", response_model=EventResultPublic)
 def update_event_result_route(
     event_result_id: int,
     updated_event_result: EventResultCreate,
