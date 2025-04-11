@@ -14,6 +14,7 @@ Dependencies:
 - pytest: Used as the testing framework.
 """
 
+from fastapi.exceptions import ResponseValidationError
 import pandas as pd
 import pytest
 from fastapi.testclient import TestClient
@@ -86,9 +87,20 @@ def test_valid_event_result(sample_csv_path):
         assert event_result.round_relative_score == data["round_relative_score"]
         assert event_result.round_total_score == data["round_total_score"]
         assert event_result.layout_id == data["layout_id"]
+        try:
+            response = client.post(
+                "/api/v1/event-results/", json=event_result.model_dump()
+            )
+            response.raise_for_status()
 
-        response = client.post("/api/v1/event-results/", json=event_result)
-        pytest.fail(f"Response JSON: {response.json()}")
+            assert response.status_code == 200
+            assert response.json() == event_result.model_dump()
+        except AssertionError as e:
+            ic(e)
+            pytest.fail(f"Assertion error: {e}")
+        except ResponseValidationError as e:
+            ic(e)
+            pytest.fail(f"Response validation error: {e}")
 
 
 # def test_invalid_event_result():
