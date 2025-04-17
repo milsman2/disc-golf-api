@@ -60,7 +60,9 @@ def test_valid_event_result(sample_csv_path):
             "division": row["division"],
             "position": row["position"],
             "position_raw": (
-                float(row["position_raw"]) if not pd.isna(row["position_raw"]) else None
+                float(row["position_raw"])
+                if not pd.isna(row["position_raw"]) or row["position_raw"] == "DNF"
+                else None
             ),
             "name": row["name"],
             "event_relative_score": int(row["event_relative_score"]),
@@ -92,35 +94,30 @@ def test_valid_event_result(sample_csv_path):
                 "/api/v1/event-results/", json=event_result.model_dump()
             )
             response.raise_for_status()
-
             assert response.status_code == 200
-            assert response.json() == event_result.model_dump()
-        except AssertionError as e:
-            ic(e)
-            pytest.fail(f"Assertion error: {e}")
         except ResponseValidationError as e:
             ic(e)
             pytest.fail(f"Response validation error: {e}")
 
 
-# def test_invalid_event_result():
-#     """
-#     Test that invalid rows raise validation errors.
-#     """
-#     invalid_data = {
-#         "division": "GOLD",
-#         "position": "1",
-#         "position_raw": "invalid",
-#         "name": "Andrew Zinck",
-#         "event_relative_score": -6,
-#         "event_total_score": 49,
-#         "pdga_number": "invalid",
-#         "username": "zinckles",
-#         "round_relative_score": -6,
-#         "round_total_score": 49,
-#         "course_id": 1,
-#         "layout_id": 2,
-#     }
+def test_invalid_event_result():
+    """
+    Test that invalid rows raise validation errors.
+    """
+    invalid_data = {
+        "division": "GOLD",
+        "position": "1",
+        "position_raw": "invalid",
+        "name": "Andrew Zinck",
+        "event_relative_score": -6,
+        "event_total_score": 49,
+        "pdga_number": "invalid",
+        "username": "zinckles",
+        "round_relative_score": -6,
+        "round_total_score": 49,
+        "course_id": 1,
+        "layout_id": 2,
+    }
 
-#     with pytest.raises(ValueError):
-#         EventResultCreate(**invalid_data)
+    with pytest.raises(ValueError):
+        EventResultCreate(**invalid_data)

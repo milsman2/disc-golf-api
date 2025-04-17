@@ -4,6 +4,7 @@ This module contains tests for the courses endpoints.
 
 import json
 
+from pydantic import ValidationError
 import pytest
 from fastapi.testclient import TestClient
 from icecream import ic
@@ -14,6 +15,7 @@ from sqlalchemy.pool import StaticPool
 from src.api.deps import get_db
 from src.main import app
 from src.models.base import Base
+from src.schemas.courses import CourseCreate
 
 
 @pytest.fixture(name="session")
@@ -35,12 +37,20 @@ def test_create_and_get_course(session: Session):
 
     app.dependency_overrides[get_db] = get_session_override
     client = TestClient(app)
+    ic(client)
 
     # Create the course
     with open("data/t-c-jester-park-zVh6.json", encoding="utf-8") as f:
         course_data = json.load(f)
-
-    response = client.post("/api/v1/courses/", json=course_data)
+        try:
+            course_data = CourseCreate(**course_data)
+        except ValidationError as e:
+            print("Validation error:", e)
+            pytest.fail(f"Validation error: {e}")
+    response = client.post(
+        "/api/v1/courses/",
+        json=(course_data.model_dump()),
+    )
     assert response.status_code == 200
 
     # Get the course

@@ -24,7 +24,7 @@ Modules Used:
 - src.schemas.event_results: Defines the Pydantic schemas for EventResult.
 """
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from src.models.event_result import EventResult as EventResultModel
 from src.schemas.event_results import EventResultCreate
 
@@ -50,18 +50,11 @@ def create_event_result(
 
 
 def get_event_result(db: Session, event_result_id: int) -> EventResultModel | None:
-    """
-    Retrieve a single EventResult by its ID.
-
-    Args:
-        db (Session): The database session.
-        event_result_id (int): The ID of the EventResult to retrieve.
-
-    Returns:
-        EventResultModel | None: The EventResult if found, otherwise None.
-    """
     return (
         db.query(EventResultModel)
+        .options(
+            joinedload(EventResultModel.layout)
+        )  # Eagerly load the layout relationship
         .filter(EventResultModel.id == event_result_id)
         .first()
     )

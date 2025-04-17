@@ -39,7 +39,7 @@ class EventResult(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     division: Mapped[str] = mapped_column(String, nullable=False)
     position: Mapped[str] = mapped_column(String, nullable=False)
-    position_raw: Mapped[int] = mapped_column(Integer, nullable=False)
+    position_raw: Mapped[int | None] = mapped_column(Integer, nullable=True)
     name: Mapped[str] = mapped_column(String, nullable=False)
     event_relative_score: Mapped[int] = mapped_column(Integer, nullable=False)
     event_total_score: Mapped[int] = mapped_column(Integer, nullable=False)
