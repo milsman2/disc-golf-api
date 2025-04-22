@@ -42,7 +42,19 @@ def create_event_result(
     Returns:
         EventResultModel: The created EventResult.
     """
-    db_event_result = EventResultModel(**event_result.model_dump())
+    db_event_result = EventResultModel(
+        division=event_result.division,
+        position=event_result.position,
+        layout_id=event_result.layout_id,
+        pdga_number=event_result.pdga_number,
+        username=event_result.username,
+        event_relative_score=event_result.event_relative_score,
+        event_total_score=event_result.event_total_score,
+        round_relative_score=event_result.round_relative_score,
+        round_total_score=event_result.round_total_score,
+        position_raw=event_result.position_raw,
+        name=event_result.name,
+    )
     db.add(db_event_result)
     db.commit()
     db.refresh(db_event_result)
@@ -52,9 +64,7 @@ def create_event_result(
 def get_event_result(db: Session, event_result_id: int) -> EventResultModel | None:
     return (
         db.query(EventResultModel)
-        .options(
-            joinedload(EventResultModel.layout)
-        )  # Eagerly load the layout relationship
+        .options(joinedload(EventResultModel.layout))
         .filter(EventResultModel.id == event_result_id)
         .first()
     )

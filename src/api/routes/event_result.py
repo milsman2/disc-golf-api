@@ -51,7 +51,7 @@ def create_event_result_route(event_result: EventResultCreate, session: SessionD
     """
     Create a new EventResult.
     """
-    return create_event_result(session, event_result)
+    return create_event_result(db=session, event_result=event_result)
 
 
 @router.get("/", response_model=List[EventResultPublic])
@@ -63,7 +63,7 @@ def get_event_results_route(
     """
     Retrieve a list of EventResults.
     """
-    return get_event_results(session, skip, limit)
+    return get_event_results(db=session, skip=skip, limit=limit)
 
 
 @router.get("/{event_result_id}", response_model=EventResultPublic)
@@ -71,7 +71,7 @@ def get_event_result_route(event_result_id: int, session: SessionDep):
     """
     Retrieve a single EventResult by ID.
     """
-    db_event_result = get_event_result(session, event_result_id)
+    db_event_result = get_event_result(db=session, event_result_id=event_result_id)
     if not db_event_result:
         raise HTTPException(status_code=404, detail="EventResult not found")
     return db_event_result
@@ -87,7 +87,9 @@ def update_event_result_route(
     Update an existing EventResult by ID.
     """
     db_event_result = update_event_result(
-        session, event_result_id, updated_event_result
+        db=session,
+        event_result_id=event_result_id,
+        updated_event_result=updated_event_result,
     )
     if not db_event_result:
         raise HTTPException(status_code=404, detail="EventResult not found")
@@ -99,7 +101,7 @@ def delete_event_result_route(event_result_id: int, session: SessionDep):
     """
     Delete an EventResult by ID.
     """
-    success = delete_event_result(session, event_result_id)
+    success = delete_event_result(db=session, event_result_id=event_result_id)
     if not success:
         raise HTTPException(status_code=404, detail="EventResult not found")
     return {"detail": "EventResult deleted successfully"}

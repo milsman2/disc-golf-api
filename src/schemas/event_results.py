@@ -58,4 +58,4 @@ class EventResultPublic(EventResultBase):
     Schema for returning an EventResult, including relationships.
     """
 
-    layout: CourseLayoutPublic
+    layout: CourseLayoutPublic | None = None

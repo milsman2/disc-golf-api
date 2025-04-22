@@ -14,7 +14,6 @@ Dependencies:
 - pytest: Used as the testing framework.
 """
 
-from fastapi.exceptions import ResponseValidationError
 import pandas as pd
 import pytest
 from fastapi.testclient import TestClient
@@ -89,15 +88,22 @@ def test_valid_event_result(sample_csv_path):
         assert event_result.round_relative_score == data["round_relative_score"]
         assert event_result.round_total_score == data["round_total_score"]
         assert event_result.layout_id == data["layout_id"]
-        try:
-            response = client.post(
-                "/api/v1/event-results/", json=event_result.model_dump()
-            )
-            response.raise_for_status()
-            assert response.status_code == 200
-        except ResponseValidationError as e:
-            ic(e)
-            pytest.fail(f"Response validation error: {e}")
+        response = client.post("/api/v1/event-results/", json=event_result.model_dump())
+        response.raise_for_status()
+        assert response.status_code == 200
+
+        # Check if the response contains the expected data
+        response_data = response.json()
+        assert response_data["division"] == data["division"]
+        assert response_data["position"] == data["position"]
+        assert response_data["position_raw"] == data["position_raw"]
+        assert response_data["name"] == data["name"]
+        assert response_data["event_relative_score"] == data["event_relative_score"]
+        assert response_data["event_total_score"] == data["event_total_score"]
+        assert response_data["pdga_number"] == data["pdga_number"]
+        assert response_data["username"] == data["username"]
+        assert response_data["round_relative_score"] == data["round_relative_score"]
+        assert response_data["round_total_score"] == data["round_total_score"]
 
 
 def test_invalid_event_result():
