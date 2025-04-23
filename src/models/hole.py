@@ -4,7 +4,7 @@ Hole model for disc golf course holes
 
 from typing import TYPE_CHECKING
 
-from sqlalchemy import ForeignKey, Integer
+from sqlalchemy import ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models.base import Base
@@ -26,7 +26,7 @@ class Hole(Base):
     layout_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("course_layouts.id"), nullable=False
     )
-    hole_number: Mapped[int] = mapped_column(Integer, nullable=False)
+    hole_name: Mapped[str] = mapped_column(String, nullable=False)
     par: Mapped[int | None] = mapped_column(Integer, nullable=False)
     distance: Mapped[int | None] = mapped_column(Integer, nullable=True)
 

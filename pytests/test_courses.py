@@ -12,6 +12,8 @@ import json
 from src.api.deps import get_db
 from src.main import app
 from src.models.base import Base
+from src.schemas.courses import CourseCreate
+from pydantic import ValidationError
 
 
 @pytest.fixture(name="session")
@@ -37,11 +39,40 @@ def test_create_and_get_course(session: Session):
     # Create the course
     with open("data/t-c-jester-park-zVh6.json", encoding="utf-8") as f:
         course_data = json.load(f)
+        try:
+            course_data["layouts"] = [
+                {
+                    "name": layout["name"],
+                    "par": layout["par"],
+                    "length": layout["length"],
+                    "holes": [
+                        {
+                            "hole_name": hole["hole_name"],
+                            "par": hole["par"],
+                            "distance": hole["distance"],
+                        }
+                        for hole in layout["holes"]
+                    ],
+                }
+                for layout in course_data["layouts"]
+            ]
+        except KeyError as e:
+            ic(f"KeyError: {e}")
+            raise
+        try:
+            course_test = CourseCreate.model_validate(course_data)
+        except ValidationError as e:
+            ic(f"ValidationError: {e}")
+            raise
+        except AttributeError as e:
+            ic(f"AttributeError: {e}")
+            raise
+        except TypeError as e:
+            ic(f"TypeError: {e}")
+            raise
+        response = client.post("/api/v1/courses/", json=course_test.model_dump())
+        assert response.status_code == 200
 
-    response = client.post("/api/v1/courses/", json=course_data)
-    assert response.status_code == 200
-
-    # Get the course
     response = client.get("/api/v1/courses/1")
     assert response.status_code == 200
     data = response.json()
