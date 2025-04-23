@@ -70,10 +70,9 @@ def test_create_and_get_course(session: Session):
         except TypeError as e:
             ic(f"TypeError: {e}")
             raise
-    response = client.post("/api/v1/courses/", json=course_data)
-    assert response.status_code == 200
+        response = client.post("/api/v1/courses/", json=course_test.model_dump())
+        assert response.status_code == 200
 
-    # Get the course
     response = client.get("/api/v1/courses/1")
     assert response.status_code == 200
     data = response.json()
