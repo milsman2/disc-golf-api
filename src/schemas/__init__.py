@@ -8,7 +8,7 @@ from src.schemas.course_layouts import (
     CourseLayoutsPublic,
 )
 from src.schemas.courses import CoursePublic, CourseCreate, CoursesPublic
-from src.schemas.holes import HoleCreate, HoleUpdate
+from src.schemas.holes import HoleCreate, HoleUpdate, HolePublic
 from src.schemas.users import (
     Message,
     NewPassword,
@@ -42,6 +42,7 @@ __all__ = [
     "CoursesPublic",
     "HoleCreate",
     "HoleUpdate",
+    "HolePublic",
     "CoursePublic",
     "CourseLayoutsPublic",
 ]

@@ -72,7 +72,7 @@ def create_course(db: Session, course: CourseCreate) -> Course:
 
         for hole in layout.holes:
             db_hole = Hole(
-                hole_number=hole.hole_number,
+                hole_name=hole.hole_name,
                 par=hole.par,
                 distance=hole.distance,
                 layout_id=db_layout.id,

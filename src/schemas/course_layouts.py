@@ -2,34 +2,33 @@
 This file contains the Pydantic models for the CourseLayout model.
 """
 
-from typing import List, Optional
-
 from pydantic import BaseModel, ConfigDict
 
-from src.schemas.holes import Hole, HoleCreate
+from src.schemas.holes import HolePublic, HoleCreate
 
 
 class CourseLayoutBase(BaseModel):
     name: str
-    par: Optional[int] = None
-    length: Optional[float] = None
-    difficulty: Optional[str] = None
+    par: int | None = None
+    length: float | None = None
+    difficulty: str | None = None
 
 
 class CourseLayoutCreate(CourseLayoutBase):
-    holes: List[HoleCreate] = []
+    holes: list[HoleCreate] = []
 
 
 class CourseLayoutInDBBase(CourseLayoutBase):
     model_config = ConfigDict(from_attributes=True)
-    id: Optional[int] = None
-    course_id: Optional[int] = None
+
+    id: int
+    course_id: int | None = None
 
 
 class CourseLayoutPublic(CourseLayoutInDBBase):
-    holes: List[Hole] = []
+    holes: list[HolePublic] = []
 
 
 class CourseLayoutsPublic(BaseModel):
-    course_layouts: List[CourseLayoutPublic] = []
+    course_layouts: list[CourseLayoutPublic] = []
     count: int
