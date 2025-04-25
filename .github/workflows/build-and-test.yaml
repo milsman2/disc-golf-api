@@ -7,6 +7,10 @@ on:
         description: 'Python version'
         required: true
         type: string
+        default: '3.10'
+  push:
+    branches-ignore:
+      - main
 
 jobs:
   API-Build-And-Test:
