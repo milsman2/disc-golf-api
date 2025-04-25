@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.0.4 (2025-04-25)
+
+### Bug Fixes
+
+- Always run a test build on every commit to make sure build is green.
+  ([`08a6c5c`](https://github.com/milsman2/disc-golf-api/commit/08a6c5c44e11eaa299db5d1ef762dbf6ccec884a))
+
+
 ## v0.0.3 (2025-04-23)
 
 
