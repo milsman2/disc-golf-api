@@ -14,22 +14,17 @@ on:
 
 jobs:
   API-Build-And-Test:
+    env:
+      python_version: ${{ inputs.python_version }}
     runs-on: ubuntu-latest
     steps:
-      - name: Set Python Version (Default for Push Events)
-        if: ${{ github.event_name == 'push' }}
-        run: echo "python_version=3.10" >> $GITHUB_ENV
-
-      - name: Echo Python Version
-        run: echo ${{ inputs.python_version}}
-
       - name: Check out repository code
         uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ inputs.python_version }}
+          python-version: ${{ env.python_version }}
 
       - name: Upgrade pip
         run: |
