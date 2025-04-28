@@ -12,7 +12,9 @@ def get_course_layout(db: Session, course_layout_id: int) -> CourseLayout | None
     return db.query(CourseLayout).filter(CourseLayout.id == course_layout_id).first()
 
 
-def get_course_layouts(db: Session, skip: int = 0, limit: int = 100):
+def get_course_layouts(
+    db: Session, skip: int = 0, limit: int = 100
+) -> list[CourseLayout]:
     return db.query(CourseLayout).offset(skip).limit(limit).all()
 
 

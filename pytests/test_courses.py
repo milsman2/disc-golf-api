@@ -16,9 +16,11 @@ from src.schemas.courses import CourseCreate
 from pydantic import ValidationError
 
 
-@pytest.fixture(name="session")
+@pytest.fixture(scope="module", name="session")
 def session_fixture():
-    ic()
+    """
+    Create a shared in-memory SQLite database session for the test suite.
+    """
     engine = create_engine(
         "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
     )
@@ -27,8 +29,10 @@ def session_fixture():
         yield session
 
 
-def test_create_and_get_course(session: Session):
-    ic()
+def test_create_course(session: Session):
+    """
+    Test creating a course.
+    """
 
     def get_session_override():
         return session
@@ -36,7 +40,6 @@ def test_create_and_get_course(session: Session):
     app.dependency_overrides[get_db] = get_session_override
     client = TestClient(app)
 
-    # Create the course
     with open("data/t-c-jester-park-zVh6.json", encoding="utf-8") as f:
         course_data = json.load(f)
         try:
@@ -59,19 +62,27 @@ def test_create_and_get_course(session: Session):
         except KeyError as e:
             ic(f"KeyError: {e}")
             raise
+
         try:
             course_test = CourseCreate.model_validate(course_data)
         except ValidationError as e:
             ic(f"ValidationError: {e}")
             raise
-        except AttributeError as e:
-            ic(f"AttributeError: {e}")
-            raise
-        except TypeError as e:
-            ic(f"TypeError: {e}")
-            raise
+
         response = client.post("/api/v1/courses/", json=course_test.model_dump())
         assert response.status_code == 200
+
+
+def test_get_course(session: Session):
+    """
+    Test retrieving a course.
+    """
+
+    def get_session_override():
+        return session
+
+    app.dependency_overrides[get_db] = get_session_override
+    client = TestClient(app)
 
     response = client.get("/api/v1/courses/1")
     assert response.status_code == 200
