@@ -90,7 +90,7 @@ jobs:
 
   Docker-Build-Push:
     needs:
-      - Python-Build-And-Test
+      - API-Build-And-Test
       - Python-Release
     runs-on: ubuntu-latest
     steps:
