@@ -48,11 +48,11 @@ class EventResult(Base):
     round_relative_score: Mapped[int] = mapped_column(Integer, nullable=False)
     round_total_score: Mapped[int] = mapped_column(Integer, nullable=False)
 
-    layout_id: Mapped[int] = mapped_column(
+    course_layout_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("course_layouts.id"), nullable=False
     )
 
-    layout: Mapped["CourseLayout"] = relationship(
+    course_layout: Mapped["CourseLayout"] = relationship(
         "CourseLayout", back_populates="event_results"
     )
     """
