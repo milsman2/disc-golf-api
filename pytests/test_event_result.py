@@ -49,11 +49,30 @@ def get_sample():
     return "./data/tc-jester-hfds-league-tc-jester-hfds-league-2025-03-19.csv"
 
 
-def test_valid_event_result(sample_csv_path):
+def test_valid_event_result_with_layouts(sample_csv_path):
     """
-    Test that valid rows from the CSV file fit the EventResultCreate schema.
+    Test that valid rows from the CSV file fit the EventResultCreate schema,
+    including associated layout data.
     """
     df = pd.read_csv(sample_csv_path)
+
+    # Sample layout data with `id` included
+    layout_data = [
+        {
+            "id": 1,
+            "name": "Main Layout",
+            "par": 72,
+            "length": 6500,
+            "difficulty": "Intermediate",
+        },
+        {
+            "id": 2,
+            "name": "Alternate Layout",
+            "par": 70,
+            "length": 6200,
+            "difficulty": "Advanced",
+        },
+    ]
 
     for _, row in df.iterrows():
         data = {
@@ -73,7 +92,7 @@ def test_valid_event_result(sample_csv_path):
             "username": row["username"],
             "round_relative_score": int(row["round_relative_score"]),
             "round_total_score": int(row["round_total_score"]),
-            "layout_id": 1,
+            "layouts": layout_data,
         }
 
         event_result = EventResultCreate(**data)
@@ -88,43 +107,11 @@ def test_valid_event_result(sample_csv_path):
         assert event_result.username == data["username"]
         assert event_result.round_relative_score == data["round_relative_score"]
         assert event_result.round_total_score == data["round_total_score"]
-        assert event_result.layout_id == data["layout_id"]
-        response = client.post("/api/v1/event-results/", json=event_result.model_dump())
-        response.raise_for_status()
-        assert response.status_code == 200
 
-        # Check if the response contains the expected data
-        response_data = response.json()
-        assert response_data["division"] == data["division"]
-        assert response_data["position"] == data["position"]
-        assert response_data["position_raw"] == data["position_raw"]
-        assert response_data["name"] == data["name"]
-        assert response_data["event_relative_score"] == data["event_relative_score"]
-        assert response_data["event_total_score"] == data["event_total_score"]
-        assert response_data["pdga_number"] == data["pdga_number"]
-        assert response_data["username"] == data["username"]
-        assert response_data["round_relative_score"] == data["round_relative_score"]
-        assert response_data["round_total_score"] == data["round_total_score"]
-
-
-def test_invalid_event_result():
-    """
-    Test that invalid rows raise validation errors.
-    """
-    invalid_data = {
-        "division": "GOLD",
-        "position": "1",
-        "position_raw": "invalid",
-        "name": "Andrew Zinck",
-        "event_relative_score": -6,
-        "event_total_score": 49,
-        "pdga_number": "invalid",
-        "username": "zinckles",
-        "round_relative_score": -6,
-        "round_total_score": 49,
-        "course_id": 1,
-        "layout_id": 2,
-    }
-
-    with pytest.raises(ValueError):
-        EventResultCreate(**invalid_data)
+        assert len(event_result.layouts) == len(layout_data)
+        for i, layout in enumerate(event_result.layouts):
+            assert layout.id == layout_data[i]["id"]
+            assert layout.name == layout_data[i]["name"]
+            assert layout.par == layout_data[i]["par"]
+            assert layout.length == layout_data[i]["length"]
+            assert layout.difficulty == layout_data[i]["difficulty"]

@@ -13,7 +13,7 @@ Schemas:
 """
 
 from pydantic import BaseModel, ConfigDict
-from src.schemas.course_layouts import CourseLayoutPublic
+from src.schemas.course_layouts import CourseLayoutPublic, CourseLayoutInDBBase
 
 
 class EventResultBase(BaseModel):
@@ -40,7 +40,7 @@ class EventResultCreate(EventResultBase):
     Schema for creating a new EventResult.
     """
 
-    layout_id: int
+    layouts: list[CourseLayoutInDBBase] = []
 
 
 class EventResultInDBBase(EventResultBase):
