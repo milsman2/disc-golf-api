@@ -14,9 +14,7 @@ router = APIRouter(prefix="/courses", tags=["Courses"])
 @router.get("/", response_model=CoursesPublic)
 def read_courses(session: SessionDep, skip: int = 0, limit: int = 100):
     courses_data = get_courses(db=session, skip=skip, limit=limit)
-    return CoursesPublic(
-        courses=[CoursePublic.model_validate(course) for course in courses_data]
-    )
+    return {"courses": courses_data}
 
 
 @router.get("/{course_id}", response_model=CoursePublic)
@@ -28,10 +26,7 @@ def read_course(session: SessionDep, course_id: int):
 
 
 @router.post("/", response_model=CoursePublic)
-def create_new_course(
-    session: SessionDep,
-    course: CourseCreate,
-):
+def create_new_course(session: SessionDep, course: CourseCreate):
     return create_course(db=session, course=course)
 
 

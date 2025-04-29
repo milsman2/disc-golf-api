@@ -27,7 +27,7 @@ def create_hole(db: Session, hole: HoleCreate) -> Hole:
 def update_hole(db: Session, hole_id: int, hole: HoleUpdate) -> Hole | None:
     db_hole = db.query(Hole).filter(Hole.id == hole_id).first()
     if db_hole:
-        for key, value in hole.dict(exclude_unset=True).items():
+        for key, value in hole.model_dump(exclude_unset=True).items():
             setattr(db_hole, key, value)
         db.commit()
         db.refresh(db_hole)

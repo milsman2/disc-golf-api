@@ -16,11 +16,14 @@ from src.api.deps import get_db
 from src.main import app
 from src.models.base import Base
 from src.schemas.courses import CourseCreate
+from pydantic import ValidationError
 
 
-@pytest.fixture(name="session")
+@pytest.fixture(scope="module", name="session")
 def session_fixture():
-    ic()
+    """
+    Create a shared in-memory SQLite database session for the test suite.
+    """
     engine = create_engine(
         "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
     )
@@ -29,8 +32,10 @@ def session_fixture():
         yield session
 
 
-def test_create_and_get_course(session: Session):
-    ic()
+def test_create_course(session: Session):
+    """
+    Test creating a course.
+    """
 
     def get_session_override():
         return session
@@ -39,21 +44,50 @@ def test_create_and_get_course(session: Session):
     client = TestClient(app)
     ic(client)
 
-    # Create the course
     with open("data/t-c-jester-park-zVh6.json", encoding="utf-8") as f:
         course_data = json.load(f)
         try:
-            course_data = CourseCreate(**course_data)
-        except ValidationError as e:
-            print("Validation error:", e)
-            pytest.fail(f"Validation error: {e}")
-    response = client.post(
-        "/api/v1/courses/",
-        json=(course_data.model_dump()),
-    )
-    assert response.status_code == 200
+            course_data["layouts"] = [
+                {
+                    "name": layout["name"],
+                    "par": layout["par"],
+                    "length": layout["length"],
+                    "holes": [
+                        {
+                            "hole_name": hole["hole_name"],
+                            "par": hole["par"],
+                            "distance": hole["distance"],
+                        }
+                        for hole in layout["holes"]
+                    ],
+                }
+                for layout in course_data["layouts"]
+            ]
+        except KeyError as e:
+            ic(f"KeyError: {e}")
+            raise
 
-    # Get the course
+        try:
+            course_test = CourseCreate.model_validate(course_data)
+        except ValidationError as e:
+            ic(f"ValidationError: {e}")
+            raise
+
+        response = client.post("/api/v1/courses/", json=course_test.model_dump())
+        assert response.status_code == 200
+
+
+def test_get_course(session: Session):
+    """
+    Test retrieving a course.
+    """
+
+    def get_session_override():
+        return session
+
+    app.dependency_overrides[get_db] = get_session_override
+    client = TestClient(app)
+
     response = client.get("/api/v1/courses/1")
     assert response.status_code == 200
     data = response.json()

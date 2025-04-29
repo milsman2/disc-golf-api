@@ -23,147 +23,147 @@
         {
           "id": 1,
           "layout_id": 1,
-          "hole_number": 1,
+          "hole_name": "1",
           "par": 3,
           "distance": 330
         },
         {
           "id": 2,
           "layout_id": 1,
-          "hole_number": 2,
+          "hole_name": "2",
           "par": 3,
           "distance": 367
         },
         {
           "id": 3,
           "layout_id": 1,
-          "hole_number": 3,
+          "hole_name": "3",
           "par": 3,
           "distance": 240
         },
         {
           "id": 4,
           "layout_id": 1,
-          "hole_number": 4,
+          "hole_name": "4",
           "par": 3,
           "distance": 254
         },
         {
           "id": 5,
           "layout_id": 1,
-          "hole_number": 5,
+          "hole_name": "5",
           "par": 3,
           "distance": 267
         },
         {
           "id": 6,
           "layout_id": 1,
-          "hole_number": 6,
+          "hole_name": "6",
           "par": 3,
           "distance": 267
         },
         {
           "id": 7,
           "layout_id": 1,
-          "hole_number": 7,
+          "hole_name": "7",
           "par": 3,
           "distance": 333
         },
         {
           "id": 8,
           "layout_id": 1,
-          "hole_number": 8,
+          "hole_name": "8",
           "par": 3,
           "distance": 432
         },
         {
           "id": 9,
           "layout_id": 1,
-          "hole_number": 9,
+          "hole_name": "9",
           "par": 3,
           "distance": 210
         },
         {
           "id": 10,
           "layout_id": 1,
-          "hole_number": 10,
+          "hole_name": "10",
           "par": 3,
           "distance": 253
         },
         {
           "id": 11,
           "layout_id": 1,
-          "hole_number": 11,
+          "hole_name": "11",
           "par": 3,
           "distance": 502
         },
         {
           "id": 12,
           "layout_id": 1,
-          "hole_number": 12,
+          "hole_name": "12",
           "par": 3,
           "distance": 276
         },
         {
           "id": 13,
           "layout_id": 1,
-          "hole_number": 13,
+          "hole_name": "13",
           "par": 3,
           "distance": 414
         },
         {
           "id": 14,
           "layout_id": 1,
-          "hole_number": 14,
+          "hole_name": "14",
           "par": 3,
           "distance": 311
         },
         {
           "id": 15,
           "layout_id": 1,
-          "hole_number": 15,
+          "hole_name": "15",
           "par": 3,
           "distance": 264
         },
         {
           "id": 16,
           "layout_id": 1,
-          "hole_number": 16,
+          "hole_name": "16",
           "par": 3,
           "distance": 297
         },
         {
           "id": 17,
           "layout_id": 1,
-          "hole_number": 17,
+          "hole_name": "17",
           "par": 3,
           "distance": 327
         },
         {
           "id": 18,
           "layout_id": 1,
-          "hole_number": 18,
+          "hole_name": "18",
           "par": 3,
           "distance": 384
         },
         {
           "id": 19,
           "layout_id": 1,
-          "hole_number": 19,
+          "hole_name": "19",
           "par": 3,
           "distance": 267
         },
         {
           "id": 20,
           "layout_id": 1,
-          "hole_number": 20,
+          "hole_name": "20",
           "par": 3,
           "distance": 261
         },
         {
           "id": 21,
           "layout_id": 1,
-          "hole_number": 21,
+          "hole_name": "21",
           "par": 3,
           "distance": 361
         }
@@ -180,91 +180,91 @@
         {
           "id": 1,
           "layout_id": 1,
-          "hole_number": 1,
+          "hole_name": "1",
           "par": 3,
           "distance": 330
         },
         {
           "id": 2,
           "layout_id": 1,
-          "hole_number": 2,
+          "hole_name": "2",
           "par": 3,
           "distance": 367
         },
         {
           "id": 3,
           "layout_id": 1,
-          "hole_number": 3,
+          "hole_name": "3",
           "par": 3,
           "distance": 240
         },
         {
           "id": 4,
           "layout_id": 1,
-          "hole_number": 4,
+          "hole_name": "4",
           "par": 3,
           "distance": 254
         },
         {
           "id": 5,
           "layout_id": 1,
-          "hole_number": 5,
+          "hole_name": "5",
           "par": 3,
           "distance": 267
         },
         {
           "id": 6,
           "layout_id": 1,
-          "hole_number": 6,
+          "hole_name": "6",
           "par": 3,
           "distance": 267
         },
         {
           "id": 7,
           "layout_id": 1,
-          "hole_number": 7,
+          "hole_name": "7",
           "par": 3,
           "distance": 333
         },
         {
           "id": 8,
           "layout_id": 1,
-          "hole_number": 8,
+          "hole_name": "8",
           "par": 3,
           "distance": 432
         },
         {
           "id": 9,
           "layout_id": 1,
-          "hole_number": 9,
+          "hole_name": "9",
           "par": 3,
           "distance": 210
         },
         {
           "id": 10,
           "layout_id": 1,
-          "hole_number": 10,
+          "hole_name": "10",
           "par": 3,
           "distance": 253
         },
         {
           "id": 11,
           "layout_id": 1,
-          "hole_number": 11,
+          "hole_name": "11",
           "par": 3,
           "distance": 502
         },
         {
           "id": 12,
           "layout_id": 1,
-          "hole_number": 12,
+          "hole_name": "12",
           "par": 3,
           "distance": 276
         },
         {
           "id": 13,
           "layout_id": 1,
-          "hole_number": 13,
+          "hole_name": "13",
           "par": 3,
           "distance": 414
         }

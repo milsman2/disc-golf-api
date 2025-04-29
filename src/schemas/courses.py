@@ -2,8 +2,6 @@
 This file contains the Pydantic models for the Course model.
 """
 
-from typing import List
-
 from pydantic import BaseModel, ConfigDict
 
 from src.schemas.course_layouts import CourseLayoutPublic, CourseLayoutCreate
@@ -31,7 +29,7 @@ class CourseBase(BaseModel):
 
 
 class CourseCreate(CourseBase):
-    layouts: List[CourseLayoutCreate] = []
+    layouts: list[CourseLayoutCreate] = []
 
 
 class CourseInDBBase(CourseBase):
@@ -41,8 +39,8 @@ class CourseInDBBase(CourseBase):
 
 
 class CoursePublic(CourseInDBBase):
-    layouts: List[CourseLayoutPublic] = []
+    layouts: list[CourseLayoutPublic] = []
 
 
 class CoursesPublic(BaseModel):
-    courses: List[CoursePublic] = []
+    courses: list[CoursePublic] = []

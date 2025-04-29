@@ -7,7 +7,6 @@ from sqlalchemy.orm import Session, joinedload
 from src.models import Course, CourseLayout
 from src.models.hole import Hole
 from src.schemas.courses import CourseCreate
-from typing import List
 
 
 def get_course(db: Session, course_id: int) -> Course | None:
@@ -19,7 +18,7 @@ def get_course(db: Session, course_id: int) -> Course | None:
     )
 
 
-def get_courses(db: Session, skip: int = 0, limit: int = 100) -> List[Course]:
+def get_courses(db: Session, skip: int = 0, limit: int = 100) -> list[Course]:
     courses = (
         db.query(Course)
         .options(joinedload(Course.layouts).joinedload(CourseLayout.holes))
@@ -72,7 +71,7 @@ def create_course(db: Session, course: CourseCreate) -> Course:
 
         for hole in layout.holes:
             db_hole = Hole(
-                hole_number=hole.hole_number,
+                hole_name=hole.hole_name,
                 par=hole.par,
                 distance=hole.distance,
                 layout_id=db_layout.id,

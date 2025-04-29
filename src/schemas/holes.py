@@ -6,7 +6,7 @@ from pydantic import BaseModel, ConfigDict
 
 
 class HoleBase(BaseModel):
-    hole_number: int
+    hole_name: str
     par: int | None = None
     distance: int | None = None
 
@@ -23,13 +23,10 @@ class HoleUpdate(HoleBase):
 
 class HoleInDBBase(HoleBase):
     model_config = ConfigDict(from_attributes=True)
-    id: int | None = None
+
+    id: int
     layout_id: int | None = None
 
 
-class Hole(HoleInDBBase):
-    pass
-
-
-class HoleInDB(HoleInDBBase):
+class HolePublic(HoleInDBBase):
     pass
