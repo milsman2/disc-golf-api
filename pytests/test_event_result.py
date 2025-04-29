@@ -21,6 +21,7 @@ from icecream import ic
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
+
 from src.main import app
 from src.models.base import Base
 from src.schemas.event_results import EventResultCreate

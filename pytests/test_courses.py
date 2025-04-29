@@ -4,10 +4,10 @@ This module contains tests for the courses endpoints.
 
 import json
 
-from pydantic import ValidationError
 import pytest
 from fastapi.testclient import TestClient
 from icecream import ic
+from pydantic import ValidationError
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
@@ -16,7 +16,6 @@ from src.api.deps import get_db
 from src.main import app
 from src.models.base import Base
 from src.schemas.courses import CourseCreate
-from pydantic import ValidationError
 
 
 @pytest.fixture(scope="module", name="session")
