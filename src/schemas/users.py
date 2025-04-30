@@ -2,13 +2,15 @@
 User and Token schemas
 """
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, ConfigDict
 
 
 class UserBase(BaseModel):
     is_active: bool = True
     is_superuser: bool = False
     full_name: str | None = Field(default=None, max_length=255)
+
+    model_config = ConfigDict(extra="forbid")
 
 
 class UserCreate(UserBase):

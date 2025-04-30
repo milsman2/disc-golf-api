@@ -2,18 +2,20 @@
 This module contains tests for the courses endpoints.
 """
 
+import json
+
 import pytest
 from fastapi.testclient import TestClient
 from icecream import ic
+from pydantic import ValidationError
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
-import json
+
 from src.api.deps import get_db
 from src.main import app
 from src.models.base import Base
 from src.schemas.courses import CourseCreate
-from pydantic import ValidationError
 
 
 @pytest.fixture(scope="module", name="session")
@@ -39,6 +41,7 @@ def test_create_course(session: Session):
 
     app.dependency_overrides[get_db] = get_session_override
     client = TestClient(app)
+    ic(client)
 
     with open("data/t-c-jester-park-zVh6.json", encoding="utf-8") as f:
         course_data = json.load(f)

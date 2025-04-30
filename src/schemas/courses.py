@@ -25,6 +25,8 @@ class CourseBase(BaseModel):
     conditions: str | None = None
     conditions_updated: str | None = None
 
+    model_config = ConfigDict(extra="forbid")
+
 
 class CourseCreate(CourseBase):
     layouts: list[CourseLayoutCreate] = []

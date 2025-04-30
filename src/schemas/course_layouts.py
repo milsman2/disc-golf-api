@@ -13,6 +13,8 @@ class CourseLayoutBase(BaseModel):
     length: float | None = None
     difficulty: str | None = None
 
+    model_config = ConfigDict(extra="forbid")
+
 
 class CourseLayoutCreate(CourseLayoutBase):
     holes: list[HoleCreate] = []

@@ -12,6 +12,7 @@ from src.models.base import Base
 if TYPE_CHECKING:
     from src.models.course import Course
     from src.models.hole import Hole
+    from src.models.event_result import EventResult
 
 
 class CourseLayout(Base):
@@ -35,4 +36,7 @@ class CourseLayout(Base):
     course: Mapped["Course"] = relationship("Course", back_populates="layouts")
     holes: Mapped[list["Hole"]] = relationship(
         "Hole", back_populates="layout", cascade="all, delete-orphan"
+    )
+    event_results: Mapped[list["EventResult"]] = relationship(
+        "EventResult", back_populates="course_layout"
     )
