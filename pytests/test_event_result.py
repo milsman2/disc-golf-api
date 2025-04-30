@@ -25,9 +25,10 @@ from sqlalchemy.pool import StaticPool
 from src.main import app
 from src.models.base import Base
 from src.schemas.event_results import EventResultCreate
+from src.api.deps import get_db
 
 
-@pytest.fixture(name="session")
+@pytest.fixture(name="session", scope="module")
 def session_fixture():
     ic()
     engine = create_engine(
@@ -38,9 +39,6 @@ def session_fixture():
         yield session
 
 
-client = TestClient(app)
-
-
 @pytest.fixture(name="sample_csv_path")
 def get_sample():
     """
@@ -49,11 +47,18 @@ def get_sample():
     return "./data/tc-jester-hfds-league-tc-jester-hfds-league-2025-03-19.csv"
 
 
-def test_valid_event_result_with_layouts(sample_csv_path):
+def test_valid_event_result_with_layouts(sample_csv_path, session: Session):
     """
     Test that valid rows from the CSV file fit the EventResultCreate schema,
     including associated layout data.
     """
+
+    def get_session_override():
+        return session
+
+    app.dependency_overrides[get_db] = get_session_override
+    client = TestClient(app)
+    ic(client)
     df = pd.read_csv(sample_csv_path)
 
     for _, row in df.iterrows():
