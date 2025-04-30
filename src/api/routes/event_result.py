@@ -28,13 +28,11 @@ Modules Used:
 """
 
 from fastapi import APIRouter, HTTPException
-from typing import List
 
 from src.schemas.event_results import EventResultPublic, EventResultCreate
 from src.crud import (
     create_event_result,
     get_event_result,
-    get_event_results,
     update_event_result,
     delete_event_result,
 )
@@ -54,22 +52,10 @@ def create_event_result_route(event_result: EventResultCreate, session: SessionD
     return create_event_result(db=session, event_result=event_result)
 
 
-@router.get("/", response_model=List[EventResultPublic])
-def get_event_results_route(
-    session: SessionDep,
-    skip: int = 0,
-    limit: int = 100,
-):
-    """
-    Retrieve a list of EventResults.
-    """
-    return get_event_results(db=session, skip=skip, limit=limit)
-
-
 @router.get("/{event_result_id}", response_model=EventResultPublic)
 def get_event_result_route(event_result_id: int, session: SessionDep):
     """
-    Retrieve a single EventResult by ID.
+    Get an EventResult by ID.
     """
     db_event_result = get_event_result(db=session, event_result_id=event_result_id)
     if not db_event_result:

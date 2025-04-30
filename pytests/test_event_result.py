@@ -56,24 +56,6 @@ def test_valid_event_result_with_layouts(sample_csv_path):
     """
     df = pd.read_csv(sample_csv_path)
 
-    # Sample layout data with `id` included
-    layout_data = [
-        {
-            "id": 1,
-            "name": "Main Layout",
-            "par": 72,
-            "length": 6500,
-            "difficulty": "Intermediate",
-        },
-        {
-            "id": 2,
-            "name": "Alternate Layout",
-            "par": 70,
-            "length": 6200,
-            "difficulty": "Advanced",
-        },
-    ]
-
     for _, row in df.iterrows():
         data = {
             "division": row["division"],
@@ -92,7 +74,7 @@ def test_valid_event_result_with_layouts(sample_csv_path):
             "username": row["username"],
             "round_relative_score": int(row["round_relative_score"]),
             "round_total_score": int(row["round_total_score"]),
-            "layouts": layout_data,
+            "course_layout_id": 1,
         }
 
         event_result = EventResultCreate(**data)
@@ -107,11 +89,18 @@ def test_valid_event_result_with_layouts(sample_csv_path):
         assert event_result.username == data["username"]
         assert event_result.round_relative_score == data["round_relative_score"]
         assert event_result.round_total_score == data["round_total_score"]
-
-        assert len(event_result.layouts) == len(layout_data)
-        for i, layout in enumerate(event_result.layouts):
-            assert layout.id == layout_data[i]["id"]
-            assert layout.name == layout_data[i]["name"]
-            assert layout.par == layout_data[i]["par"]
-            assert layout.length == layout_data[i]["length"]
-            assert layout.difficulty == layout_data[i]["difficulty"]
+        response = client.post(
+            "/api/v1/event-results/",
+            json=event_result.model_dump(),
+        )
+        assert response.status_code == 200
+        assert response.json()["division"] == data["division"]
+        assert response.json()["position"] == data["position"]
+        assert response.json()["position_raw"] == data["position_raw"]
+        assert response.json()["name"] == data["name"]
+        assert response.json()["event_relative_score"] == data["event_relative_score"]
+        assert response.json()["event_total_score"] == data["event_total_score"]
+        assert response.json()["pdga_number"] == data["pdga_number"]
+        assert response.json()["username"] == data["username"]
+        assert response.json()["round_relative_score"] == data["round_relative_score"]
+        assert response.json()["round_total_score"] == data["round_total_score"]

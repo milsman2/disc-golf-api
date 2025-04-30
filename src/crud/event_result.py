@@ -9,7 +9,6 @@ EventResult data.
 Functions:
 - create_event_result: Create a new EventResult in the database.
 - get_event_result: Retrieve a single EventResult by its ID.
-- get_event_results: Retrieve a list of EventResults with optional pagination.
 - update_event_result: Update an existing EventResult by its ID.
 - delete_event_result: Delete an EventResult by its ID.
 
@@ -32,29 +31,7 @@ from src.schemas.event_results import EventResultCreate
 def create_event_result(
     db: Session, event_result: EventResultCreate
 ) -> EventResultModel:
-    """
-    Create a new EventResult in the database.
-
-    Args:
-        db (Session): The database session.
-        event_result (EventResultCreate): The data for the new EventResult.
-
-    Returns:
-        EventResultModel: The created EventResult.
-    """
-    db_event_result = EventResultModel(
-        division=event_result.division,
-        position=event_result.position,
-        layout_id=event_result.layout_id,
-        pdga_number=event_result.pdga_number,
-        username=event_result.username,
-        event_relative_score=event_result.event_relative_score,
-        event_total_score=event_result.event_total_score,
-        round_relative_score=event_result.round_relative_score,
-        round_total_score=event_result.round_total_score,
-        position_raw=event_result.position_raw,
-        name=event_result.name,
-    )
+    db_event_result = EventResultModel(**event_result.model_dump())
     db.add(db_event_result)
     db.commit()
     db.refresh(db_event_result)
@@ -64,27 +41,10 @@ def create_event_result(
 def get_event_result(db: Session, event_result_id: int) -> EventResultModel | None:
     return (
         db.query(EventResultModel)
-        .options(joinedload(EventResultModel.layout))
+        .options(joinedload(EventResultModel.course_layout))
         .filter(EventResultModel.id == event_result_id)
         .first()
     )
-
-
-def get_event_results(
-    db: Session, skip: int = 0, limit: int = 100
-) -> list[EventResultModel]:
-    """
-    Retrieve a list of EventResults with optional pagination.
-
-    Args:
-        db (Session): The database session.
-        skip (int): The number of results to skip (default: 0).
-        limit (int): The maximum number of results to return (default: 100).
-
-    Returns:
-        list[EventResultModel]: A list of EventResults.
-    """
-    return db.query(EventResultModel).offset(skip).limit(limit).all()
 
 
 def update_event_result(
@@ -109,7 +69,7 @@ def update_event_result(
     if not db_event_result:
         return None
 
-    for key, value in updated_event_result.dict().items():
+    for key, value in updated_event_result.model_dump().items():
         setattr(db_event_result, key, value)
 
     db.commit()

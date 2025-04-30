@@ -18,7 +18,6 @@ from src.crud.course_layout import (
 from src.crud.user import authenticate, create_user, get_user_by_email, update_user
 from src.crud.event_result import (
     create_event_result,
-    get_event_results,
     get_event_result,
     update_event_result,
     delete_event_result,
@@ -39,7 +38,6 @@ __all__ = [
     "get_course_layouts",
     "delete_course_layout",
     "create_event_result",
-    "get_event_results",
     "get_event_result",
     "update_event_result",
     "delete_event_result",
