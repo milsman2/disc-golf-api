@@ -31,6 +31,7 @@ class EventResultBase(BaseModel):
     username: str
     round_relative_score: int
     round_total_score: int
+    round_points: float = 0.0
 
     model_config = ConfigDict(extra="forbid")
 
