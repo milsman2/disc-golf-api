@@ -36,7 +36,9 @@ class EventResult(Base):
 
     __tablename__ = "event_results"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    id: Mapped[int] = mapped_column(
+        Integer, primary_key=True, index=True, autoincrement=True, nullable=False
+    )
     division: Mapped[str] = mapped_column(String, nullable=False)
     position: Mapped[str] = mapped_column(String, nullable=False)
     position_raw: Mapped[int | None] = mapped_column(Integer, nullable=True)

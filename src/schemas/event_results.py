@@ -58,5 +58,5 @@ class EventResultPublic(EventResultBase):
     """
     Schema for returning an EventResult, including relationships.
     """
-
+    id: int
     layout: CourseLayoutPublic | None = None

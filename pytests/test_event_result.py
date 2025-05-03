@@ -112,3 +112,4 @@ def test_valid_event_result_with_layouts(sample_csv_path, session: Session):
         assert response.json()["username"] == data["username"]
         assert response.json()["round_relative_score"] == data["round_relative_score"]
         assert response.json()["round_total_score"] == data["round_total_score"]
+        assert response.json()["round_points"] == 0.0
