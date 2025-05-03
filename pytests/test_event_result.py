@@ -44,7 +44,10 @@ def get_sample():
     """
     Fixture to provide the path to the sample CSV file for testing.
     """
-    return "./data/event_results/tc-jester-hfds-league-tc-jester-hfds-league-2025-03-19.csv"
+    return (
+        "./data/event_results/"
+        "tc-jester-hfds-league-tc-jester-hfds-league-2025-03-19.csv"
+    )
 
 
 def test_valid_event_result_with_layouts(sample_csv_path, session: Session):
