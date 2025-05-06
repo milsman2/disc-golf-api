@@ -6,16 +6,16 @@ import pandas as pd
 from icecream import ic
 
 
-def assign_round_points(df):
+def assign_round_points(df: pd.DataFrame, max_points: int = 30) -> pd.DataFrame:
     """
     Assign points based on position_raw for each division. 
     Handles ties by averaging points.
     :param df: DataFrame containing 'division' and 'position_raw' columns.
     :return: DataFrame with the 'round_points' column updated.
     """
-    max_points = 30
-
-    def calculate_points(group):
+    ic()
+    def calculate_points(group: pd.DataFrame) -> pd.DataFrame:
+        ic()
         group = group.sort_values(by="position_raw").reset_index(drop=True)
         points = []
         i = 0
@@ -25,7 +25,6 @@ def assign_round_points(df):
             ].index
             num_tied = len(tied_positions)
             if num_tied > 1:
-                # Calculate average points for tied positions
                 start_points = max_points - i
                 end_points = max_points - (i + num_tied - 1)
                 avg_points = sum(range(start_points, end_points - 1, -1)) / num_tied
@@ -51,7 +50,6 @@ def import_and_print_csv(file_path):
     try:
         pd.set_option("display.max_rows", None)
         pd.set_option("display.max_columns", None)
-        pd.set_option("display.width", None)
 
         df = pd.read_csv(file_path)
         selected_columns = df[["division", "position_raw", "name"]].copy()
@@ -65,7 +63,7 @@ def import_and_print_csv(file_path):
     except pd.errors.EmptyDataError as e:
         ic(e)
     except KeyError as e:
-        print(f"Error: One or more specified columns are missing in the CSV file. {e}")
+        ic(e)
 
 
 if __name__ == "__main__":
