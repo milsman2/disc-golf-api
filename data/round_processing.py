@@ -8,7 +8,8 @@ from icecream import ic
 
 def assign_round_points(df):
     """
-    Assign points based on position_raw for each division. Handles ties by averaging points.
+    Assign points based on position_raw for each division. 
+    Handles ties by averaging points.
     :param df: DataFrame containing 'division' and 'position_raw' columns.
     :return: DataFrame with the 'round_points' column updated.
     """
