@@ -6,8 +6,9 @@ application. Each event result is tied to a specific course and course layout, a
 contains information about a player's performance in the event.
 """
 
-from sqlalchemy import Integer, String, ForeignKey
-from sqlalchemy.orm import relationship, Mapped, mapped_column
+from sqlalchemy import ForeignKey, Integer, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from src.models.base import Base
 from src.models.course_layout import CourseLayout
 

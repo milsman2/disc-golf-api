@@ -8,9 +8,9 @@ from typing import Annotated, Any
 from fastapi import APIRouter, Depends, HTTPException, Response
 from fastapi.security import OAuth2PasswordRequestForm
 
-from src.crud import authenticate, get_user_by_email
 from src.api.deps import CurrentUser, SessionDep
-from src.core import settings, get_password_hash, create_access_token
+from src.core import create_access_token, get_password_hash, settings
+from src.crud import authenticate, get_user_by_email
 from src.schemas import Message, NewPassword, Token, UserPublic
 from src.utils import verify_password_reset_token
 

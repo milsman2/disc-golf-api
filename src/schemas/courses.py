@@ -4,7 +4,7 @@ This file contains the Pydantic models for the Course model.
 
 from pydantic import BaseModel, ConfigDict
 
-from src.schemas.course_layouts import CourseLayoutPublic, CourseLayoutCreate
+from src.schemas.course_layouts import CourseLayoutCreate, CourseLayoutPublic
 
 
 class CourseBase(BaseModel):

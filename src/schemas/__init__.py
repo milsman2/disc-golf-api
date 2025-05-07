@@ -7,8 +7,13 @@ from src.schemas.course_layouts import (
     CourseLayoutPublic,
     CourseLayoutsPublic,
 )
-from src.schemas.courses import CoursePublic, CourseCreate, CoursesPublic
-from src.schemas.holes import HoleCreate, HoleUpdate, HolePublic
+from src.schemas.courses import CourseCreate, CoursePublic, CoursesPublic
+from src.schemas.event_results import (
+    EventResultBase,
+    EventResultCreate,
+    EventResultPublic,
+)
+from src.schemas.holes import HoleCreate, HolePublic, HoleUpdate
 from src.schemas.users import (
     Message,
     NewPassword,
@@ -21,11 +26,6 @@ from src.schemas.users import (
     UsersPublic,
     UserUpdate,
     UserUpdateMe,
-)
-from src.schemas.event_results import (
-    EventResultBase,
-    EventResultCreate,
-    EventResultPublic,
 )
 
 __all__ = [

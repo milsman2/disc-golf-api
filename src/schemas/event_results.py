@@ -13,6 +13,7 @@ Schemas:
 """
 
 from pydantic import BaseModel, ConfigDict
+
 from src.schemas.course_layouts import CourseLayoutPublic
 
 

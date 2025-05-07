@@ -7,10 +7,10 @@ from fastapi import APIRouter
 from src.api.routes import (
     courses_layouts_router,
     courses_router,
+    event_result_router,
     healthcheck_router,
     login_router,
     private_router,
-    event_result_router,
 )
 from src.core import settings
 

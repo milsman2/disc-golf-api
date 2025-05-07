@@ -11,8 +11,8 @@ from src.models.base import Base
 
 if TYPE_CHECKING:
     from src.models.course import Course
-    from src.models.hole import Hole
     from src.models.event_result import EventResult
+    from src.models.hole import Hole
 
 
 class CourseLayout(Base):
