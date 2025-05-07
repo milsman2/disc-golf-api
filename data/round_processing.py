@@ -4,16 +4,18 @@ Calculates round points based on position_raw for each division in a CSV file.
 
 import pandas as pd
 from icecream import ic
+from pathlib import Path
 
 
 def assign_round_points(df: pd.DataFrame, max_points: int = 30) -> pd.DataFrame:
     """
-    Assign points based on position_raw for each division. 
+    Assign points based on position_raw for each division.
     Handles ties by averaging points.
     :param df: DataFrame containing 'division' and 'position_raw' columns.
     :return: DataFrame with the 'round_points' column updated.
     """
     ic()
+
     def calculate_points(group: pd.DataFrame) -> pd.DataFrame:
         ic()
         group = group.sort_values(by="position_raw").reset_index(drop=True)
@@ -41,12 +43,12 @@ def assign_round_points(df: pd.DataFrame, max_points: int = 30) -> pd.DataFrame:
     )
 
 
-def import_and_print_csv(file_path):
+def import_and_process_csv(file_path):
     """
     Import a CSV file, assign points for each division, and print its contents.
     :param file_path: Path to the CSV file.
     """
-    ic()
+    ic(f"Processing file: {file_path}")
     try:
         pd.set_option("display.max_rows", None)
         pd.set_option("display.max_columns", None)
@@ -66,5 +68,16 @@ def import_and_print_csv(file_path):
         ic(e)
 
 
+def process_all_csv_files(folder_path):
+    """
+    Loop through all .csv files in the specified folder and process them.
+    :param folder_path: Path to the folder containing CSV files.
+    """
+    ic(f"Looking for CSV files in folder: {folder_path}")
+    csv_files = Path(folder_path).glob("*.csv")
+    for csv_file in csv_files:
+        import_and_process_csv(csv_file)
+
+
 if __name__ == "__main__":
-    import_and_print_csv("data/event_results/tc-jester-hfds-league-2025-03-12.csv")
+    process_all_csv_files("data/event_results")
