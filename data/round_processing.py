@@ -3,10 +3,12 @@ Calculates round points based on position_raw for each division in a CSV file
 and posts event results to an API endpoint.
 """
 
+from pathlib import Path
+
+import httpx
 import pandas as pd
 from icecream import ic
-from pathlib import Path
-import httpx
+import math
 
 
 def assign_round_points(df: pd.DataFrame, max_points: int = 30) -> pd.DataFrame:
@@ -45,6 +47,8 @@ def assign_round_points(df: pd.DataFrame, max_points: int = 30) -> pd.DataFrame:
         .apply(calculate_points)
         .reset_index(drop=True)
     )
+    if "division" in result.columns:
+        result["division"] = df["division"]
     return result
 
 
@@ -78,7 +82,6 @@ def import_and_process_csv(file_path):
 
         df = pd.read_csv(file_path)
 
-        # Check if required columns exist
         required_columns = {
             "division",
             "position_raw",
@@ -92,45 +95,53 @@ def import_and_process_csv(file_path):
         }
 
         missing_columns = required_columns - set(df.columns)
-        if missing_columns:
-            raise KeyError(f"Missing required columns: {missing_columns}")
-
-        selected_columns = df[["division", "position_raw", "name"]].copy()
-        selected_columns.loc[:, "position_raw"] = pd.to_numeric(
-            selected_columns["position_raw"], errors="coerce"
-        )
-        selected_columns = assign_round_points(selected_columns)
-        ic(selected_columns)
-
-        # Post each row as an event result
-        for _, row in selected_columns.iterrows():
+        ic(missing_columns)
+        df.loc[:, "position_raw"] = pd.to_numeric(df["position_raw"], errors="coerce")
+        df = assign_round_points(df)
+        df = df.replace([float("inf"), -float("inf")], pd.NA)
+        df = df.where(pd.notnull(df), None)
+        df = df.loc[:, ~df.columns.str.startswith("hole_")]
+        ic(df)
+        for _, row in df.iterrows():
+            pdga_number = row.get("pdga_number")
+            if isinstance(pdga_number, float) and math.isnan(pdga_number):
+                pdga_number = None
+            position_raw = row.get("position_raw")
+            if isinstance(position_raw, float) and math.isnan(position_raw):
+                position = ""
+                position_raw_clean = None
+            else:
+                position = str(position_raw)
+                position_raw_clean = position_raw
+            course_layout_id = 3
             event_result = {
-                "division": row["division"],
-                "position_raw": row["position_raw"],
-                "name": row["name"],
-                "event_relative_score": row["event_relative_score"],
-                "event_total_score": row["event_total_score"],
-                "pdga_number": row["pdga_number"],
-                "username": row["username"],
-                "round_relative_score": row["round_relative_score"],
-                "round_total_score": row["round_total_score"],
-                "round_points": row["round_points"],
+                "division": row.get("division"),
+                "position": position,
+                "position_raw": position_raw_clean,
+                "name": row.get("name"),
+                "event_relative_score": row.get("event_relative_score"),
+                "event_total_score": row.get("event_total_score"),
+                "pdga_number": pdga_number,
+                "username": row.get("username"),
+                "round_relative_score": row.get("round_relative_score"),
+                "round_total_score": row.get("round_total_score"),
+                "round_points": row.get("round_points"),
+                "course_layout_id": course_layout_id,
             }
-            post_event_result(event_result)
 
+            post_event_result(event_result)
     except FileNotFoundError as e:
         ic(f"FileNotFoundError: {e}")
     except pd.errors.EmptyDataError as e:
         ic(f"EmptyDataError: {e}")
-    except KeyError as e:
-        ic(f"KeyError: {e}")
+    except pd.errors.ParserError as e:
+        ic(f"ParserError: {e}")
     except ValueError as e:
         ic(f"ValueError: {e}")
-
-
 def process_all_csv_files(folder_path):
     """
-    Loop through all .csv files in the specified folder, process them, and post event results.
+    Loop through all .csv files in the specified folder, process them, and
+    post event results.
     :param folder_path: Path to the folder containing CSV files.
     """
     ic(f"Looking for CSV files in folder: {folder_path}")
