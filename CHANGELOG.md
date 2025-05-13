@@ -1,6 +1,50 @@
 # CHANGELOG
 
 
+## v0.2.0 (2025-05-13)
+
+### Bug Fixes
+
+- Able to post rounds
+  ([`d1bf4b4`](https://github.com/milsman2/disc-golf-api/commit/d1bf4b4dad3ae1b096e4674dbef4e326f1c12f6e))
+
+- Add course data processing and POST script
+  ([`e74f74f`](https://github.com/milsman2/disc-golf-api/commit/e74f74ff2e0a574007752499abdf68e51eae60a9))
+
+- Add loop for processing all csv files.
+  ([`9e72cd3`](https://github.com/milsman2/disc-golf-api/commit/9e72cd3f0531649c0ea4ba72198e793956faec83))
+
+- Add points and testing for points.
+  ([`88b8b2f`](https://github.com/milsman2/disc-golf-api/commit/88b8b2f009e39275a0339c4470ce7c9ee3e0977d))
+
+- Add psycopg[binary] for postgresql
+  ([`b33502b`](https://github.com/milsman2/disc-golf-api/commit/b33502b7dccab5dce6ff061b0a3f326f7f68b56a))
+
+- Apply isort and refactor startup.
+  ([`ea639bc`](https://github.com/milsman2/disc-golf-api/commit/ea639bc916442694fb3d36f50805a55897e9e80f))
+
+- Better typing and cleanup.
+  ([`f708e05`](https://github.com/milsman2/disc-golf-api/commit/f708e05a63f36f13c4e894b1bebf30ffc6bb3321))
+
+- Black formatting
+  ([`c5eccb8`](https://github.com/milsman2/disc-golf-api/commit/c5eccb81c9c10325c79048d3fb4b24b2d809cf16))
+
+- Pylint cleaning.
+  ([`992f290`](https://github.com/milsman2/disc-golf-api/commit/992f2905937da56db31d2ed3865f4dd27cac991a))
+
+- Pylint nit pick.
+  ([`1929839`](https://github.com/milsman2/disc-golf-api/commit/1929839a5f49f3c51fe6355272cc0f0c12238ea5))
+
+- Reorder bash scripts
+  ([`f458267`](https://github.com/milsman2/disc-golf-api/commit/f458267abfea87be40e766be1b9289fd48a877da))
+
+- Reorganize sample data
+  ([`8aeae0f`](https://github.com/milsman2/disc-golf-api/commit/8aeae0fab8247b63d586a2da49ba725e892a476b))
+
+- Update sample data location
+  ([`bc7f06a`](https://github.com/milsman2/disc-golf-api/commit/bc7f06a99305de8a34f604faef384032484fd890))
+
+
 ## v0.1.0 (2025-04-30)
 
 ### Bug Fixes
