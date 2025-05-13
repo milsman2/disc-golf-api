@@ -24,6 +24,7 @@ Modules Used:
 """
 
 from sqlalchemy.orm import Session, joinedload
+
 from src.models.event_result import EventResult as EventResultModel
 from src.schemas.event_results import EventResultCreate
 

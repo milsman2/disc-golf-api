@@ -4,7 +4,7 @@ This file contains the Pydantic models for the CourseLayout model.
 
 from pydantic import BaseModel, ConfigDict
 
-from src.schemas.holes import HolePublic, HoleCreate
+from src.schemas.holes import HoleCreate, HolePublic
 
 
 class CourseLayoutBase(BaseModel):

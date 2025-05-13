@@ -13,8 +13,8 @@ from src.crud.course_layout import (
     get_course_layouts,
 )
 from src.schemas.course_layouts import (
-    CourseLayoutPublic,
     CourseLayoutCreate,
+    CourseLayoutPublic,
     CourseLayoutsPublic,
 )
 

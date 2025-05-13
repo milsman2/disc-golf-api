@@ -13,6 +13,7 @@ Schemas:
 """
 
 from pydantic import BaseModel, ConfigDict
+
 from src.schemas.course_layouts import CourseLayoutPublic
 
 
@@ -31,6 +32,7 @@ class EventResultBase(BaseModel):
     username: str
     round_relative_score: int
     round_total_score: int
+    round_points: float = 0.0
 
     model_config = ConfigDict(extra="forbid")
 
@@ -58,4 +60,5 @@ class EventResultPublic(EventResultBase):
     Schema for returning an EventResult, including relationships.
     """
 
+    id: int
     layout: CourseLayoutPublic | None = None

@@ -6,7 +6,7 @@ from fastapi import APIRouter, HTTPException
 
 from src.api.deps import SessionDep
 from src.crud.course import create_course, delete_course, get_course, get_courses
-from src.schemas.courses import CoursePublic, CourseCreate, CoursesPublic
+from src.schemas.courses import CourseCreate, CoursePublic, CoursesPublic
 
 router = APIRouter(prefix="/courses", tags=["Courses"])
 

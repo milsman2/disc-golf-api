@@ -43,7 +43,7 @@ def test_create_course(session: Session):
     client = TestClient(app)
     ic(client)
 
-    with open("data/t-c-jester-park-zVh6.json", encoding="utf-8") as f:
+    with open("data/courses/t-c-jester-park-zVh6.json", encoding="utf-8") as f:
         course_data = json.load(f)
         try:
             course_data["layouts"] = [

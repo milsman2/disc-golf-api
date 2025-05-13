@@ -31,6 +31,7 @@ def init(db_engine: Engine) -> None:
     """
     Initialize the database connection and check if the database is awake.
     """
+    ic()
     try:
         with Session(db_engine) as session:
             session.execute(select(1))

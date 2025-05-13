@@ -6,8 +6,9 @@ application. Each event result is tied to a specific course and course layout, a
 contains information about a player's performance in the event.
 """
 
-from sqlalchemy import Integer, String, ForeignKey
-from sqlalchemy.orm import relationship, Mapped, mapped_column
+from sqlalchemy import ForeignKey, Integer, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from src.models.base import Base
 from src.models.course_layout import CourseLayout
 
@@ -28,15 +29,17 @@ class EventResult(Base):
         username (str): The player's username in the system.
         round_relative_score (int): The player's score relative to par for the round.
         round_total_score (int): The player's total score for the round.
-        course_id (int): Foreign key referencing the associated course.
-        layout_id (int): Foreign key referencing the associated course layout.
-        course (Course): Relationship to the associated Course model.
-        layout (CourseLayout): Relationship to the associated CourseLayout model.
+        course_layout_id (int): The foreign key referencing the CourseLayout
+        model.
+        course_layout (CourseLayout): The CourseLayout associated with the event
+        round_points (float): The points earned by the player for the round.
     """
 
     __tablename__ = "event_results"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    id: Mapped[int] = mapped_column(
+        Integer, primary_key=True, index=True, autoincrement=True, nullable=False
+    )
     division: Mapped[str] = mapped_column(String, nullable=False)
     position: Mapped[str] = mapped_column(String, nullable=False)
     position_raw: Mapped[int | None] = mapped_column(Integer, nullable=True)
@@ -47,6 +50,7 @@ class EventResult(Base):
     username: Mapped[str] = mapped_column(String, nullable=False)
     round_relative_score: Mapped[int] = mapped_column(Integer, nullable=False)
     round_total_score: Mapped[int] = mapped_column(Integer, nullable=False)
+    round_points: Mapped[float] = mapped_column(Integer, nullable=False, default=0.0)
 
     course_layout_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("course_layouts.id"), nullable=False

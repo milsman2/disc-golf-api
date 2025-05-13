@@ -29,14 +29,14 @@ Modules Used:
 
 from fastapi import APIRouter, HTTPException
 
-from src.schemas.event_results import EventResultPublic, EventResultCreate
+from src.api.deps import SessionDep
 from src.crud import (
     create_event_result,
+    delete_event_result,
     get_event_result,
     update_event_result,
-    delete_event_result,
 )
-from src.api.deps import SessionDep
+from src.schemas.event_results import EventResultCreate, EventResultPublic
 
 router = APIRouter(
     prefix="/event-results",

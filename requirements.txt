@@ -58,6 +58,8 @@ playwright==1.51.0
 pluggy==1.5.0
 propcache==0.3.1
 psutil==7.0.0
+psycopg==3.2.7
+psycopg-binary==3.2.7
 pydantic==2.11.3
 pydantic-settings==2.9.1
 pydantic_core==2.33.1
