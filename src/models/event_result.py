@@ -6,9 +6,9 @@ application. Each event result is tied to a specific course and course layout, a
 contains information about a player's performance in the event.
 """
 
-from sqlalchemy import ForeignKey, Integer, String
+from sqlalchemy import ForeignKey, Integer, String, DateTime, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
+import datetime
 from src.models.base import Base
 from src.models.course_layout import CourseLayout
 
@@ -36,10 +36,13 @@ class EventResult(Base):
     """
 
     __tablename__ = "event_results"
-
+    __table_args__ = (
+        UniqueConstraint("date", "username", name="uq_eventresult_date_username"),
+    )
     id: Mapped[int] = mapped_column(
         Integer, primary_key=True, index=True, autoincrement=True, nullable=False
     )
+    date: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=False)
     division: Mapped[str] = mapped_column(String, nullable=False)
     position: Mapped[str] = mapped_column(String, nullable=False)
     position_raw: Mapped[int | None] = mapped_column(Integer, nullable=True)
