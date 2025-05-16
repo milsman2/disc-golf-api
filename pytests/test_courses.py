@@ -73,7 +73,7 @@ def test_create_course(session: Session):
             raise
 
         response = client.post("/api/v1/courses/", json=course_test.model_dump())
-        assert response.status_code == 200
+        assert response.status_code == 201
 
 
 def test_get_course(session: Session):
