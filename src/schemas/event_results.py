@@ -12,8 +12,9 @@ Schemas:
   Course and CourseLayout.
 """
 
-from pydantic import BaseModel, ConfigDict
 import datetime
+
+from pydantic import BaseModel, ConfigDict
 
 from src.schemas.course_layouts import CourseLayoutPublic
 
