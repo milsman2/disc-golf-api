@@ -34,9 +34,14 @@ from src.crud import (
     create_event_result,
     delete_event_result,
     get_event_result,
+    get_event_results,
     update_event_result,
 )
-from src.schemas.event_results import EventResultCreate, EventResultPublic
+from src.schemas.event_results import (
+    EventResultCreate,
+    EventResultPublic,
+    EventResultsPublic,
+)
 
 router = APIRouter(
     prefix="/event-results",
@@ -44,12 +49,19 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=EventResultPublic)
-def create_event_result_route(event_result: EventResultCreate, session: SessionDep):
+@router.get("/", response_model=EventResultsPublic)
+def get_event_results_route(
+    session: SessionDep,
+    skip: int = 0,
+    limit: int = 100,
+):
     """
-    Create a new EventResult.
+    Get a list of EventResults with optional pagination.
     """
-    return create_event_result(db=session, event_result=event_result)
+    raw_results = get_event_results(db=session, skip=skip, limit=limit)
+    if not raw_results:
+        raise HTTPException(status_code=404, detail="No EventResults found")
+    return {"event_results": raw_results}
 
 
 @router.get("/{event_result_id}", response_model=EventResultPublic)
@@ -61,6 +73,14 @@ def get_event_result_route(event_result_id: int, session: SessionDep):
     if not db_event_result:
         raise HTTPException(status_code=404, detail="EventResult not found")
     return db_event_result
+
+
+@router.post("/", response_model=EventResultPublic)
+def create_event_result_route(event_result: EventResultCreate, session: SessionDep):
+    """
+    Create a new EventResult.
+    """
+    return create_event_result(db=session, event_result=event_result)
 
 
 @router.put("/{event_result_id}", response_model=EventResultPublic)

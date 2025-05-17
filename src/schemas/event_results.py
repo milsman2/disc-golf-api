@@ -16,8 +16,6 @@ import datetime
 
 from pydantic import BaseModel, ConfigDict
 
-from src.schemas.course_layouts import CourseLayoutPublic
-
 
 class EventResultBase(BaseModel):
     """
@@ -64,4 +62,12 @@ class EventResultPublic(EventResultBase):
     """
 
     id: int
-    layout: CourseLayoutPublic | None = None
+    course_layout_id: int
+
+
+class EventResultsPublic(BaseModel):
+    """
+    Schema for returning a list of EventResults.
+    """
+
+    event_results: list[EventResultPublic] = []
