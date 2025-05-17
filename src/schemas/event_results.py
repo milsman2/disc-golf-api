@@ -12,9 +12,9 @@ Schemas:
   Course and CourseLayout.
 """
 
-from pydantic import BaseModel, ConfigDict
+import datetime
 
-from src.schemas.course_layouts import CourseLayoutPublic
+from pydantic import BaseModel, ConfigDict
 
 
 class EventResultBase(BaseModel):
@@ -22,6 +22,7 @@ class EventResultBase(BaseModel):
     Base schema for EventResult, used for shared attributes.
     """
 
+    date: datetime.datetime
     division: str
     position: str
     position_raw: int | None = None
@@ -61,4 +62,12 @@ class EventResultPublic(EventResultBase):
     """
 
     id: int
-    layout: CourseLayoutPublic | None = None
+    course_layout_id: int
+
+
+class EventResultsPublic(BaseModel):
+    """
+    Schema for returning a list of EventResults.
+    """
+
+    event_results: list[EventResultPublic] = []

@@ -29,6 +29,38 @@ from src.models.event_result import EventResult as EventResultModel
 from src.schemas.event_results import EventResultCreate
 
 
+def get_event_result(db: Session, event_result_id: int) -> EventResultModel | None:
+    return (
+        db.query(EventResultModel)
+        .options(joinedload(EventResultModel.course_layout))
+        .filter(EventResultModel.id == event_result_id)
+        .first()
+    )
+
+
+def get_event_results(
+    db: Session, skip: int = 0, limit: int = 100
+) -> list[EventResultModel]:
+    """
+    Get a list of EventResults with optional pagination.
+
+    Args:
+        db (Session): The database session.
+        skip (int): Number of records to skip (for pagination).
+        limit (int): Maximum number of records to return.
+
+    Returns:
+        list[EventResultModel]: A list of EventResult models.
+    """
+    return (
+        db.query(EventResultModel)
+        .options(joinedload(EventResultModel.course_layout))
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+
 def create_event_result(
     db: Session, event_result: EventResultCreate
 ) -> EventResultModel:
@@ -37,15 +69,6 @@ def create_event_result(
     db.commit()
     db.refresh(db_event_result)
     return db_event_result
-
-
-def get_event_result(db: Session, event_result_id: int) -> EventResultModel | None:
-    return (
-        db.query(EventResultModel)
-        .options(joinedload(EventResultModel.course_layout))
-        .filter(EventResultModel.id == event_result_id)
-        .first()
-    )
 
 
 def update_event_result(

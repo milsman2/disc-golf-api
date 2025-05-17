@@ -3,12 +3,14 @@ Calculates round points based on position_raw for each division in a CSV file
 and posts event results to an API endpoint.
 """
 
+import datetime
+import math
+import re
 from pathlib import Path
 
 import httpx
 import pandas as pd
 from icecream import ic
-import math
 
 
 def assign_round_points(df: pd.DataFrame, max_points: int = 30) -> pd.DataFrame:
@@ -79,10 +81,17 @@ def import_and_process_csv(file_path):
     try:
         pd.set_option("display.max_rows", None)
         pd.set_option("display.max_columns", None)
-
+        match = re.search(r"(\d{4}-\d{2}-\d{2})", str(file_path))
+        if match:
+            date_str = match.group(1)
+            dt = datetime.datetime.strptime(date_str, "%Y-%m-%d").replace(hour=18)
+            date_val = dt.isoformat()
+        else:
+            date_val = None
         df = pd.read_csv(file_path)
-
+        df.insert(0, "date", date_val)
         required_columns = {
+            "date",
             "division",
             "position_raw",
             "name",
@@ -113,8 +122,9 @@ def import_and_process_csv(file_path):
             else:
                 position = str(position_raw)
                 position_raw_clean = position_raw
-            course_layout_id = 3
+            course_layout_id = 1
             event_result = {
+                "date": row.get("date"),
                 "division": row.get("division"),
                 "position": position,
                 "position_raw": position_raw_clean,
@@ -138,6 +148,8 @@ def import_and_process_csv(file_path):
         ic(f"ParserError: {e}")
     except ValueError as e:
         ic(f"ValueError: {e}")
+
+
 def process_all_csv_files(folder_path):
     """
     Loop through all .csv files in the specified folder, process them, and

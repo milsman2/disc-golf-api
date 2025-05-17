@@ -44,10 +44,7 @@ def get_sample():
     """
     Fixture to provide the path to the sample CSV file for testing.
     """
-    return (
-        "./data/event_results/"
-        "tc-jester-hfds-league-tc-jester-hfds-league-2025-03-19.csv"
-    )
+    return "./data/event_results/tc-jester-hfds-league-2025-03-12.csv"
 
 
 def test_valid_event_result_with_layouts(sample_csv_path, session: Session):
@@ -63,9 +60,14 @@ def test_valid_event_result_with_layouts(sample_csv_path, session: Session):
     client = TestClient(app)
     ic(client)
     df = pd.read_csv(sample_csv_path)
-
+    df.insert(0, "date", pd.to_datetime(1741820400, unit="s"))
     for _, row in df.iterrows():
         data = {
+            "date": (
+                row["date"].isoformat()
+                if hasattr(row["date"], "isoformat")
+                else str(row["date"])
+            ),
             "division": row["division"],
             "position": row["position"],
             "position_raw": (
@@ -87,6 +89,11 @@ def test_valid_event_result_with_layouts(sample_csv_path, session: Session):
 
         event_result = EventResultCreate(**data)
 
+        assert (
+            event_result.date.isoformat()
+            if hasattr(event_result.date, "isoformat")
+            else str(event_result.date)
+        ) == data["date"]
         assert event_result.division == data["division"]
         assert event_result.position == data["position"]
         assert event_result.position_raw == data["position_raw"]
@@ -99,7 +106,7 @@ def test_valid_event_result_with_layouts(sample_csv_path, session: Session):
         assert event_result.round_total_score == data["round_total_score"]
         response = client.post(
             "/api/v1/event-results/",
-            json=event_result.model_dump(),
+            json=event_result.model_dump(mode="json", exclude_none=True),
         )
         assert response.status_code == 200
         assert response.json()["division"] == data["division"]

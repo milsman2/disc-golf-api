@@ -12,6 +12,7 @@ from src.schemas.event_results import (
     EventResultBase,
     EventResultCreate,
     EventResultPublic,
+    EventResultsPublic,
 )
 from src.schemas.holes import HoleCreate, HolePublic, HoleUpdate
 from src.schemas.users import (
@@ -53,4 +54,5 @@ __all__ = [
     "EventResultBase",
     "EventResultCreate",
     "EventResultPublic",
+    "EventResultsPublic",
 ]

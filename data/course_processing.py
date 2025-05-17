@@ -63,17 +63,11 @@ def create_courses(data_directory: str = "data/courses/") -> None:
                         )
                         response.raise_for_status()
                     except httpx.HTTPStatusError as e:
-                        ic(f"HTTPStatusError: {e}")
-                        raise
+                        ic(e)
                     except httpx.RequestError as e:
-                        ic(f"RequestError: {e}")
-                        raise
+                        ic(e)
                     except json.JSONDecodeError as e:
-                        ic(f"JSONDecodeError: {e}")
-                        raise
-                    except Exception as e:
-                        ic(f"Unexpected error: {e}")
-                        raise
+                        ic(e)
 
 
 if __name__ == "__main__":
