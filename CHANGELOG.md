@@ -1,6 +1,26 @@
 # CHANGELOG
 
 
+## v0.2.1 (2025-05-17)
+
+### Bug Fixes
+
+- Add date and unique constraint to date for event_result
+  ([`7cc1546`](https://github.com/milsman2/disc-golf-api/commit/7cc154631bd44cf9f030b509f3b3824d7ed875fe))
+
+- Allow GET for multiple event_results
+  ([`04c60b4`](https://github.com/milsman2/disc-golf-api/commit/04c60b47217ea2e5a4c925173d5a919ae334a201))
+
+- Automate getting date for event_result
+  ([`9322ce5`](https://github.com/milsman2/disc-golf-api/commit/9322ce53ef638ed3e7360ffbf503d58a26931428))
+
+- Corrected expected response code for new course POST
+  ([`76d2a68`](https://github.com/milsman2/disc-golf-api/commit/76d2a68fec29f27d1a611e9ac70a2e62e8186328))
+
+- Working pytest for new event_result data shape
+  ([`3933a65`](https://github.com/milsman2/disc-golf-api/commit/3933a65ab2dde8e5347cf441b26402b50b71d45b))
+
+
 ## v0.2.0 (2025-05-13)
 
 ### Bug Fixes
