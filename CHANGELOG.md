@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.2.3 (2025-05-27)
+
+### Bug Fixes
+
+- Update image due to broken dockerfile
+  ([`5ea29db`](https://github.com/milsman2/disc-golf-api/commit/5ea29dbdeb7d5b6cb6bcb41e1ddb930995e4617f))
+
+
 ## v0.2.2 (2025-05-27)
 
 ### Bug Fixes
