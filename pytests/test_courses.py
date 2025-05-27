@@ -110,3 +110,21 @@ def test_get_course(session: Session):
     assert data["layouts"][1]["name"] == "North 13 - White Tees"
     assert data["layouts"][1]["par"] == 40
     assert data["layouts"][1]["length"] == 4204
+
+
+def test_delete_course(session: Session):
+    """
+    Test deleting a course.
+    """
+
+    def get_session_override():
+        return session
+
+    app.dependency_overrides[get_db] = get_session_override
+    client = TestClient(app)
+
+    delete_response = client.delete("/api/v1/courses/1")
+    assert delete_response.status_code == 204
+
+    get_response = client.get("/api/v1/courses/1")
+    assert get_response.status_code == 404

@@ -1,15 +1,9 @@
 """
-Schemas for EventResult.
+Pydantic schemas for EventResult resources.
 
-This module defines the Pydantic schemas for the EventResult model, which represent
-the results of a disc golf event. These schemas are used for data validation and
-serialization in the FastAPI application.
-
-Schemas:
-- EventResultBase: Shared attributes for EventResult.
-- EventResultCreate: Schema for creating a new EventResult.
-- EventResult: Schema for returning an EventResult, including relationships to
-  Course and CourseLayout.
+Defines data validation and serialization models for EventResult objects,
+including creation, database, and public response schemas. These are used
+throughout the FastAPI application for request and response handling.
 """
 
 import datetime
@@ -19,7 +13,7 @@ from pydantic import BaseModel, ConfigDict
 
 class EventResultBase(BaseModel):
     """
-    Base schema for EventResult, used for shared attributes.
+    Shared attributes for EventResult used in creation and response schemas.
     """
 
     date: datetime.datetime
@@ -40,7 +34,7 @@ class EventResultBase(BaseModel):
 
 class EventResultCreate(EventResultBase):
     """
-    Schema for creating a new EventResult.
+    Schema for validating data when creating a new EventResult.
     """
 
     course_layout_id: int
@@ -48,17 +42,18 @@ class EventResultCreate(EventResultBase):
 
 class EventResultInDBBase(EventResultBase):
     """
-    Base schema for EventResult in the database.
+    Schema representing an EventResult as stored in the database.
+    Includes the database-generated ID.
     """
 
     model_config = ConfigDict(from_attributes=True)
-
     id: int
 
 
 class EventResultPublic(EventResultBase):
     """
-    Schema for returning an EventResult, including relationships.
+    Schema for API responses, representing an EventResult with its ID
+    and layout reference.
     """
 
     id: int
@@ -67,7 +62,7 @@ class EventResultPublic(EventResultBase):
 
 class EventResultsPublic(BaseModel):
     """
-    Schema for returning a list of EventResults.
+    Schema for API responses returning a list of EventResults.
     """
 
     event_results: list[EventResultPublic] = []
