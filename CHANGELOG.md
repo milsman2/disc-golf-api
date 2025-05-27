@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.2.4 (2025-05-27)
+
+### Bug Fixes
+
+- Enable container scanning
+  ([`3697afc`](https://github.com/milsman2/disc-golf-api/commit/3697afc2803981d72c6a5bec5396d77ce34f75a6))
+
+
 ## v0.2.3 (2025-05-27)
 
 ### Bug Fixes
