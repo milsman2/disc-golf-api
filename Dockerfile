@@ -5,6 +5,7 @@ WORKDIR /app
 
 # Install build dependencies
 RUN apt-get update && \
+    apt-get upgrade -y &&\
     apt-get install -y --no-install-recommends \
     gcc \
     build-essential \
