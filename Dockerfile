@@ -1,5 +1,5 @@
 # Use a multi-stage build to reduce the final image size
-FROM python:3.10-slim AS builder
+FROM python:3.13-slim AS builder
 
 WORKDIR /app
 
@@ -25,7 +25,7 @@ COPY ./alembic.ini /code/alembic.ini
 COPY ./migrations /code/migrations
 
 # Final stage
-FROM python:3.10-slim
+FROM python:3.13-slim
 
 WORKDIR /app
 
