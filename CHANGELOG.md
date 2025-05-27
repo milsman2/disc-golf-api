@@ -1,6 +1,26 @@
 # CHANGELOG
 
 
+## v0.2.2 (2025-05-27)
+
+### Bug Fixes
+
+- Add test for deleting course and refactor Courses to match
+  ([`ef52929`](https://github.com/milsman2/disc-golf-api/commit/ef5292995d8173a7726ec892490b7a5f9fd0a95e))
+
+- Remove unnecessary f-string
+  ([`b1544b1`](https://github.com/milsman2/disc-golf-api/commit/b1544b13e034225a5677bd10f502deb11ddefa22))
+
+- Update Dockerfile per rec
+  ([`adac348`](https://github.com/milsman2/disc-golf-api/commit/adac348239269a9338281d132dfe10ee5bdfb4f0))
+
+- Update Dockerfile.
+  ([`979d455`](https://github.com/milsman2/disc-golf-api/commit/979d455e208fc6351f7a8786d820eb399b42b912))
+
+- Update documentation
+  ([`ca5e66d`](https://github.com/milsman2/disc-golf-api/commit/ca5e66d8b81160b9c5b5e77e7eea544f46e429ec))
+
+
 ## v0.2.1 (2025-05-17)
 
 ### Bug Fixes
