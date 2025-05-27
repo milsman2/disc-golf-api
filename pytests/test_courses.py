@@ -123,8 +123,8 @@ def test_delete_course(session: Session):
     app.dependency_overrides[get_db] = get_session_override
     client = TestClient(app)
 
-    delete_response = client.delete(f"/api/v1/courses/1")
+    delete_response = client.delete("/api/v1/courses/1")
     assert delete_response.status_code == 204
 
-    get_response = client.get(f"/api/v1/courses/1")
+    get_response = client.get("/api/v1/courses/1")
     assert get_response.status_code == 404
