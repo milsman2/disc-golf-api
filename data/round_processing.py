@@ -4,54 +4,13 @@ and posts event results to an API endpoint.
 """
 
 import datetime
-import math
 import re
 from pathlib import Path
+import math
 
 import httpx
 import pandas as pd
 from icecream import ic
-
-
-def assign_round_points(df: pd.DataFrame, max_points: int = 30) -> pd.DataFrame:
-    """
-    Assign points based on position_raw for each division.
-    Handles ties by averaging points.
-    :param df: DataFrame containing 'division' and 'position_raw' columns.
-    :return: DataFrame with the 'round_points' column updated.
-    """
-    ic()
-
-    def calculate_points(group: pd.DataFrame) -> pd.DataFrame:
-        ic()
-        group = group.sort_values(by="position_raw").reset_index(drop=True)
-        points = []
-        i = 0
-        while i < len(group):
-            tied_positions = group[
-                group["position_raw"] == group.loc[i, "position_raw"]
-            ].index
-            num_tied = len(tied_positions)
-            if num_tied > 1:
-                start_points = max_points - i
-                end_points = max_points - (i + num_tied - 1)
-                avg_points = sum(range(start_points, end_points - 1, -1)) / num_tied
-                points.extend([avg_points] * num_tied)
-                i += num_tied
-            else:
-                points.append(max_points - i)
-                i += 1
-        group["round_points"] = points
-        return group
-
-    result = (
-        df.groupby("division", group_keys=False)
-        .apply(calculate_points)
-        .reset_index(drop=True)
-    )
-    if "division" in result.columns:
-        result["division"] = df["division"]
-    return result
 
 
 def post_event_result(event_result: dict):
@@ -90,6 +49,7 @@ def import_and_process_csv(file_path):
             date_val = None
         df = pd.read_csv(file_path)
         df.insert(0, "date", date_val)
+        df = df.loc[:, ~df.columns.str.startswith("hole_")]
         required_columns = {
             "date",
             "division",
@@ -102,26 +62,28 @@ def import_and_process_csv(file_path):
             "round_relative_score",
             "round_total_score",
         }
-
         missing_columns = required_columns - set(df.columns)
         ic(missing_columns)
-        df.loc[:, "position_raw"] = pd.to_numeric(df["position_raw"], errors="coerce")
-        df = assign_round_points(df)
         df = df.replace([float("inf"), -float("inf")], pd.NA)
         df = df.where(pd.notnull(df), None)
-        df = df.loc[:, ~df.columns.str.startswith("hole_")]
-        ic(df)
+        df.loc[:, "position_raw"] = pd.to_numeric(
+            df["position_raw"],
+            errors="coerce",
+            downcast="float",
+        )
         for _, row in df.iterrows():
             pdga_number = row.get("pdga_number")
             if isinstance(pdga_number, float) and math.isnan(pdga_number):
                 pdga_number = None
             position_raw = row.get("position_raw")
-            if isinstance(position_raw, float) and math.isnan(position_raw):
+            if position_raw is None or (
+                isinstance(position_raw, float) and math.isnan(position_raw)
+            ):
                 position = ""
                 position_raw_clean = None
             else:
                 position = str(position_raw)
-                position_raw_clean = position_raw
+                position_raw_clean = float(position_raw)
             course_layout_id = 1
             event_result = {
                 "date": row.get("date"),
@@ -135,7 +97,6 @@ def import_and_process_csv(file_path):
                 "username": row.get("username"),
                 "round_relative_score": row.get("round_relative_score"),
                 "round_total_score": row.get("round_total_score"),
-                "round_points": row.get("round_points"),
                 "course_layout_id": course_layout_id,
             }
 
