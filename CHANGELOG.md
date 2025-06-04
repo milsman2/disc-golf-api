@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.2.5 (2025-06-04)
+
+### Bug Fixes
+
+- Update round_processing to debug point values.
+  ([`f8604c5`](https://github.com/milsman2/disc-golf-api/commit/f8604c514586dc78c684177bde7fbb841aecc602))
+
+
 ## v0.2.4 (2025-05-27)
 
 ### Bug Fixes
