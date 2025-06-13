@@ -11,6 +11,7 @@ import json
 
 import httpx
 import pytest
+from dateutil.parser import isoparse
 from fastapi.testclient import TestClient
 from icecream import ic
 from pydantic import ValidationError
@@ -73,7 +74,16 @@ def test_league_session_post(sample_csv_path, session: Session):
                 assert (
                     response.status_code == 201
                 ), f"Expected status code 201, got {response.status_code}"
-                return response.json()
+                data = response.json()
+                assert data["name"] == league_session_data["name"]
+                assert isoparse(data["start_date"]).replace(tzinfo=None) == isoparse(
+                    league_session_data["start_date"]
+                ).replace(tzinfo=None)
+                assert isoparse(data["end_date"]).replace(tzinfo=None) == isoparse(
+                    league_session_data["end_date"]
+                ).replace(tzinfo=None)
+                assert data["description"] == league_session_data["description"]
+                assert "id" in data
             except httpx.HTTPStatusError as e:
                 ic(e)
             except httpx.RequestError as e:

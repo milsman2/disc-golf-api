@@ -85,6 +85,7 @@ def test_valid_event_result_with_layouts(sample_csv_path, session: Session):
             "round_relative_score": int(row["round_relative_score"]),
             "round_total_score": int(row["round_total_score"]),
             "course_layout_id": 1,
+            "league_session_id": 1,
         }
 
         event_result = EventResultCreate(**data)
