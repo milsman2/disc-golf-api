@@ -1,6 +1,39 @@
 # CHANGELOG
 
 
+## v0.3.0 (2025-06-13)
+
+### Bug Fixes
+
+- Improve docstring formatting for clarity in league session API tests
+  ([`4c15f79`](https://github.com/milsman2/disc-golf-api/commit/4c15f7940f3d27babcb7530a592ffa01c610f608))
+
+- Remove outdated requests package from requirements.txt
+  ([`5f6f74e`](https://github.com/milsman2/disc-golf-api/commit/5f6f74ea615115d1b9f6dc34dcd612718de6dc2d))
+
+- Update league session dates and enhance league session API test assertions
+  ([`7ff207e`](https://github.com/milsman2/disc-golf-api/commit/7ff207ea42c96ef978b9f98aa217d0b3397c8b65))
+
+- Update module docstring for clarity on league session API tests
+  ([`08aa2f8`](https://github.com/milsman2/disc-golf-api/commit/08aa2f813224ea2778a872a25360df9fd626b7d7))
+
+- Update package versions in requirements.txt for compatibility and improvements
+  ([`f3e6a89`](https://github.com/milsman2/disc-golf-api/commit/f3e6a896d5cf7c3f9f9521c762687c136744a75b))
+
+### Features
+
+- Add league session management functionality
+  ([`55db535`](https://github.com/milsman2/disc-golf-api/commit/55db535f47ed11932d3b9e2f31ae65cc76589ea6))
+
+- Introduced new API routes for managing league sessions, including creation, retrieval, updating,
+  and deletion. - Implemented CRUD operations for league sessions in the database. - Created
+  Pydantic schemas for validating and serializing league session data. - Updated event results to
+  associate them with league sessions. - Added new league session JSON data for testing. - Enhanced
+  round processing to include points assignment based on player positions. - Created migration
+  scripts to set up the league_sessions table and update event_results schema. - Added unit tests
+  for league session API endpoints.
+
+
 ## v0.2.5 (2025-06-04)
 
 ### Bug Fixes
