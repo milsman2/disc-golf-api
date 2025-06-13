@@ -1,9 +1,10 @@
 """
 Pytest module for testing disc golf league session API endpoints.
 
-This module contains tests for validating and posting LeagueSession data using FastAPI's TestClient.
-It includes fixtures for sample data and database session setup, and verifies that league session
-creation via the API works as expected.
+This module contains tests for validating and posting LeagueSession data
+using FastAPI's TestClient. It includes fixtures for sample data and database
+session setup, and verifies that league session creation via the API works as
+expected.
 """
 
 import json
