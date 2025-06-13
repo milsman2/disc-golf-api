@@ -15,6 +15,11 @@ from src.schemas.event_results import (
     EventResultsPublic,
 )
 from src.schemas.holes import HoleCreate, HolePublic, HoleUpdate
+from src.schemas.league_sessions import (
+    LeagueSessionCreate,
+    LeagueSessionPublic,
+    LeagueSessionUpdate,
+)
 from src.schemas.users import (
     Message,
     NewPassword,
@@ -55,4 +60,7 @@ __all__ = [
     "EventResultCreate",
     "EventResultPublic",
     "EventResultsPublic",
+    "LeagueSessionPublic",
+    "LeagueSessionCreate",
+    "LeagueSessionUpdate",
 ]

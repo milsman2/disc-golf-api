@@ -1,0 +1,66 @@
+division,position,position_raw,name,event_relative_score,event_total_score,pdga_number,username,round_relative_score,round_total_score,hole_1,hole_2,hole_3,hole_4,hole_5,hole_9,hole_10,hole_11,hole_12,hole_13,hole_14,hole_15,hole_16,hole_17,hole_18,hole_19,hole_20,hole_21
+GOLD,1,1,Joshua Downey,-9,46,114479,joshdowney,-9,46,2,3,3,3,3,2,2,4,2,3,3,2,2,3,2,2,2,3
+GOLD,T2,2,Paul Williams,-7,48,24252,aceonthefly,-7,48,3,3,3,2,4,4,2,3,2,4,3,2,2,3,2,2,2,2
+GOLD,T2,2,Charlie Vercher,-7,48,66995,cverch,-7,48,2,3,2,2,5,2,2,3,3,4,2,2,2,2,4,4,2,2
+GOLD,T2,2,Corey Steinmann ,-7,48,139803,cscobra9,-7,48,2,3,2,2,3,3,3,4,2,3,2,3,2,3,3,3,2,3
+GOLD,T5,5,Jeff Turner,-6,49,21671,jt9696,-6,49,3,3,3,3,3,3,2,4,2,3,3,2,2,3,3,2,2,3
+GOLD,T5,5,Chris Lindsey,-6,49,158031,bananas420,-6,49,3,3,2,2,2,2,3,3,3,3,3,3,3,2,2,3,3,4
+GOLD,7,7,Adis Ismic,-5,50,128858,adisio,-5,50,3,3,3,3,3,2,3,4,3,3,2,3,2,3,3,3,2,2
+GOLD,8,8,Erik Soete,-3,52,,ericsoete,-3,52,3,3,2,2,4,4,3,3,3,3,3,3,4,2,3,3,2,2
+GOLD,9,9,Andrew Eckert,-2,53,277257,jerseyeckert,-2,53,3,3,3,3,3,4,3,5,2,4,3,3,2,3,2,2,2,3
+GOLD,T10,10,Jeff Clark,3,58,134168,jeffclark,3,58,3,3,3,3,2,3,2,4,3,3,3,3,4,5,3,4,2,5
+GOLD,T10,10,Jack Soete,3,58,,jetpackjack69,3,58,5,5,2,2,3,2,2,3,3,3,3,3,4,5,3,2,4,4
+BLUE,1,1,Bryan Dupree,-6,49,98371,bdupree18,-6,49,3,3,3,2,2,3,2,3,2,4,2,3,5,3,3,2,2,2
+BLUE,T2,2,Ryan Cronauer,-3,52,116264,ryancronauer,-3,52,3,3,2,3,3,3,2,4,3,3,3,3,2,2,4,3,3,3
+BLUE,T2,2,Albert Longoria,-3,52,134311,albertlongoria,-3,52,3,3,2,3,2,4,2,5,2,3,3,3,3,3,3,3,2,3
+BLUE,4,4,Ted G,-1,54,,tedg27,-1,54,3,3,2,3,3,3,4,4,3,3,3,3,3,3,3,2,3,3
+BLUE,T5,5,Daniel Watson,0,55,152702,mcp1sr,0,55,2,4,2,3,3,4,3,4,2,3,4,2,4,4,3,3,2,3
+BLUE,T5,5,Josh Day,0,55,152832,audiosyncrasies,0,55,5,3,4,3,2,2,3,3,3,3,3,3,3,4,3,3,2,3
+BLUE,T7,7,Ryan Bahde,1,56,38147,delrey,1,56,3,5,3,2,3,2,3,4,2,4,2,3,3,4,4,3,3,3
+BLUE,T7,7,Matt Higgins,1,56,148747,matthiggins,1,56,4,3,3,3,3,4,3,3,2,3,3,3,3,3,3,3,3,4
+BLUE,T9,9,Adam Benton,2,57,232667,adamwestend,2,57,3,3,3,3,3,4,2,4,3,5,3,3,3,3,3,4,2,3
+BLUE,T9,9,Daniel Vasquez ,2,57,258421,liamnoe4321,2,57,3,4,3,3,3,3,2,4,5,2,2,2,4,4,4,4,2,3
+BLUE,T9,9,Jeff Peterson,2,57,,vikingjpete,2,57,4,3,3,3,3,4,3,4,2,4,3,3,3,2,3,4,2,4
+BLUE,T9,9,Scott Duncan,2,57,,scottrd9,2,57,2,3,2,3,3,3,3,5,3,3,3,3,4,3,4,3,4,3
+BLUE,13,13,Joseph Plumb,3,58,128029,joejams,3,58,3,3,3,3,3,3,3,5,3,4,4,3,3,3,3,3,3,3
+BLUE,14,14,Kyle Jenkins,4,59,39888,kylejenkins,4,59,3,4,3,3,3,3,3,4,3,3,3,5,3,3,3,3,4,3
+BLUE,15,15,ISMAEL LLAMAS JR,5,60,187567,ismaelllamasjr,5,60,3,4,2,2,3,6,2,4,3,4,4,3,3,3,3,5,3,3
+BLUE,16,16,Tommy Samson,6,61,160149,goatkindaguy,6,61,4,3,2,3,5,3,3,3,4,4,3,4,3,3,3,3,4,4
+WHITE,T1,1,John O’Connor,-5,50,,johnoconn,-5,50,3,3,2,3,2,3,3,4,3,3,3,2,2,2,3,3,3,3
+WHITE,T1,1,Matthew Patrolia,-5,50,,matthew15,-5,50,3,3,1,2,3,3,3,3,2,3,3,5,3,3,3,3,2,2
+WHITE,3,3,Joseph Lyons,-4,51,220409,jl27840,-4,51,2,3,2,4,3,4,2,5,3,3,3,3,3,3,2,2,2,2
+WHITE,T4,4,Steve Payne,-3,52,32546,hockeydoc,-3,52,3,3,3,2,3,3,2,4,2,4,3,3,2,3,3,3,3,3
+WHITE,T4,4,Glenn Daigle,-3,52,205860,glenndaigle,-3,52,3,4,2,3,3,3,2,4,4,4,3,3,2,2,3,2,2,3
+WHITE,T4,4,Walter  Hernandez,-3,52,268739,walterx,-3,52,3,3,4,3,3,3,3,3,3,3,3,2,3,4,3,2,2,2
+WHITE,T7,7,Kirby cummings ,-2,53,231215,kirbyc415,-2,53,3,3,2,2,3,3,3,4,4,3,3,3,2,3,4,2,3,3
+WHITE,T7,7,Stuart Bermack,-2,53,240487,stuartbermack,-2,53,3,4,2,3,3,3,2,3,2,4,3,3,3,3,4,3,2,3
+WHITE,T7,7,Miles Kane,-2,53,,milsman2,-2,53,3,3,2,3,4,2,2,4,3,6,3,2,2,3,3,3,2,3
+WHITE,T7,7,Spokes ,-2,53,,spokes,-2,53,3,3,3,3,3,4,2,4,2,3,3,3,3,3,3,3,2,3
+WHITE,11,11,Sam Eichenlaub,-1,54,105262,samykus,-1,54,3,3,2,3,3,3,3,5,3,4,3,2,3,3,3,3,2,3
+WHITE,12,12,Todd Zwissler,0,55,168540,tzwissle,0,55,3,4,3,2,3,4,3,4,3,3,4,3,3,2,4,2,2,3
+WHITE,T13,13,Michael Irizarry,1,56,199113,mirizar,1,56,3,3,3,3,3,3,3,4,3,4,3,3,3,3,3,3,3,3
+WHITE,T13,13,Chris jordan,1,56,,cjnasty,1,56,4,3,3,3,3,3,2,4,3,3,3,3,3,4,3,3,3,3
+WHITE,T13,13,Elliot Hauser,1,56,,elliothauser,1,56,4,3,2,3,4,3,3,3,3,4,3,2,3,4,4,2,3,3
+WHITE,T13,13,Patrick Fitzgerald,1,56,,prolandscaper,1,56,3,4,3,3,2,3,2,7,3,3,3,3,3,3,3,3,3,2
+WHITE,T17,17,Kevin Cheek,2,57,103077,bigmoneycheeks,2,57,3,4,3,2,3,4,3,4,3,4,4,3,3,4,3,2,3,2
+WHITE,T17,17,Dylan Epley,2,57,162111,depley,2,57,3,5,3,2,3,3,3,4,2,4,3,4,4,3,3,3,2,3
+WHITE,T17,17,Phillip Martinez,2,57,192515,phillip15,2,57,3,4,3,3,4,4,3,4,2,3,3,3,3,3,3,4,2,3
+WHITE,T17,17,Blake Meyers,2,57,,glutenator,2,57,3,4,2,3,3,4,2,4,4,4,3,3,3,3,3,2,4,3
+WHITE,T17,17,Stu Brown,2,57,,smrtprts,2,57,4,3,3,3,3,3,3,5,2,3,3,3,3,3,4,3,3,3
+WHITE,22,22,Kevin S,3,58,,kevaschm713,3,58,3,4,3,3,3,3,3,4,3,4,3,3,4,4,3,3,3,2
+WHITE,23,23,Kyle Bazzell,4,59,,kyle696,4,59,3,3,3,2,3,4,3,3,3,4,4,3,3,4,3,4,4,3
+WHITE,T24,24,Grant Ball,5,60,,gballl,5,60,3,4,3,3,4,5,2,4,3,4,3,3,4,3,4,3,2,3
+WHITE,T24,24,Stacey Duke,5,60,,elduko,5,60,4,4,3,2,3,4,3,4,3,3,4,3,3,4,3,3,3,4
+WHITE,26,26,Dennis Woodward,7,62,52512,jackpsquat,7,62,3,3,3,3,4,4,3,5,4,4,3,3,3,5,3,3,3,3
+WHITE,27,27,Manny Gonzalez,8,63,,mannygonzalez,8,63,3,3,3,2,3,3,3,6,3,5,4,4,3,3,4,3,4,4
+WHITE,28,28,John Blake,13,68,,jtblake4,13,68,3,5,2,3,3,5,4,6,4,5,4,4,3,4,4,3,3,3
+RED,1,1,Kevin Osborn,3,58,,kevinosborn88,3,58,3,3,3,3,3,3,3,4,4,5,3,4,5,2,3,2,2,3
+RED,2,2,Paul Verberne,6,61,83677,wizdog,6,61,3,4,4,4,2,5,3,4,4,3,3,3,4,3,4,2,3,3
+RED,3,3,Paul Phillips ,7,62,,slicenugget,7,62,4,3,3,3,4,3,4,5,3,5,3,4,3,3,4,3,2,3
+RED,T4,4,Stephen Hoffart ,10,65,271729,midnightlace,10,65,3,5,2,2,3,5,3,6,4,4,3,3,5,4,4,3,3,3
+RED,T4,4,Luis Mansilla,10,65,286398,htxpunchy,10,65,3,4,4,3,4,4,5,4,3,4,4,3,3,4,3,4,3,3
+RED,T6,6,Chris Friedman,11,66,,doopesmoker420,11,66,4,3,3,3,3,4,4,4,4,4,4,4,4,4,4,3,3,4
+RED,T6,6,Robert Hartsoe,11,66,,hartsoerob,11,66,4,5,3,4,3,5,3,3,3,4,4,3,4,4,4,4,3,3
+RED,8,8,paul vandemark,12,67,,pavandemark,12,67,2,3,5,2,3,5,2,5,5,3,3,4,3,4,8,3,4,3
+RED,9,9,Jacob Simpson,15,70,,yungbingus,15,70,4,4,2,3,4,5,3,4,3,4,6,4,4,3,5,3,4,5
+RED,10,10,Ian McClellan,24,79,,rthawk,24,79,6,5,4,3,5,4,4,6,4,6,4,3,4,5,3,4,5,4

@@ -8,11 +8,12 @@ contains information about a player's performance in the event.
 
 import datetime
 
-from sqlalchemy import DateTime, ForeignKey, Integer, String, UniqueConstraint
+from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models.base import Base
 from src.models.course_layout import CourseLayout
+from src.models.league_session import LeagueSession
 
 
 class EventResult(Base):
@@ -55,7 +56,21 @@ class EventResult(Base):
     username: Mapped[str] = mapped_column(String, nullable=False)
     round_relative_score: Mapped[int] = mapped_column(Integer, nullable=False)
     round_total_score: Mapped[int] = mapped_column(Integer, nullable=False)
-    round_points: Mapped[float] = mapped_column(Integer, nullable=False, default=0.0)
+    round_points: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+
+    league_session_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("league_sessions.id"), nullable=False
+    )
+
+    league_session: Mapped["LeagueSession"] = relationship(
+        "LeagueSession", back_populates="event_results"
+    )
+    """
+    Relationship to the LeagueSession model.
+
+    This establishes a many-to-one relationship between EventResult and LeagueSession,
+    where each event result is associated with a specific league session.
+    """
 
     course_layout_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("course_layouts.id"), nullable=False

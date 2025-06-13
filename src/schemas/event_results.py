@@ -38,6 +38,7 @@ class EventResultCreate(EventResultBase):
     """
 
     course_layout_id: int
+    league_session_id: int
 
 
 class EventResultInDBBase(EventResultBase):
@@ -58,6 +59,7 @@ class EventResultPublic(EventResultBase):
 
     id: int
     course_layout_id: int
+    league_session_id: int
 
 
 class EventResultsPublic(BaseModel):

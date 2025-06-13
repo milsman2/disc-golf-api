@@ -22,10 +22,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
 
+from src.api.deps import get_db
 from src.main import app
 from src.models.base import Base
 from src.schemas.event_results import EventResultCreate
-from src.api.deps import get_db
 
 
 @pytest.fixture(name="session", scope="module")

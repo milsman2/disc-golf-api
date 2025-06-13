@@ -4,13 +4,42 @@ and posts event results to an API endpoint.
 """
 
 import datetime
+import math
 import re
 from pathlib import Path
-import math
 
 import httpx
 import pandas as pd
 from icecream import ic
+from pydantic import ValidationError
+
+from src.schemas.event_results import EventResultCreate
+
+
+def assign_points(df: pd.DataFrame) -> pd.DataFrame:
+    """Assigns points based on position_raw for each division in the DataFrame.
+    :param df: DataFrame containing event results.
+    :return: DataFrame with assigned points.
+    """
+    ic()
+    points_dict = {}
+    keys = range(1, 31)
+    for key in keys:
+        most_points_plus = 31
+        points_dict[key] = most_points_plus - key
+    df2 = (
+        df.groupby(["division", "position_raw"])["name"]
+        .nunique()
+        .reset_index()
+        .rename(columns={"name": "players"})
+    )
+    df2["points_value"] = df2["position_raw"].map(points_dict)
+    df2["adjusted_points"] = (
+        df2["points_value"] + (df2["points_value"] + 1) - (df2["players"])
+    ) / 2
+    df3 = pd.merge(df, df2, on=["position_raw", "division"], how="left")
+    ic(df3)
+    return df3
 
 
 def post_event_result(event_result: dict):
@@ -48,22 +77,9 @@ def import_and_process_csv(file_path):
         else:
             date_val = None
         df = pd.read_csv(file_path)
+        df = assign_points(df)
         df.insert(0, "date", date_val)
         df = df.loc[:, ~df.columns.str.startswith("hole_")]
-        required_columns = {
-            "date",
-            "division",
-            "position_raw",
-            "name",
-            "event_relative_score",
-            "event_total_score",
-            "pdga_number",
-            "username",
-            "round_relative_score",
-            "round_total_score",
-        }
-        missing_columns = required_columns - set(df.columns)
-        ic(missing_columns)
         df = df.replace([float("inf"), -float("inf")], pd.NA)
         df = df.where(pd.notnull(df), None)
         df.loc[:, "position_raw"] = pd.to_numeric(
@@ -98,8 +114,13 @@ def import_and_process_csv(file_path):
                 "round_relative_score": row.get("round_relative_score"),
                 "round_total_score": row.get("round_total_score"),
                 "course_layout_id": course_layout_id,
+                "round_points": row.get("adjusted_points", 0.0),
+                "league_session_id": 1,
             }
-
+            try:
+                EventResultCreate(**event_result)
+            except ValidationError as e:
+                ic(e)
             post_event_result(event_result)
     except FileNotFoundError as e:
         ic(f"FileNotFoundError: {e}")
