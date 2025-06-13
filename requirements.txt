@@ -77,7 +77,6 @@ python-multipart==0.0.20
 python-semantic-release==10.1.0
 pytz==2025.2
 PyYAML==6.0.2
-requests==2.32.4
 requests-toolbelt==1.0.0
 rich==14.0.0
 rich-toolkit==0.14.7
