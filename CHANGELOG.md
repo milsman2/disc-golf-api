@@ -1,6 +1,17 @@
 # CHANGELOG
 
 
+## v0.3.1 (2025-06-19)
+
+### Bug Fixes
+
+- Add push trigger for main branch in release workflow
+  ([`8cf6125`](https://github.com/milsman2/disc-golf-api/commit/8cf6125f2f7b6d0da7234cd313cdf66a08bc470f))
+
+- Update package versions in requirements.txt for compatibility and improvements
+  ([`c361ea1`](https://github.com/milsman2/disc-golf-api/commit/c361ea179608e3cb0058c50a3be27bdf5569c246))
+
+
 ## v0.3.0 (2025-06-13)
 
 ### Bug Fixes
