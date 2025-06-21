@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.4.0 (2025-06-21)
+
+### Features
+
+- Enhance database setup in pre_start.sh and add POSTGRES_OWNER to config
+  ([`af4af2f`](https://github.com/milsman2/disc-golf-api/commit/af4af2f8eb72b1005b8d7eed96fd69b0eac139cb))
+
+
 ## v0.3.1 (2025-06-19)
 
 ### Bug Fixes
