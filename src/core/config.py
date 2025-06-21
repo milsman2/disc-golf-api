@@ -69,6 +69,7 @@ class Settings(BaseSettings):
     POSTGRES_PORT: int = 5432
     POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str = "changeme"
+    POSTGRES_OWNER: str = "postgres"
     POSTGRES_DB: str = "postgres"
     SQLITE_URI: str = "sqlite:///./test.db"
     EMAIL_RESET_TOKEN_EXPIRE_HOURS: int = 48
