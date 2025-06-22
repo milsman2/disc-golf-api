@@ -5,7 +5,7 @@ WORKDIR /app
 
 # Install build dependencies
 RUN apt-get update && \
-    apt-get upgrade -y &&\
+    apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
     gcc \
     build-essential \
@@ -30,6 +30,12 @@ FROM python:3.13-slim
 
 WORKDIR /app
 
+# Install psql client
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends postgresql-client && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 # Copy the wheels and application code from the builder stage
 COPY --from=builder /app/wheels /wheels
 COPY --from=builder /app/requirements.txt .
@@ -45,4 +51,4 @@ COPY ./bash_scripts/pre_start.sh /app/bash_scripts/pre_start.sh
 RUN chmod +x /app/bash_scripts/pre_start.sh
 
 # Command to run the pre-start script and then start the FastAPI application
-CMD ["/bin/bash", "-c", "/app/bash_scripts/pre_start.sh && uvicorn src.main:app --host 0.0.0.0"]
+CMD ["/bin/bash", "-c", "/app/bash_scripts/pre_start.sh &&
