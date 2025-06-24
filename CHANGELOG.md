@@ -1,6 +1,19 @@
 # CHANGELOG
 
 
+## v0.5.0 (2025-06-24)
+
+### Bug Fixes
+
+- Update PostgreSQL port mapping and remove Redis service from Docker Compose
+  ([`ced677b`](https://github.com/milsman2/disc-golf-api/commit/ced677b8c1dffe268ee877736c03fb23713a2c87))
+
+### Features
+
+- Add Docker Compose configuration for PostgreSQL and Redis services
+  ([`421f837`](https://github.com/milsman2/disc-golf-api/commit/421f83797dfd69a50f26780b212b343a40dfa0d2))
+
+
 ## v0.4.0 (2025-06-21)
 
 ### Features
