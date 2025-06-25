@@ -81,7 +81,9 @@ def create_event_result_route(event_result: EventResultCreate, session: SessionD
     if not league_session:
         raise HTTPException(
             status_code=422,
-            detail=f"league_session_id {event_result.league_session_id} does not exist.",
+            detail=(
+                f"league_session_id {event_result.league_session_id} does not exist."
+            ),
         )
     return create_event_result(db=session, event_result=event_result)
 
