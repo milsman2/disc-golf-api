@@ -6,8 +6,8 @@ EventResultCreate schema. It ensures that valid data passes schema validation
 and invalid data raises appropriate errors.
 
 Tests:
-- test_valid_event_result: Validates rows from the CSV file against the schema.
-- test_invalid_event_result: Ensures invalid data raises validation errors.
+- test_valid_event_result_with_layouts: Validates rows from the CSV file against the schema and API.
+- test_invalid_league_session_id: Ensures invalid league_session_id returns a 422 error.
 
 Dependencies:
 - pandas: Used to read and process the CSV file.
@@ -27,9 +27,11 @@ from src.main import app
 from src.models.base import Base
 from src.schemas.event_results import EventResultCreate
 
-
 @pytest.fixture(name="session", scope="module")
 def session_fixture():
+    """
+    Fixture to provide a SQLAlchemy session with an in-memory SQLite database.
+    """
     ic()
     engine = create_engine(
         "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
@@ -38,6 +40,28 @@ def session_fixture():
     with Session(engine) as session:
         yield session
 
+@pytest.fixture
+def client(session):
+    def get_session_override():
+        return session
+    app.dependency_overrides[get_db] = get_session_override
+    return TestClient(app)
+
+
+@pytest.fixture
+def league_session_id(client):
+    """
+    Fixture to create a league session and return its ID.
+    """
+    data = {
+        "name": "Test League Session",
+        "start_date": "2025-03-01T00:00:00Z",
+        "end_date": "2025-04-01T00:00:00Z",
+        "description": "Test session"
+    }
+    response = client.post("/api/v1/league_sessions/", json=data)
+    assert response.status_code in (200, 201)
+    return response.json()["id"]
 
 @pytest.fixture(name="sample_csv_path")
 def get_sample():
@@ -47,17 +71,11 @@ def get_sample():
     return "./data/event_results/tc-jester-hfds-league-2025-03-12.csv"
 
 
-def test_valid_event_result_with_layouts(sample_csv_path, session: Session):
+def test_valid_event_result_with_layouts(sample_csv_path, client, league_session_id):
     """
     Test that valid rows from the CSV file fit the EventResultCreate schema,
-    including associated layout data.
+    including associated layout data and a valid league_session_id.
     """
-
-    def get_session_override():
-        return session
-
-    app.dependency_overrides[get_db] = get_session_override
-    client = TestClient(app)
     ic(client)
     df = pd.read_csv(sample_csv_path)
     df.insert(0, "date", pd.to_datetime(1741820400, unit="s"))
@@ -85,7 +103,7 @@ def test_valid_event_result_with_layouts(sample_csv_path, session: Session):
             "round_relative_score": int(row["round_relative_score"]),
             "round_total_score": int(row["round_total_score"]),
             "course_layout_id": 1,
-            "league_session_id": 1,
+            "league_session_id": league_session_id,
         }
 
         event_result = EventResultCreate(**data)
@@ -121,3 +139,30 @@ def test_valid_event_result_with_layouts(sample_csv_path, session: Session):
         assert response.json()["round_relative_score"] == data["round_relative_score"]
         assert response.json()["round_total_score"] == data["round_total_score"]
         assert response.json()["round_points"] == 0.0
+
+def test_invalid_league_session_id(client):
+    """
+    Test that creating an EventResult with a non-existent league_session_id returns 422.
+    """
+    event_result_data = {
+        "date": "2025-03-12T18:00:00Z",
+        "division": "MPO",
+        "position": "1",
+        "position_raw": 1,
+        "name": "Test Player",
+        "event_relative_score": -10,
+        "event_total_score": 50,
+        "pdga_number": 12345,
+        "username": "testuser",
+        "round_relative_score": -5,
+        "round_total_score": 25,
+        "course_layout_id": 1,
+        "league_session_id": 99999  # Non-existent league_session_id
+    }
+
+    response = client.post(
+        "/api/v1/event-results/",
+        json=event_result_data,
+    )
+    assert response.status_code == 422
+    assert "does not exist" in response.json()["detail"]

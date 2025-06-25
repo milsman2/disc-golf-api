@@ -35,6 +35,8 @@ from src.schemas.event_results import (
     EventResultPublic,
     EventResultsPublic,
 )
+from src.crud.league_session import get_league_session
+
 
 router = APIRouter(
     prefix="/event-results",
@@ -76,8 +78,13 @@ def create_event_result_route(event_result: EventResultCreate, session: SessionD
     Create a new EventResult.
     Returns the created EventResult.
     """
+    league_session = get_league_session(session, event_result.league_session_id)
+    if not league_session:
+        raise HTTPException(
+            status_code=422,
+            detail=f"league_session_id {event_result.league_session_id} does not exist.",
+        )
     return create_event_result(db=session, event_result=event_result)
-
 
 @router.put("/{event_result_id}", response_model=EventResultPublic)
 def update_event_result_route(
