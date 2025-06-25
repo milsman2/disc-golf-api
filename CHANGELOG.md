@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.5.1 (2025-06-25)
+
+### Bug Fixes
+
+- Remove version declaration from Docker Compose file
+  ([`8b4df45`](https://github.com/milsman2/disc-golf-api/commit/8b4df45c5f6e1757bc2ffc678059fe8e0f9b7230))
+
+
 ## v0.5.0 (2025-06-24)
 
 ### Bug Fixes
