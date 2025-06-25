@@ -8,6 +8,11 @@ if [ -f .env ]; then
     export $(grep -v '^#' .env | xargs)
 fi
 
+until pg_isready -h "$POSTGRES_SERVER" -p "$POSTGRES_PORT" -U "$POSTGRES_USER"; do
+  echo "Waiting for Postgres..."
+  sleep 1
+done
+
 # Use postgres superuser to create the database and owner
 if PGPASSWORD="$POSTGRES_PASSWORD" \
     psql -h "$POSTGRES_SERVER" -p "$POSTGRES_PORT" \
