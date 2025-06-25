@@ -42,7 +42,7 @@ def session_fixture():
         yield session
 
 
-@pytest.fixture
+@pytest.fixture(name="sample_client")
 def client(session):
     def get_session_override():
         return session
@@ -51,8 +51,8 @@ def client(session):
     return TestClient(app)
 
 
-@pytest.fixture
-def league_session_id(client):
+@pytest.fixture(name="sample_league_session_id")
+def league_session_id(sample_client):
     """
     Fixture to create a league session and return its ID.
     """
@@ -62,7 +62,7 @@ def league_session_id(client):
         "end_date": "2025-04-01T00:00:00Z",
         "description": "Test session",
     }
-    response = client.post("/api/v1/league_sessions/", json=data)
+    response = sample_client.post("/api/v1/league_sessions/", json=data)
     assert response.status_code in (200, 201)
     return response.json()["id"]
 
@@ -75,12 +75,14 @@ def get_sample():
     return "./data/event_results/tc-jester-hfds-league-2025-03-12.csv"
 
 
-def test_valid_event_result_with_layouts(sample_csv_path, client, league_session_id):
+def test_valid_event_result_with_layouts(
+    sample_csv_path, sample_client, sample_league_session_id
+):
     """
     Test that valid rows from the CSV file fit the EventResultCreate schema,
     including associated layout data and a valid league_session_id.
     """
-    ic(client)
+    ic(sample_client)
     df = pd.read_csv(sample_csv_path)
     df.insert(0, "date", pd.to_datetime(1741820400, unit="s"))
     for _, row in df.iterrows():
@@ -107,7 +109,7 @@ def test_valid_event_result_with_layouts(sample_csv_path, client, league_session
             "round_relative_score": int(row["round_relative_score"]),
             "round_total_score": int(row["round_total_score"]),
             "course_layout_id": 1,
-            "league_session_id": league_session_id,
+            "league_session_id": sample_league_session_id,
         }
 
         event_result = EventResultCreate(**data)
@@ -127,7 +129,7 @@ def test_valid_event_result_with_layouts(sample_csv_path, client, league_session
         assert event_result.username == data["username"]
         assert event_result.round_relative_score == data["round_relative_score"]
         assert event_result.round_total_score == data["round_total_score"]
-        response = client.post(
+        response = sample_client.post(
             "/api/v1/event-results/",
             json=event_result.model_dump(mode="json", exclude_none=True),
         )
@@ -145,7 +147,7 @@ def test_valid_event_result_with_layouts(sample_csv_path, client, league_session
         assert response.json()["round_points"] == 0.0
 
 
-def test_invalid_league_session_id(client):
+def test_invalid_league_session_id(sample_client):
     """
     Test that creating an EventResult with a non-existent league_session_id returns 422.
     """
@@ -165,7 +167,7 @@ def test_invalid_league_session_id(client):
         "league_session_id": 99999,  # Non-existent league_session_id
     }
 
-    response = client.post(
+    response = sample_client.post(
         "/api/v1/event-results/",
         json=event_result_data,
     )
