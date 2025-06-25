@@ -1,6 +1,29 @@
 # CHANGELOG
 
 
+## v0.5.3 (2025-06-25)
+
+### Bug Fixes
+
+- Clean up test code by adding missing newlines and formatting adjustments
+  ([`5a252bd`](https://github.com/milsman2/disc-golf-api/commit/5a252bdc03038fdf653d8a3d14b1e3b72a97e296))
+
+- Enhance event result tests and add league session validation
+  ([`40c4012`](https://github.com/milsman2/disc-golf-api/commit/40c40128c2d315a8c8003ecf5949548dd0a57168))
+
+- Improve error message formatting for league session validation in create_event_result_route
+  ([`200e315`](https://github.com/milsman2/disc-golf-api/commit/200e3153f1bc74208edebcb7a22ce587ece4aa45))
+
+- Improve formatting and documentation in test_event_result.py
+  ([`2fc8879`](https://github.com/milsman2/disc-golf-api/commit/2fc887989340318ae36756e17107f465131e53ce))
+
+- Refactor test fixtures to use consistent naming for sample client and league session ID
+  ([`4d77230`](https://github.com/milsman2/disc-golf-api/commit/4d772307f56070038f8101065f25d0493d8861bf))
+
+- Remove redundant import statement for league_session
+  ([`496c348`](https://github.com/milsman2/disc-golf-api/commit/496c3488b4b10c766d025f070893b974bd0459a2))
+
+
 ## v0.5.2 (2025-06-25)
 
 ### Bug Fixes
