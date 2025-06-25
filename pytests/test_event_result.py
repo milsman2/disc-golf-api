@@ -27,6 +27,7 @@ from src.main import app
 from src.models.base import Base
 from src.schemas.event_results import EventResultCreate
 
+
 @pytest.fixture(name="session", scope="module")
 def session_fixture():
     """
@@ -40,10 +41,12 @@ def session_fixture():
     with Session(engine) as session:
         yield session
 
+
 @pytest.fixture
 def client(session):
     def get_session_override():
         return session
+
     app.dependency_overrides[get_db] = get_session_override
     return TestClient(app)
 
@@ -57,11 +60,12 @@ def league_session_id(client):
         "name": "Test League Session",
         "start_date": "2025-03-01T00:00:00Z",
         "end_date": "2025-04-01T00:00:00Z",
-        "description": "Test session"
+        "description": "Test session",
     }
     response = client.post("/api/v1/league_sessions/", json=data)
     assert response.status_code in (200, 201)
     return response.json()["id"]
+
 
 @pytest.fixture(name="sample_csv_path")
 def get_sample():
@@ -140,6 +144,7 @@ def test_valid_event_result_with_layouts(sample_csv_path, client, league_session
         assert response.json()["round_total_score"] == data["round_total_score"]
         assert response.json()["round_points"] == 0.0
 
+
 def test_invalid_league_session_id(client):
     """
     Test that creating an EventResult with a non-existent league_session_id returns 422.
@@ -157,7 +162,7 @@ def test_invalid_league_session_id(client):
         "round_relative_score": -5,
         "round_total_score": 25,
         "course_layout_id": 1,
-        "league_session_id": 99999  # Non-existent league_session_id
+        "league_session_id": 99999,  # Non-existent league_session_id
     }
 
     response = client.post(
