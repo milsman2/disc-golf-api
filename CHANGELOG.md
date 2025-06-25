@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.5.2 (2025-06-25)
+
+### Bug Fixes
+
+- Add wait loop for Postgres readiness before database setup
+  ([`28ce506`](https://github.com/milsman2/disc-golf-api/commit/28ce50686c66ffcb88635dc6369f5ee9c20a07c8))
+
+
 ## v0.5.1 (2025-06-25)
 
 ### Bug Fixes
