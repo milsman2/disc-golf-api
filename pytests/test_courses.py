@@ -3,6 +3,7 @@ This module contains tests for the courses endpoints.
 """
 
 import json
+
 import pytest
 from fastapi.testclient import TestClient
 from icecream import ic
@@ -16,6 +17,7 @@ from src.main import app
 from src.models.base import Base
 from src.schemas.courses import CourseCreate
 
+
 @pytest.fixture(scope="module", name="test_session")
 def session():
     """
@@ -28,15 +30,19 @@ def session():
     with Session(engine) as session:
         yield session
 
+
 @pytest.fixture(name="test_client")
 def client(test_session):
     """
     Provides a TestClient with the session dependency overridden.
     """
+
     def get_session_override():
         return test_session
+
     app.dependency_overrides[get_db] = get_session_override
     return TestClient(app)
+
 
 def load_course_data():
     """
@@ -66,6 +72,7 @@ def load_course_data():
             raise
         return course_data
 
+
 def test_create_course(test_client):
     """
     Test creating a course.
@@ -79,6 +86,7 @@ def test_create_course(test_client):
 
     response = test_client.post("/api/v1/courses/", json=course_test.model_dump())
     assert response.status_code == 201
+
 
 def test_get_course(test_client):
     """
@@ -108,6 +116,7 @@ def test_get_course(test_client):
     assert data["layouts"][1]["par"] == 40
     assert data["layouts"][1]["length"] == 4204
 
+
 def get_all_courses(test_client):
     """
     Test retrieving all courses.
@@ -119,7 +128,8 @@ def get_all_courses(test_client):
     assert len(data["courses"]) > 0
     assert isinstance(data["courses"], list)
     assert all("id" in course for course in data["courses"])
-    
+
+
 def test_delete_course(test_client):
     """
     Test deleting a course.

@@ -6,9 +6,9 @@ EventResultCreate schema. It ensures that valid data passes schema validation
 and invalid data raises appropriate errors.
 
 Tests:
-- test_valid_event_result_with_layouts: Validates rows from the CSV file 
+- test_valid_event_result_with_layouts: Validates rows from the CSV file
 against the schema and API.
-- test_invalid_league_session_id: Ensures invalid league_session_id returns 
+- test_invalid_league_session_id: Ensures invalid league_session_id returns
 a 422 error.
 
 Dependencies:
@@ -50,6 +50,7 @@ def client(session):
     Fixture to create a TestClient with a session override for testing.
     This allows the tests to use the in-memory SQLite database.
     """
+
     def get_session_override():
         return session
 
