@@ -19,7 +19,7 @@ from src.schemas.courses import CourseCreate
 
 
 @pytest.fixture(scope="module", name="test_session")
-def session():
+def test_session_fixture():
     """
     Create a shared in-memory SQLite database session for the test suite.
     """
@@ -27,8 +27,8 @@ def session():
         "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
     )
     Base.metadata.create_all(engine)
-    with Session(engine) as session:
-        yield session
+    with Session(engine) as test_session:
+        yield test_session
 
 
 @pytest.fixture(name="test_client")
