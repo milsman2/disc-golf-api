@@ -22,7 +22,7 @@
 [MAIN]
 extension-pkg-whitelist=pydantic
 # Files or directories to be skipped. They should be base names, not paths.
-ignore=third_party,migrations
+ignore=third_party,migrations,CHANGELOG.md
 
 # Files or directories matching the regex patterns are skipped. The regex
 # matches against base names, not paths.
