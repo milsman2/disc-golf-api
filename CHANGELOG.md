@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.5.5 (2025-06-27)
+
+### Bug Fixes
+
+- Update .pylintrc to ignore CHANGELOG.md for Pylint checks
+  ([`6375e1c`](https://github.com/milsman2/disc-golf-api/commit/6375e1ca7be09c5cbf820cc8aecd189438392a26))
+
+
 ## v0.5.4 (2025-06-27)
 
 ### Bug Fixes
