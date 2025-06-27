@@ -117,7 +117,7 @@ def test_get_course(test_client):
     assert data["layouts"][1]["length"] == 4204
 
 
-def get_all_courses(test_client):
+def test_get_all_courses(test_client):
     """
     Test retrieving all courses.
     """
