@@ -18,8 +18,8 @@ from src.models.base import Base
 from src.schemas.courses import CourseCreate
 
 
-@pytest.fixture(scope="module", name="session")
-def session_fixture():
+@pytest.fixture(scope="module", name="test_session")
+def test_session_fixture():
     """
     Create a shared in-memory SQLite database session for the test suite.
     """
@@ -27,22 +27,27 @@ def session_fixture():
         "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
     )
     Base.metadata.create_all(engine)
-    with Session(engine) as session:
-        yield session
+    with Session(engine) as test_session:
+        yield test_session
 
 
-def test_create_course(session: Session):
+@pytest.fixture(name="test_client")
+def client(test_session):
     """
-    Test creating a course.
+    Provides a TestClient with the session dependency overridden.
     """
 
     def get_session_override():
-        return session
+        return test_session
 
     app.dependency_overrides[get_db] = get_session_override
-    client = TestClient(app)
-    ic(client)
+    return TestClient(app)
 
+
+def load_course_data():
+    """
+    Loads and normalizes course data from the test JSON file.
+    """
     with open("data/courses/t-c-jester-park-zVh6.json", encoding="utf-8") as f:
         course_data = json.load(f)
         try:
@@ -65,29 +70,29 @@ def test_create_course(session: Session):
         except KeyError as e:
             ic(f"KeyError: {e}")
             raise
-
-        try:
-            course_test = CourseCreate.model_validate(course_data)
-        except ValidationError as e:
-            ic(f"ValidationError: {e}")
-            raise
-
-        response = client.post("/api/v1/courses/", json=course_test.model_dump())
-        assert response.status_code == 201
+        return course_data
 
 
-def test_get_course(session: Session):
+def test_create_course(test_client):
+    """
+    Test creating a course.
+    """
+    course_data = load_course_data()
+    try:
+        course_test = CourseCreate.model_validate(course_data)
+    except ValidationError as e:
+        ic(f"ValidationError: {e}")
+        raise
+
+    response = test_client.post("/api/v1/courses/", json=course_test.model_dump())
+    assert response.status_code == 201
+
+
+def test_get_course(test_client):
     """
     Test retrieving a course.
     """
-
-    def get_session_override():
-        return session
-
-    app.dependency_overrides[get_db] = get_session_override
-    client = TestClient(app)
-
-    response = client.get("/api/v1/courses/1")
+    response = test_client.get("/api/v1/courses/1")
     assert response.status_code == 200
     data = response.json()
     assert data["name"] == "T.C. Jester Park"
@@ -112,19 +117,25 @@ def test_get_course(session: Session):
     assert data["layouts"][1]["length"] == 4204
 
 
-def test_delete_course(session: Session):
+def test_get_all_courses(test_client):
+    """
+    Test retrieving all courses.
+    """
+    response = test_client.get("/api/v1/courses/")
+    assert response.status_code == 200
+    data = response.json()
+    assert "courses" in data
+    assert len(data["courses"]) > 0
+    assert isinstance(data["courses"], list)
+    assert all("id" in course for course in data["courses"])
+
+
+def test_delete_course(test_client):
     """
     Test deleting a course.
     """
-
-    def get_session_override():
-        return session
-
-    app.dependency_overrides[get_db] = get_session_override
-    client = TestClient(app)
-
-    delete_response = client.delete("/api/v1/courses/1")
+    delete_response = test_client.delete("/api/v1/courses/1")
     assert delete_response.status_code == 204
 
-    get_response = client.get("/api/v1/courses/1")
+    get_response = test_client.get("/api/v1/courses/1")
     assert get_response.status_code == 404
