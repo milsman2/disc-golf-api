@@ -1,6 +1,23 @@
 # CHANGELOG
 
 
+## v0.5.4 (2025-06-27)
+
+### Bug Fixes
+
+- Clean up whitespace and formatting in test files for consistency
+  ([`b24d516`](https://github.com/milsman2/disc-golf-api/commit/b24d516a533397f497c2b361ae572cd28ce8ee82))
+
+- Refactor course tests to use consistent test client and session fixtures
+  ([`aecd398`](https://github.com/milsman2/disc-golf-api/commit/aecd398d012fe6557e843ee56c9f9f8a5b5a2dea))
+
+- Rename get_all_courses function to test_get_all_courses for consistency
+  ([`fab5e08`](https://github.com/milsman2/disc-golf-api/commit/fab5e0805070061d037a7c993fe7f10dad02fd15))
+
+- Rename session fixture to test_session_fixture for clarity
+  ([`155454b`](https://github.com/milsman2/disc-golf-api/commit/155454b19c666cd5a883179ddd7cb97ebae85c3f))
+
+
 ## v0.5.3 (2025-06-25)
 
 ### Bug Fixes
