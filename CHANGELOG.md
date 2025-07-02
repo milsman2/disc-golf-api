@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.5.7 (2025-07-02)
+
+### Bug Fixes
+
+- Ensure CMD in Dockerfile has a newline at the end for proper execution
+  ([`de9cbc4`](https://github.com/milsman2/disc-golf-api/commit/de9cbc4a506bbcd3fa48c44f4e9bf929fc949e5d))
+
+
 ## v0.5.6 (2025-07-02)
 
 ### Bug Fixes
