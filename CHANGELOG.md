@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.5.6 (2025-07-02)
+
+### Bug Fixes
+
+- Correct POSTGRES_USER environment variable to use POSTGRES_OWNER
+  ([`7083945`](https://github.com/milsman2/disc-golf-api/commit/7083945a1ce39c0ccd0418e89237689fa4ea0e7a))
+
+
 ## v0.5.5 (2025-06-27)
 
 ### Bug Fixes
