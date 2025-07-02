@@ -51,4 +51,4 @@ COPY ./bash_scripts/pre_start.sh /app/bash_scripts/pre_start.sh
 RUN chmod +x /app/bash_scripts/pre_start.sh
 
 # Command to run the pre-start script and then start the FastAPI application
-CMD ["/bin/bash", "-c", "/app/bash_scripts/pre_start.sh &&
+CMD ["/bin/bash", "-c", "/app/bash_scripts/pre_start.sh && uvicorn src.main:app --host 0.0.0.0 --port 8000"]
