@@ -9,9 +9,9 @@ The tests use an in-memory SQLite database for isolation and include fixtures
 for CSV data loading, database session setup, and event session creation.
 
 Tests:
-- test_valid_event_result_with_layouts: Validates CSV data against the EventResultCreate 
+- test_valid_event_result_with_layouts: Validates CSV data against the EventResultCreate
   schema and tests successful API creation with valid event session references.
-- test_invalid_event_session_id: Ensures that invalid event_session_id references 
+- test_invalid_event_session_id: Ensures that invalid event_session_id references
   return appropriate 422 HTTP error responses.
 
 Dependencies:
@@ -39,11 +39,11 @@ from src.schemas.event_results import EventResultCreate
 def session_fixture():
     """
     Fixture to provide a SQLAlchemy session with an in-memory SQLite database.
-    
+
     Creates a temporary database for the duration of the test module, ensuring
     test isolation and preventing interference with production data. All database
     tables are created from the SQLAlchemy models.
-    
+
     Yields:
         Session: SQLAlchemy session connected to the in-memory test database.
     """
@@ -60,14 +60,14 @@ def session_fixture():
 def client(session):
     """
     Fixture to create a TestClient with database session dependency override.
-    
+
     This fixture sets up a FastAPI TestClient that uses the in-memory test database
     instead of the production database. It overrides the get_db dependency to ensure
     all API calls during testing use the same test database session.
-    
+
     Args:
         session: The SQLAlchemy session fixture for the test database.
-        
+
     Returns:
         TestClient: Configured FastAPI test client with database override.
     """
@@ -83,17 +83,17 @@ def client(session):
 def league_session_id(sample_client):
     """
     Fixture to create a test event session and return its database ID.
-    
+
     Creates a sample event session via the API to ensure that event results
     have a valid foreign key reference during testing. This prevents foreign
     key constraint violations when creating test event results.
-    
+
     Args:
         sample_client: The TestClient fixture for making API requests.
-        
+
     Returns:
         int: The database ID of the created event session.
-        
+
     Raises:
         AssertionError: If the event session creation fails (non-200/201 response).
     """
@@ -112,7 +112,7 @@ def league_session_id(sample_client):
 def get_sample():
     """
     Fixture to provide the file path to the sample CSV file for testing.
-    
+
     Returns:
         str: Path to the CSV file containing test event result data.
     """
@@ -124,23 +124,23 @@ def test_valid_event_result_with_layouts(
 ):
     """
     Test that valid CSV data fits the EventResultCreate schema and API endpoints.
-    
+
     This comprehensive test validates that:
     1. CSV data can be successfully parsed and converted to EventResultCreate objects
     2. Schema validation passes for all required fields
     3. API POST requests succeed with valid data
     4. Response data matches the input data for all fields
     5. Foreign key relationships (event_session_id) are properly handled
-    
+
     The test processes each row in the CSV file, validates it against the Pydantic
     schema, and then makes API calls to ensure end-to-end functionality works.
-    
+
     Args:
         sample_csv_path (str): Path to the test CSV file containing event result data.
         sample_client (TestClient): FastAPI test client with database override.
         sample_event_session_id (int): ID of a valid event session for foreign
         key reference.
-        
+
     Asserts:
         - Schema validation succeeds for all CSV rows
         - API returns 200 status code for successful creation
@@ -215,19 +215,19 @@ def test_valid_event_result_with_layouts(
 def test_invalid_event_session_id(sample_client):
     """
     Test that invalid event_session_id references return proper 422 HTTP errors.
-    
+
     This test ensures that the API properly validates foreign key references
     and returns meaningful error messages when attempting to create an event
     result with a non-existent event_session_id.
-    
+
     The test verifies that:
     1. Invalid foreign key references are caught at the API level
     2. A 422 Unprocessable Entity status code is returned
     3. The error message contains helpful information about the validation failure
-    
+
     Args:
         sample_client (TestClient): FastAPI test client with database override.
-        
+
     Asserts:
         - HTTP status code is 422 (Unprocessable Entity)
         - Error message contains "does not exist" to indicate validation failure

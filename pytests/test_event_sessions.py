@@ -10,7 +10,7 @@ The tests use an in-memory SQLite database for isolation and include fixtures
 for JSON data loading and database session management.
 
 Tests:
-- test_event_session_post: Validates JSON data against the EventSessionCreate 
+- test_event_session_post: Validates JSON data against the EventSessionCreate
   schema and tests successful API creation with proper field validation.
 
 Dependencies:
@@ -44,16 +44,16 @@ from src.schemas.event_sessions import EventSessionCreate
 def get_sample():
     """
     Fixture to provide the file path to the sample JSON file for testing.
-    
+
     This fixture returns the path to a JSON file containing test event session data.
-    The file should contain valid EventSession data including name, start_date, 
+    The file should contain valid EventSession data including name, start_date,
     end_date, and description fields.
 
     Returns:
         str: Path to the test JSON file containing event session data.
-        
+
     Note:
-        The fixture name uses 'csv_path' for historical reasons but actually 
+        The fixture name uses 'csv_path' for historical reasons but actually
         points to a JSON file containing event session test data.
     """
     return "./data/event_sessions/tcj_session_2025_1.json"
@@ -67,14 +67,14 @@ def session_fixture():
     Creates a temporary database for the duration of the test module, ensuring
     test isolation and preventing interference with production data. All database
     tables are created from the SQLAlchemy models defined in the application.
-    
+
     The fixture uses module scope to share the same database session across all
     tests in this module, which improves performance and allows for test data
     to persist between individual test functions if needed.
 
     Yields:
         Session: SQLAlchemy session connected to the in-memory test database.
-        
+
     Note:
         The in-memory database is automatically destroyed when the test module
         completes, ensuring no persistent state between test runs.
@@ -98,7 +98,7 @@ def test_event_session_post(sample_csv_path, session: Session):
     3. Makes a POST request to the API endpoint with valid data
     4. Verifies the response contains the expected fields and values
     5. Confirms the created event session is assigned a unique database ID
-    
+
     The test uses dependency injection to override the database session with
     an in-memory test database, ensuring isolation from production data.
 
@@ -115,14 +115,14 @@ def test_event_session_post(sample_csv_path, session: Session):
         - Response data matches the input data for name, dates, and description
         - Response includes a database-generated ID field
         - Datetime fields are properly parsed and compared (timezone-aware)
-        
+
     Raises:
         AssertionError: If any of the validation checks fail
         FileNotFoundError: If the test JSON file cannot be found
         ValidationError: If the JSON data doesn't match the EventSessionCreate schema
         HTTPStatusError: If the API request fails with an HTTP error
         RequestError: If there's a network or connection error during the request
-        
+
     Note:
         The test includes comprehensive error handling with debug output using
         icecream (ic) for troubleshooting test failures.
