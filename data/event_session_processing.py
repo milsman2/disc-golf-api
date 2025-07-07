@@ -13,10 +13,10 @@ import httpx
 from icecream import ic
 from pydantic import ValidationError
 
-from src.schemas.league_sessions import LeagueSessionCreate
+from src.schemas.event_sessions import EventSessionCreate
 
 
-def post_league_session(data_directory: str = "data/league_sessions/") -> None:
+def post_event_session(data_directory: str = "data/event_sessions/") -> None:
     """
     Reads all JSON files in the specified directory, validates each as a
     LeagueSessionCreate object, and posts valid league sessions to the API endpoint.
@@ -35,19 +35,19 @@ def post_league_session(data_directory: str = "data/league_sessions/") -> None:
     for filename in os.listdir(data_directory):
         if filename.endswith(".json"):
             with open(os.path.join(data_directory, filename), encoding="utf-8") as f:
-                league_session_data = json.load(f)
+                event_session_data = json.load(f)
                 try:
-                    league_session = LeagueSessionCreate.model_validate(
-                        league_session_data
+                    event_session = EventSessionCreate.model_validate(
+                        event_session_data
                     )
                 except ValidationError as e:
                     ic(e)
-                    league_session = None
-                if league_session is not None:
+                    event_session = None
+                if event_session is not None:
                     try:
                         response = httpx.post(
-                            "http://localhost:8000/api/v1/league_sessions/",
-                            json=league_session.model_dump(mode="json"),
+                            "http://localhost:8000/api/v1/event_sessions/",
+                            json=event_session.model_dump(mode="json"),
                             headers={"Content-Type": "application/json"},
                         )
                         response.raise_for_status()
@@ -59,4 +59,4 @@ def post_league_session(data_directory: str = "data/league_sessions/") -> None:
 
 
 if __name__ == "__main__":
-    post_league_session()
+    post_event_session()

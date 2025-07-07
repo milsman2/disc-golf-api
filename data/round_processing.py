@@ -145,4 +145,4 @@ def process_all_csv_files(folder_path):
 
 
 if __name__ == "__main__":
-    process_all_csv_files("data/event_results")
+    process_all_csv_files("data/event_sessions")

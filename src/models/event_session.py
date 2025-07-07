@@ -15,7 +15,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.models.base import Base
 
 
-class LeagueSession(Base):
+class EventSession(Base):
     """
     SQLAlchemy model for a league session.
 
@@ -46,7 +46,7 @@ class LeagueSession(Base):
 
     event_results = relationship(
         "EventResult",
-        back_populates="league_session",
+        back_populates="event_session",
         cascade="all, delete-orphan",
         doc="List of EventResult objects associated with this league session.",
     )

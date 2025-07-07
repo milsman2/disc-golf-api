@@ -1,4 +1,4 @@
-#! /usr/bin/env bash
+#!/usr/bin/env bash
 
 set -e
 set -x
@@ -8,8 +8,20 @@ if [ -f .env ]; then
     export $(grep -v '^#' .env | xargs)
 fi
 
-until pg_isready -h "$POSTGRES_SERVER" -p "$POSTGRES_PORT" -U "$POSTGRES_USER"; do
-  echo "Waiting for Postgres..."
+# Echo connection details for debugging
+echo "=== PostgreSQL Connection Details ==="
+echo "POSTGRES_SERVER: $POSTGRES_SERVER"
+echo "POSTGRES_PORT: $POSTGRES_PORT"
+echo "POSTGRES_USER: $POSTGRES_USER"
+echo "POSTGRES_PASSWORD: $POSTGRES_PASSWORD"
+echo "POSTGRES_DB: $POSTGRES_DB"
+echo "POSTGRES_OWNER: $POSTGRES_OWNER"
+echo "====================================="
+
+echo "Attempting to connect to: $POSTGRES_SERVER:$POSTGRES_PORT as user $POSTGRES_OWNER"
+
+until pg_isready -h "$POSTGRES_SERVER" -p "$POSTGRES_PORT" -U "$POSTGRES_OWNER"; do
+  echo "Waiting for Postgres... (trying $POSTGRES_SERVER:$POSTGRES_PORT)"
   sleep 1
 done
 
@@ -20,6 +32,7 @@ if PGPASSWORD="$POSTGRES_PASSWORD" \
     echo "Database $POSTGRES_DB already exists."
 else
     echo "Database $POSTGRES_DB not found. Creating..."
+    echo "Attempting to connect as postgres user with password: $POSTGRES_PASSWORD"
     # Create the owner role if it doesn't exist
     PGPASSWORD="$POSTGRES_PASSWORD" \
         psql -h "$POSTGRES_SERVER" -p "$POSTGRES_PORT" \

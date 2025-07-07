@@ -1,19 +1,24 @@
 """
-Unit tests for the EventResultCreate schema.
+Unit tests for disc golf event result API endpoints.
 
-This module contains tests to validate that data from a CSV file fits the
-EventResultCreate schema. It ensures that valid data passes schema validation
-and invalid data raises appropriate errors.
+This module contains comprehensive tests to validate EventResult data models
+and API endpoints using FastAPI's TestClient. It includes tests for schema
+validation, API creation endpoints, and error handling for invalid data.
+
+The tests use an in-memory SQLite database for isolation and include fixtures
+for CSV data loading, database session setup, and event session creation.
 
 Tests:
-- test_valid_event_result_with_layouts: Validates rows from the CSV file
-against the schema and API.
-- test_invalid_league_session_id: Ensures invalid league_session_id returns
-a 422 error.
+- test_valid_event_result_with_layouts: Validates CSV data against the EventResultCreate 
+  schema and tests successful API creation with valid event session references.
+- test_invalid_event_session_id: Ensures that invalid event_session_id references 
+  return appropriate 422 HTTP error responses.
 
 Dependencies:
-- pandas: Used to read and process the CSV file.
-- pytest: Used as the testing framework.
+- pandas: Used to read and process CSV test data files.
+- pytest: Testing framework with fixtures for database and client setup.
+- FastAPI TestClient: For simulating HTTP requests to API endpoints.
+- SQLAlchemy: For in-memory database session management during tests.
 """
 
 import pandas as pd
@@ -34,6 +39,13 @@ from src.schemas.event_results import EventResultCreate
 def session_fixture():
     """
     Fixture to provide a SQLAlchemy session with an in-memory SQLite database.
+    
+    Creates a temporary database for the duration of the test module, ensuring
+    test isolation and preventing interference with production data. All database
+    tables are created from the SQLAlchemy models.
+    
+    Yields:
+        Session: SQLAlchemy session connected to the in-memory test database.
     """
     ic()
     engine = create_engine(
@@ -47,8 +59,17 @@ def session_fixture():
 @pytest.fixture(name="sample_client")
 def client(session):
     """
-    Fixture to create a TestClient with a session override for testing.
-    This allows the tests to use the in-memory SQLite database.
+    Fixture to create a TestClient with database session dependency override.
+    
+    This fixture sets up a FastAPI TestClient that uses the in-memory test database
+    instead of the production database. It overrides the get_db dependency to ensure
+    all API calls during testing use the same test database session.
+    
+    Args:
+        session: The SQLAlchemy session fixture for the test database.
+        
+    Returns:
+        TestClient: Configured FastAPI test client with database override.
     """
 
     def get_session_override():
@@ -58,10 +79,23 @@ def client(session):
     return TestClient(app)
 
 
-@pytest.fixture(name="sample_league_session_id")
+@pytest.fixture(name="sample_event_session_id")
 def league_session_id(sample_client):
     """
-    Fixture to create a league session and return its ID.
+    Fixture to create a test event session and return its database ID.
+    
+    Creates a sample event session via the API to ensure that event results
+    have a valid foreign key reference during testing. This prevents foreign
+    key constraint violations when creating test event results.
+    
+    Args:
+        sample_client: The TestClient fixture for making API requests.
+        
+    Returns:
+        int: The database ID of the created event session.
+        
+    Raises:
+        AssertionError: If the event session creation fails (non-200/201 response).
     """
     data = {
         "name": "Test League Session",
@@ -69,7 +103,7 @@ def league_session_id(sample_client):
         "end_date": "2025-04-01T00:00:00Z",
         "description": "Test session",
     }
-    response = sample_client.post("/api/v1/league_sessions/", json=data)
+    response = sample_client.post("/api/v1/event_sessions/", json=data)
     assert response.status_code in (200, 201)
     return response.json()["id"]
 
@@ -77,17 +111,40 @@ def league_session_id(sample_client):
 @pytest.fixture(name="sample_csv_path")
 def get_sample():
     """
-    Fixture to provide the path to the sample CSV file for testing.
+    Fixture to provide the file path to the sample CSV file for testing.
+    
+    Returns:
+        str: Path to the CSV file containing test event result data.
     """
     return "./data/event_results/tc-jester-hfds-league-2025-03-12.csv"
 
 
 def test_valid_event_result_with_layouts(
-    sample_csv_path, sample_client, sample_league_session_id
+    sample_csv_path, sample_client, sample_event_session_id
 ):
     """
-    Test that valid rows from the CSV file fit the EventResultCreate schema,
-    including associated layout data and a valid league_session_id.
+    Test that valid CSV data fits the EventResultCreate schema and API endpoints.
+    
+    This comprehensive test validates that:
+    1. CSV data can be successfully parsed and converted to EventResultCreate objects
+    2. Schema validation passes for all required fields
+    3. API POST requests succeed with valid data
+    4. Response data matches the input data for all fields
+    5. Foreign key relationships (event_session_id) are properly handled
+    
+    The test processes each row in the CSV file, validates it against the Pydantic
+    schema, and then makes API calls to ensure end-to-end functionality works.
+    
+    Args:
+        sample_csv_path (str): Path to the test CSV file containing event result data.
+        sample_client (TestClient): FastAPI test client with database override.
+        sample_event_session_id (int): ID of a valid event session for foreign key reference.
+        
+    Asserts:
+        - Schema validation succeeds for all CSV rows
+        - API returns 200 status code for successful creation
+        - Response data matches input data for all fields
+        - Foreign key relationships are properly established
     """
     ic(sample_client)
     df = pd.read_csv(sample_csv_path)
@@ -116,7 +173,7 @@ def test_valid_event_result_with_layouts(
             "round_relative_score": int(row["round_relative_score"]),
             "round_total_score": int(row["round_total_score"]),
             "course_layout_id": 1,
-            "league_session_id": sample_league_session_id,
+            "event_session_id": sample_event_session_id,
         }
 
         event_result = EventResultCreate(**data)
@@ -154,9 +211,26 @@ def test_valid_event_result_with_layouts(
         assert response.json()["round_points"] == 0.0
 
 
-def test_invalid_league_session_id(sample_client):
+def test_invalid_event_session_id(sample_client):
     """
-    Test that creating an EventResult with a non-existent league_session_id returns 422.
+    Test that invalid event_session_id references return proper 422 HTTP errors.
+    
+    This test ensures that the API properly validates foreign key references
+    and returns meaningful error messages when attempting to create an event
+    result with a non-existent event_session_id.
+    
+    The test verifies that:
+    1. Invalid foreign key references are caught at the API level
+    2. A 422 Unprocessable Entity status code is returned
+    3. The error message contains helpful information about the validation failure
+    
+    Args:
+        sample_client (TestClient): FastAPI test client with database override.
+        
+    Asserts:
+        - HTTP status code is 422 (Unprocessable Entity)
+        - Error message contains "does not exist" to indicate validation failure
+        - Request is rejected before attempting database operations
     """
     event_result_data = {
         "date": "2025-03-12T18:00:00Z",
@@ -171,7 +245,7 @@ def test_invalid_league_session_id(sample_client):
         "round_relative_score": -5,
         "round_total_score": 25,
         "course_layout_id": 1,
-        "league_session_id": 99999,  # Non-existent league_session_id
+        "event_session_id": 99999,  # Non-existent event_session_id
     }
 
     response = sample_client.post(

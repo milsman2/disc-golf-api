@@ -13,7 +13,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models.base import Base
 from src.models.course_layout import CourseLayout
-from src.models.league_session import LeagueSession
+from src.models.event_session import EventSession
 
 
 class EventResult(Base):
@@ -58,12 +58,12 @@ class EventResult(Base):
     round_total_score: Mapped[int] = mapped_column(Integer, nullable=False)
     round_points: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
 
-    league_session_id: Mapped[int] = mapped_column(
+    event_session_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("league_sessions.id"), nullable=False
     )
 
-    league_session: Mapped["LeagueSession"] = relationship(
-        "LeagueSession", back_populates="event_results"
+    event_session: Mapped["EventSession"] = relationship(
+        "EventSession", back_populates="event_results"
     )
     """
     Relationship to the LeagueSession model.
