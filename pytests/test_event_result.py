@@ -138,7 +138,8 @@ def test_valid_event_result_with_layouts(
     Args:
         sample_csv_path (str): Path to the test CSV file containing event result data.
         sample_client (TestClient): FastAPI test client with database override.
-        sample_event_session_id (int): ID of a valid event session for foreign key reference.
+        sample_event_session_id (int): ID of a valid event session for foreign
+        key reference.
         
     Asserts:
         - Schema validation succeeds for all CSV rows
