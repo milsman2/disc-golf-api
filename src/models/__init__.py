@@ -6,8 +6,8 @@ from src.models.base import Base
 from src.models.course import Course
 from src.models.course_layout import CourseLayout
 from src.models.event_result import EventResult
+from src.models.event_session import EventSession
 from src.models.hole import Hole
-from src.models.league_session import LeagueSession
 from src.models.user import User
 
 __all__ = [
@@ -17,5 +17,5 @@ __all__ = [
     "CourseLayout",
     "Hole",
     "EventResult",
-    "LeagueSession",
+    "EventSession",
 ]

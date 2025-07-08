@@ -22,12 +22,12 @@ from src.crud.event_result import (
     get_event_results,
     update_event_result,
 )
-from src.crud.league_session import (
-    create_league_session,
-    delete_league_session,
-    get_league_session,
-    get_league_sessions,
-    update_league_session,
+from src.crud.event_session import (
+    create_event_session,
+    delete_event_session,
+    get_event_session,
+    get_event_sessions,
+    update_event_session,
 )
 from src.crud.user import authenticate, create_user, get_user_by_email, update_user
 
@@ -50,9 +50,9 @@ __all__ = [
     "update_event_result",
     "delete_event_result",
     "get_event_results",
-    "create_league_session",
-    "get_league_session",
-    "get_league_sessions",
-    "delete_league_session",
-    "update_league_session",
+    "create_event_session",
+    "get_event_session",
+    "get_event_sessions",
+    "delete_event_session",
+    "update_event_session",
 ]
