@@ -59,17 +59,17 @@ class EventResult(Base):
     round_points: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
 
     event_session_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("league_sessions.id"), nullable=False
+        Integer, ForeignKey("event_sessions.id"), nullable=False
     )
 
     event_session: Mapped["EventSession"] = relationship(
         "EventSession", back_populates="event_results"
     )
     """
-    Relationship to the LeagueSession model.
+    Relationship to the EventSession model.
 
-    This establishes a many-to-one relationship between EventResult and LeagueSession,
-    where each event result is associated with a specific league session.
+    This establishes a many-to-one relationship between EventResult and EventSession,
+    where each event result is associated with a specific event session.
     """
 
     course_layout_id: Mapped[int] = mapped_column(

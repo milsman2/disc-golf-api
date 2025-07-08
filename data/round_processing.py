@@ -115,7 +115,7 @@ def import_and_process_csv(file_path):
                 "round_total_score": row.get("round_total_score"),
                 "course_layout_id": course_layout_id,
                 "round_points": row.get("adjusted_points", 0.0),
-                "league_session_id": 1,
+                "event_session_id": 1,
             }
             try:
                 EventResultCreate(**event_result)

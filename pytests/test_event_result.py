@@ -80,7 +80,7 @@ def client(session):
 
 
 @pytest.fixture(name="sample_event_session_id")
-def league_session_id(sample_client):
+def event_session_id(sample_client):
     """
     Fixture to create a test event session and return its database ID.
 
@@ -98,7 +98,7 @@ def league_session_id(sample_client):
         AssertionError: If the event session creation fails (non-200/201 response).
     """
     data = {
-        "name": "Test League Session",
+        "name": "Test Event Session",
         "start_date": "2025-03-01T00:00:00Z",
         "end_date": "2025-04-01T00:00:00Z",
         "description": "Test session",

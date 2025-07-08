@@ -1,9 +1,9 @@
 """
-API routes for managing disc golf league sessions.
+API routes for managing disc golf event sessions.
 
 This module defines FastAPI endpoints for creating, retrieving, updating, and deleting
-LeagueSession records. It supports operations such as fetching a single league
-session by ID, listing all league sessions with pagination, and handling standard HTTP
+EventSession records. It supports operations such as fetching a single event session
+by ID, listing all event sessions with pagination, and handling standard HTTP
 errors for not found resources. The endpoints use Pydantic schemas for request
 validation and response serialization.
 """
@@ -29,7 +29,7 @@ def get_event_session_route(
     db: SessionDep,
 ):
     """
-    Get a league session by ID.
+    Get a event session by ID.
     """
     event_session = get_event_session(db, event_session_id)
     if not event_session:
@@ -40,7 +40,7 @@ def get_event_session_route(
 @router.get("/", response_model=list[EventSessionPublic])
 def get_event_sessions_route(db: SessionDep, skip: int = 0, limit: int = 100):
     """
-    Get a list of league sessions with pagination.
+    Get a list of event sessions with pagination.
     """
     return get_event_sessions(db, skip=skip, limit=limit)
 

@@ -1,8 +1,8 @@
 """
-Functions for processing and posting disc golf league session data to the API.
+Functions for processing and posting disc golf event session data to the API.
 
-This module reads league session data from JSON files in a specified directory,
-validates the data using Pydantic schemas, and posts valid league sessions to the API.
+This module reads event session data from JSON files in a specified directory,
+validates the data using Pydantic schemas, and posts valid event sessions to the API.
 It provides error handling for validation and HTTP request failures.
 """
 
@@ -19,17 +19,17 @@ from src.schemas.event_sessions import EventSessionCreate
 def post_event_session(data_directory: str = "data/event_sessions/") -> None:
     """
     Reads all JSON files in the specified directory, validates each as a
-    LeagueSessionCreate object, and posts valid league sessions to the API endpoint.
+    EventSessionCreate object, and posts valid event sessions to the API endpoint.
 
     Args:
         data_directory (str): Path to the directory containing
-        league session JSON files.
+        event session JSON files.
 
     Returns:
         None
 
     Side Effects:
-        Posts each valid league session to the API at /api/v1/league_sessions/.
+        Posts each valid event session to the API at /api/v1/event_sessions/.
         Logs validation and HTTP errors using icecream.
     """
     for filename in os.listdir(data_directory):

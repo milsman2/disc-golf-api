@@ -1,9 +1,9 @@
 """
-CRUD operations for disc golf league sessions.
+CRUD operations for disc golf event sessions.
 
 This module provides functions to create, retrieve, update, and
 delete EventSession records in the database using SQLAlchemy ORM.
-It supports operations for single league sessions as well as listing
+It supports operations for single event sessions as well as listing
 multiple sessions with pagination.
 """
 
@@ -44,10 +44,10 @@ def delete_event_session(db: Session, event_session_id: int) -> EventSession | N
 
 
 def update_event_session(
-    db: Session, league_session_id: int, event_session_data: EventSessionUpdate
+    db: Session, event_session_id: int, event_session_data: EventSessionUpdate
 ) -> EventSession | None:
     db_event_session = (
-        db.query(EventSession).filter(EventSession.id == league_session_id).first()
+        db.query(EventSession).filter(EventSession.id == event_session_id).first()
     )
     if db_event_session:
         for key, value in event_session_data.model_dump().items():
