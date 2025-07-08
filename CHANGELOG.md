@@ -1,6 +1,22 @@
 # CHANGELOG
 
 
+## v0.5.8 (2025-07-08)
+
+### Bug Fixes
+
+- Correct formatting in docstrings for test functions in event result and session tests
+  ([`1693fb2`](https://github.com/milsman2/disc-golf-api/commit/1693fb2b6e5e53958e9c97d8d2a606402d8d4f2d))
+
+- Update docstring formatting for test_valid_event_result_with_layouts function
+  ([`380b7e0`](https://github.com/milsman2/disc-golf-api/commit/380b7e0c053893827b0c7951d48c68b7502fc487))
+
+### Refactoring
+
+- Update codebase to replace references from league sessions to event sessions
+  ([`1b0b230`](https://github.com/milsman2/disc-golf-api/commit/1b0b230ca32731ecf6c69d1a1b0193ea3b20a4b2))
+
+
 ## v0.5.7 (2025-07-02)
 
 ### Bug Fixes
