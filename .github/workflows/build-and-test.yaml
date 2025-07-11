@@ -7,7 +7,7 @@ on:
         description: 'Python version'
         required: true
         type: string
-        default: '3.10'
+        default: '3.13'
   push:
     branches-ignore:
       - main
@@ -26,27 +26,26 @@ jobs:
         with:
           python-version: ${{ env.python_version }}
 
-      - name: Upgrade pip
+      - name: Install uv
         run: |
           python -m pip install --upgrade pip
+          pip install uv
 
       - name: Install dependencies
         run: |
-          pip install -r ./requirements.txt
+          uv sync --frozen
 
       - name: Run Python isort
         run: |
-          isort ./src
+          uv run isort ./src
 
       - name: Run Python black
-        uses: psf/black@stable
-        with:
-          options: '--check --verbose'
-          src: './src'
+        run: |
+          uv run black --check --verbose ./src
 
       - name: Analysing the code with pylint
         run: |
-          pylint --rcfile=.pylintrc --load-plugins pylint_pydantic $(git ls-files '**/*.py' | grep -v '^migrations/')
+          uv run pylint --rcfile=.pylintrc --load-plugins pylint_pydantic $(git ls-files '**/*.py' | grep -v '^migrations/')
 
       - name: Set Environment Variables
         run: |
@@ -55,5 +54,5 @@ jobs:
 
       - name: Test with pytest
         run: |
-          pytest pytests/test_courses.py
-          pytest pytests/test_event_result.py
+          uv run pytest pytests/test_courses.py
+          uv run pytest pytests/test_event_result.py
