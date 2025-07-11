@@ -3,52 +3,58 @@ FROM python:3.13-slim AS builder
 
 WORKDIR /app
 
-# Install build dependencies
+# Install build dependencies and uv
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
     gcc \
     build-essential \
     make \
-    gcc \
     libffi-dev \
     libssl-dev \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && pip install uv
 
-# Copy and install Python dependencies
-COPY requirements.txt .
-RUN pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r requirements.txt
+# Copy dependency files
+COPY pyproject.toml uv.lock ./
+
+# Install dependencies using uv
+RUN uv sync --frozen --no-dev
 
 # Copy the application code
-COPY ./src /code/src
-COPY ./alembic.ini /code/alembic.ini
-COPY ./migrations /code/migrations
+COPY ./src /app/src
+COPY ./alembic.ini /app/alembic.ini
+COPY ./migrations /app/migrations
 
 # Final stage
 FROM python:3.13-slim
 
 WORKDIR /app
 
-# Install psql client
+# Install psql client and uv
 RUN apt-get update && \
     apt-get install -y --no-install-recommends postgresql-client && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* \
+    && pip install uv
 
-# Copy the wheels and application code from the builder stage
-COPY --from=builder /app/wheels /wheels
-COPY --from=builder /app/requirements.txt .
-COPY --from=builder /code /app
+# Copy the virtual environment from builder
+COPY --from=builder /app/.venv /app/.venv
 
-# Install the Python dependencies
-RUN pip install --no-cache /wheels/*
+# Copy the application code from builder
+COPY --from=builder /app/src /app/src
+COPY --from=builder /app/alembic.ini /app/alembic.ini
+COPY --from=builder /app/migrations /app/migrations
 
 # Copy the pre-start script
 COPY ./bash_scripts/pre_start.sh /app/bash_scripts/pre_start.sh
 
 # Ensure the pre-start script is executable
 RUN chmod +x /app/bash_scripts/pre_start.sh
+
+# Add the virtual environment to PATH
+ENV PATH="/app/.venv/bin:$PATH"
 
 # Command to run the pre-start script and then start the FastAPI application
 CMD ["/bin/bash", "-c", "/app/bash_scripts/pre_start.sh && uvicorn src.main:app --host 0.0.0.0 --port 8000"]
