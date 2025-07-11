@@ -1,6 +1,18 @@
 # CHANGELOG
 
 
+## v0.6.0 (2025-07-11)
+
+### Features
+
+- Migrate to uv for Python package management
+  ([`ba35f82`](https://github.com/milsman2/disc-golf-api/commit/ba35f82a29e95ec2532e622d4879347eb89d6d3c))
+
+- Replace pip and requirements.txt with uv for faster dependency resolution - Update Dockerfile to
+  use uv sync --frozen for reproducible builds - Update GitHub Actions workflow to use uv run
+  commands - Improve build performance and dependency management consistency
+
+
 ## v0.5.8 (2025-07-08)
 
 ### Bug Fixes
