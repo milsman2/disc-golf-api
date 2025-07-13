@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.7.0 (2025-07-13)
+
+### Features
+
+- Update Docker configuration to use 'uv run' for application startup
+  ([`182d571`](https://github.com/milsman2/disc-golf-api/commit/182d571c4631f9b2358f9892aab6df7805d622f6))
+
+
 ## v0.6.0 (2025-07-11)
 
 ### Features
