@@ -1,4 +1,4 @@
-# Use a multi-stage build to reduce the final image size
+# Builder stage
 FROM python:3.13-slim AS builder
 
 WORKDIR /app
@@ -19,8 +19,7 @@ RUN apt-get update && \
 # Copy dependency files
 COPY pyproject.toml uv.lock ./
 
-# Install dependencies using uv
-RUN uv sync --frozen --no-dev
+RUN uv sync --frozen --no-install-project --no-dev
 
 # Copy the application code
 COPY ./src /app/src
@@ -57,4 +56,4 @@ RUN chmod +x /app/bash_scripts/pre_start.sh
 ENV PATH="/app/.venv/bin:$PATH"
 
 # Command to run the pre-start script and then start the FastAPI application
-CMD ["/bin/bash", "-c", "/app/bash_scripts/pre_start.sh && uvicorn src.main:app --host 0.0.0.0 --port 8000"]
+CMD ["/bin/bash", "-c", "/app/bash_scripts/pre_start.sh && uv run uvicorn src.main:app --host 0.0.0.0 --port 8000"]
