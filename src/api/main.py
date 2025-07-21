@@ -8,8 +8,8 @@ from src.api.routes import (
     courses_layouts_router,
     courses_router,
     event_result_router,
-    healthcheck_router,
     event_sessions_router,
+    healthcheck_router,
     login_router,
     private_router,
 )

@@ -44,17 +44,18 @@ def get_event_session_id_for_date(event_date: str) -> int:
                 )
 
                 if start_date <= event_datetime <= end_date:
-                    ic(f"Found event session ID {session['id']} for date {event_date}")
+                    ic(f"Found event session ID {session["id"]} for date {event_date}")
                     return session["id"]
 
             # If no session found, return the first available session ID
             if event_sessions:
                 ic(
-                    f"No matching session found for {event_date}, using first available session ID: {event_sessions[0]['id']}"
+                    f"No matching session found for {event_date}, using first "
+                    f"available session ID: {event_sessions[0]["id"]}"
                 )
                 return event_sessions[0]["id"]
 
-    except Exception as e:
+    except (httpx.RequestError, httpx.HTTPStatusError, ValueError) as e:
         ic(f"Error getting event session ID for date {event_date}: {e}")
 
     # Fallback to ID 1 if all else fails
