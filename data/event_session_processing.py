@@ -29,7 +29,7 @@ def post_event_session(data_directory: str = "data/event_sessions/") -> None:
         None
 
     Side Effects:
-        Posts each valid event session to the API at /api/v1/event_sessions/.
+        Posts each valid event session to the API at /api/v1/event-sessions/.
         Logs validation and HTTP errors using icecream.
     """
     for filename in os.listdir(data_directory):
@@ -46,7 +46,7 @@ def post_event_session(data_directory: str = "data/event_sessions/") -> None:
                 if event_session is not None:
                     try:
                         response = httpx.post(
-                            "http://localhost:8000/api/v1/event_sessions/",
+                            "http://localhost:8000/api/v1/event-sessions/",
                             json=event_session.model_dump(mode="json"),
                             headers={"Content-Type": "application/json"},
                         )

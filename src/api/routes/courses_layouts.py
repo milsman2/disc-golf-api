@@ -18,7 +18,7 @@ from src.schemas.course_layouts import (
     CourseLayoutsPublic,
 )
 
-router = APIRouter(prefix="/course_layouts", tags=["Course Layouts"])
+router = APIRouter(prefix="/course-layouts", tags=["Course Layouts"])
 
 
 @router.get("/", response_model=CourseLayoutsPublic)

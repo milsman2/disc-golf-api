@@ -30,7 +30,7 @@ def get_event_session_id_for_date(event_date: str) -> int:
 
         # Get all event sessions from the API
         with httpx.Client() as client:
-            response = client.get("http://localhost:8000/api/v1/event_sessions/")
+            response = client.get("http://localhost:8000/api/v1/event-sessions/")
             response.raise_for_status()
             event_sessions = response.json()
 

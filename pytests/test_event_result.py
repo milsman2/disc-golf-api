@@ -103,7 +103,7 @@ def event_session_id(sample_client):
         "end_date": "2025-04-01T00:00:00Z",
         "description": "Test session",
     }
-    response = sample_client.post("/api/v1/event_sessions/", json=data)
+    response = sample_client.post("/api/v1/event-sessions/", json=data)
     assert response.status_code in (200, 201)
     return response.json()["id"]
 
