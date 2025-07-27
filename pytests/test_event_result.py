@@ -198,7 +198,7 @@ def test_valid_event_result_with_layouts(
             "/api/v1/event-results/",
             json=event_result.model_dump(mode="json", exclude_none=True),
         )
-        assert response.status_code == 200
+        assert response.status_code == 201
         assert response.json()["division"] == data["division"]
         assert response.json()["position"] == data["position"]
         assert response.json()["position_raw"] == data["position_raw"]

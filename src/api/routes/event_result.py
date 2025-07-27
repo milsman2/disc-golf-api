@@ -71,7 +71,7 @@ def get_event_result_route(event_result_id: int, session: SessionDep):
     return db_event_result
 
 
-@router.post("/", response_model=EventResultPublic)
+@router.post("/", response_model=EventResultPublic, status_code=201)
 def create_event_result_route(event_result: EventResultCreate, session: SessionDep):
     """
     Create a new EventResult.
@@ -117,4 +117,3 @@ def delete_event_result_route(event_result_id: int, session: SessionDep):
     success = delete_event_result(db=session, event_result_id=event_result_id)
     if not success:
         raise HTTPException(status_code=404, detail="EventResult not found")
-    return None

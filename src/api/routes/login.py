@@ -56,7 +56,7 @@ def test_token(current_user: CurrentUser) -> Any:
     return current_user
 
 
-@router.post("/reset-password/")
+@router.post("/reset-password", response_model=Message)
 def reset_password(session: SessionDep, body: NewPassword) -> Message:
     """
     Reset password

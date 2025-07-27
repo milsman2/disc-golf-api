@@ -39,19 +39,18 @@ def read_course_layout(session: SessionDep, course_layout_id: int):
     return db_course_layout
 
 
-@router.post("/", response_model=CourseLayoutPublic)
+@router.post("/", response_model=CourseLayoutPublic, status_code=201)
 def create_new_course_layout(session: SessionDep, course_layout: CourseLayoutCreate):
     return create_course_layout(db=session, course_layout=course_layout)
 
 
-@router.delete("/{course_layout_id}", response_model=CourseLayoutPublic)
+@router.delete("/{course_layout_id}", status_code=204)
 def delete_existing_course_layout(session: SessionDep, course_layout_id: int):
     db_course_layout = delete_course_layout(
         db=session, course_layout_id=course_layout_id
     )
     if db_course_layout is None:
         raise HTTPException(status_code=404, detail="Course layout not found")
-    return db_course_layout
 
 
 @router.get("/search", response_model=CourseLayoutsPublic)

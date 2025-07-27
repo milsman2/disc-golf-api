@@ -56,7 +56,7 @@ def create_event_session_route(
     return create_event_session(db, event_session)
 
 
-@router.delete("/{event_session_id}", response_model=EventSessionPublic)
+@router.delete("/{event_session_id}", status_code=204)
 def delete_event_session_route(
     event_session_id: int,
     db: SessionDep,
@@ -67,7 +67,6 @@ def delete_event_session_route(
     event_session = delete_event_session(db, event_session_id)
     if not event_session:
         raise HTTPException(status_code=404, detail="Event session not found")
-    return event_session
 
 
 @router.put("/{event_session_id}", response_model=EventSessionPublic)
