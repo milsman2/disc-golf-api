@@ -195,7 +195,7 @@ def test_valid_event_result_with_layouts(
         assert event_result.round_relative_score == data["round_relative_score"]
         assert event_result.round_total_score == data["round_total_score"]
         response = sample_client.post(
-            "/api/v1/event-results/",
+            "/api/v1/event-results",
             json=event_result.model_dump(mode="json", exclude_none=True),
         )
         assert response.status_code == 201
@@ -250,7 +250,7 @@ def test_invalid_event_session_id(sample_client):
     }
 
     response = sample_client.post(
-        "/api/v1/event-results/",
+        "/api/v1/event-results",
         json=event_result_data,
     )
     assert response.status_code == 422

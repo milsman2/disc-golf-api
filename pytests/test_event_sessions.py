@@ -144,7 +144,7 @@ def test_event_session_post(sample_csv_path, session: Session):
         if event_session is not None:
             try:
                 response = client.post(
-                    "/api/v1/event-sessions/",
+                    "/api/v1/event-sessions",
                     json=event_session.model_dump(mode="json"),
                     headers={"Content-Type": "application/json"},
                 )

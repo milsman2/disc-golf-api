@@ -121,7 +121,7 @@ def test_get_all_courses(test_client):
     """
     Test retrieving all courses.
     """
-    response = test_client.get("/api/v1/courses/")
+    response = test_client.get("/api/v1/courses")
     assert response.status_code == 200
     data = response.json()
     assert "courses" in data
