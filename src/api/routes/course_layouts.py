@@ -38,6 +38,7 @@ from src.schemas.course_layouts import (
 
 router = APIRouter(prefix="/course-layouts", tags=["Course Layouts"])
 
+
 @router.get("/", response_model=CourseLayoutsPublic)
 def read_course_layouts(
     session: SessionDep,

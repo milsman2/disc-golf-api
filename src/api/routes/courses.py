@@ -36,6 +36,7 @@ from src.schemas.courses import CourseCreate, CoursePublic, CoursesPublic, Cours
 
 router = APIRouter(prefix="/courses", tags=["Courses"])
 
+
 @router.get("/", response_model=CoursesPublic)
 def read_courses(session: SessionDep, skip: int = 0, limit: int = 100):
     """
@@ -76,7 +77,6 @@ def update_existing_course(session: SessionDep, course_id: int, course: CourseUp
     existing_course = get_course(db=session, course_id=course_id)
     if existing_course is None:
         raise HTTPException(status_code=404, detail="Course not found")
-    
     updated_course = update_course(db=session, course_id=course_id, course=course)
     return updated_course
 

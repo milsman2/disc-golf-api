@@ -34,6 +34,7 @@ from src.schemas import EventSessionCreate, EventSessionPublic, EventSessionUpda
 
 router = APIRouter(prefix="/event-sessions", tags=["event_sessions"])
 
+
 @router.get("/", response_model=list[EventSessionPublic])
 def get_event_sessions_route(db: SessionDep, skip: int = 0, limit: int = 100):
     """
