@@ -1,23 +1,22 @@
 """
 API routes for managing EventResult resources.
 
-This module defines the FastAPI endpoints for CRUD operations on EventResult objects,
-including creation, retrieval (single and multiple), update, and deletion.
+This module provides RESTful endpoints for CRUD operations on EventResult objects.
+Event results represent individual player performances in disc golf events.
 
-Routes:
-- POST /event-results/: Create a new EventResult.
-- GET /event-results/: Retrieve a list of EventResults with optional pagination.
-- GET /event-results/{event_result_id}: Retrieve a single EventResult by its ID.
-- PUT /event-results/{event_result_id}: Update an existing EventResult by its ID.
-- DELETE /event-results/{event_result_id}: Delete an EventResult by its ID.
+Routes (grouped by endpoint path, ordered by HTTP method):
+- Collection endpoints (/event-results):
+  - GET /event-results: Retrieve all event results with pagination
+  - POST /event-results: Create a new event result
+- Item endpoints (/event-results/id/{id}):
+  - GET /event-results/id/{event_result_id}: Retrieve a single event result by ID
+  - PUT /event-results/id/{event_result_id}: Update an existing event result
+  - DELETE /event-results/id/{event_result_id}: Delete an event result
 
 Dependencies:
-- SessionDep: Provides a database session for route handlers.
-
-Modules Used:
-- src.schemas.event_results: Pydantic schemas for EventResult.
-- src.crud: CRUD operations for EventResult.
-- src.api.deps: Shared dependencies for API routes.
+- SessionDep: Database session dependency injection
+- Pydantic schemas for request/response validation
+- CRUD operations with proper error handling
 """
 
 from fastapi import APIRouter, HTTPException
@@ -59,18 +58,6 @@ def get_event_results_route(
     return {"event_results": raw_results}
 
 
-@router.get("/{event_result_id}", response_model=EventResultPublic)
-def get_event_result_route(event_result_id: int, session: SessionDep):
-    """
-    Retrieve a single EventResult by its ID.
-    Returns 404 if not found.
-    """
-    db_event_result = get_event_result(db=session, event_result_id=event_result_id)
-    if not db_event_result:
-        raise HTTPException(status_code=404, detail="EventResult not found")
-    return db_event_result
-
-
 @router.post("/", response_model=EventResultPublic, status_code=201)
 def create_event_result_route(event_result: EventResultCreate, session: SessionDep):
     """
@@ -88,7 +75,19 @@ def create_event_result_route(event_result: EventResultCreate, session: SessionD
     return create_event_result(db=session, event_result=event_result)
 
 
-@router.put("/{event_result_id}", response_model=EventResultPublic)
+@router.get("/id/{event_result_id}", response_model=EventResultPublic)
+def get_event_result_route(event_result_id: int, session: SessionDep):
+    """
+    Retrieve a single EventResult by its ID.
+    Returns 404 if not found.
+    """
+    db_event_result = get_event_result(db=session, event_result_id=event_result_id)
+    if not db_event_result:
+        raise HTTPException(status_code=404, detail="EventResult not found")
+    return db_event_result
+
+
+@router.put("/id/{event_result_id}", response_model=EventResultPublic)
 def update_event_result_route(
     event_result_id: int,
     updated_event_result: EventResultCreate,
@@ -108,7 +107,7 @@ def update_event_result_route(
     return db_event_result
 
 
-@router.delete("/{event_result_id}", status_code=204)
+@router.delete("/id/{event_result_id}", status_code=204)
 def delete_event_result_route(event_result_id: int, session: SessionDep):
     """
     Delete an EventResult by its ID.

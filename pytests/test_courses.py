@@ -82,7 +82,7 @@ def test_get_course(test_client):
     """
     Test retrieving a course.
     """
-    response = test_client.get("/api/v1/courses/1")
+    response = test_client.get("/api/v1/courses/id/1")
     assert response.status_code == 200
     data = response.json()
     assert data["name"] == "T.C. Jester Park"
@@ -124,8 +124,8 @@ def test_delete_course(test_client):
     """
     Test deleting a course.
     """
-    delete_response = test_client.delete("/api/v1/courses/1")
+    delete_response = test_client.delete("/api/v1/courses/id/1")
     assert delete_response.status_code == 204
 
-    get_response = test_client.get("/api/v1/courses/1")
+    get_response = test_client.get("/api/v1/courses/id/1")
     assert get_response.status_code == 404
