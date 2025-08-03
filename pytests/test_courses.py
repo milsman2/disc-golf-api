@@ -6,8 +6,6 @@ import json
 
 import pytest
 from fastapi.testclient import TestClient
-from icecream import ic
-from pydantic import ValidationError
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
@@ -50,26 +48,22 @@ def load_course_data():
     """
     with open("data/courses/t-c-jester-park-zVh6.json", encoding="utf-8") as f:
         course_data = json.load(f)
-        try:
-            course_data["layouts"] = [
-                {
-                    "name": layout["name"],
-                    "par": layout["par"],
-                    "length": layout["length"],
-                    "holes": [
-                        {
-                            "hole_name": hole["hole_name"],
-                            "par": hole["par"],
-                            "distance": hole["distance"],
-                        }
-                        for hole in layout["holes"]
-                    ],
-                }
-                for layout in course_data["layouts"]
-            ]
-        except KeyError as e:
-            ic(f"KeyError: {e}")
-            raise
+        course_data["layouts"] = [
+            {
+                "name": layout["name"],
+                "par": layout["par"],
+                "length": layout["length"],
+                "holes": [
+                    {
+                        "hole_name": hole["hole_name"],
+                        "par": hole["par"],
+                        "distance": hole["distance"],
+                    }
+                    for hole in layout["holes"]
+                ],
+            }
+            for layout in course_data["layouts"]
+        ]
         return course_data
 
 
@@ -78,13 +72,9 @@ def test_create_course(test_client):
     Test creating a course.
     """
     course_data = load_course_data()
-    try:
-        course_test = CourseCreate.model_validate(course_data)
-    except ValidationError as e:
-        ic(f"ValidationError: {e}")
-        raise
+    course_test = CourseCreate.model_validate(course_data)
 
-    response = test_client.post("/api/v1/courses/", json=course_test.model_dump())
+    response = test_client.post("/api/v1/courses", json=course_test.model_dump())
     assert response.status_code == 201
 
 
@@ -92,7 +82,7 @@ def test_get_course(test_client):
     """
     Test retrieving a course.
     """
-    response = test_client.get("/api/v1/courses/1")
+    response = test_client.get("/api/v1/courses/id/1")
     assert response.status_code == 200
     data = response.json()
     assert data["name"] == "T.C. Jester Park"
@@ -121,7 +111,7 @@ def test_get_all_courses(test_client):
     """
     Test retrieving all courses.
     """
-    response = test_client.get("/api/v1/courses/")
+    response = test_client.get("/api/v1/courses")
     assert response.status_code == 200
     data = response.json()
     assert "courses" in data
@@ -134,8 +124,8 @@ def test_delete_course(test_client):
     """
     Test deleting a course.
     """
-    delete_response = test_client.delete("/api/v1/courses/1")
+    delete_response = test_client.delete("/api/v1/courses/id/1")
     assert delete_response.status_code == 204
 
-    get_response = test_client.get("/api/v1/courses/1")
+    get_response = test_client.get("/api/v1/courses/id/1")
     assert get_response.status_code == 404

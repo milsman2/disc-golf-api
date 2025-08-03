@@ -32,6 +32,10 @@ class CourseCreate(CourseBase):
     layouts: list[CourseLayoutCreate] = []
 
 
+class CourseUpdate(CourseBase):
+    layouts: list[CourseLayoutCreate] = []
+
+
 class CourseInDBBase(CourseBase):
     model_config = ConfigDict(from_attributes=True)
 

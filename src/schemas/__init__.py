@@ -7,7 +7,7 @@ from src.schemas.course_layouts import (
     CourseLayoutPublic,
     CourseLayoutsPublic,
 )
-from src.schemas.courses import CourseCreate, CoursePublic, CoursesPublic
+from src.schemas.courses import CourseCreate, CoursePublic, CoursesPublic, CourseUpdate
 from src.schemas.event_results import (
     EventResultBase,
     EventResultCreate,
@@ -63,4 +63,5 @@ __all__ = [
     "EventSessionPublic",
     "EventSessionCreate",
     "EventSessionUpdate",
+    "CourseUpdate",
 ]

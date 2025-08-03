@@ -24,7 +24,6 @@ Dependencies:
 import pandas as pd
 import pytest
 from fastapi.testclient import TestClient
-from icecream import ic
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
@@ -47,7 +46,6 @@ def session_fixture():
     Yields:
         Session: SQLAlchemy session connected to the in-memory test database.
     """
-    ic()
     engine = create_engine(
         "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
     )
@@ -103,7 +101,7 @@ def event_session_id(sample_client):
         "end_date": "2025-04-01T00:00:00Z",
         "description": "Test session",
     }
-    response = sample_client.post("/api/v1/event_sessions/", json=data)
+    response = sample_client.post("/api/v1/event-sessions/", json=data)
     assert response.status_code in (200, 201)
     return response.json()["id"]
 
@@ -147,7 +145,6 @@ def test_valid_event_result_with_layouts(
         - Response data matches input data for all fields
         - Foreign key relationships are properly established
     """
-    ic(sample_client)
     df = pd.read_csv(sample_csv_path)
     df.insert(0, "date", pd.to_datetime(1741820400, unit="s"))
     for _, row in df.iterrows():
@@ -195,10 +192,10 @@ def test_valid_event_result_with_layouts(
         assert event_result.round_relative_score == data["round_relative_score"]
         assert event_result.round_total_score == data["round_total_score"]
         response = sample_client.post(
-            "/api/v1/event-results/",
+            "/api/v1/event-results",
             json=event_result.model_dump(mode="json", exclude_none=True),
         )
-        assert response.status_code == 200
+        assert response.status_code == 201
         assert response.json()["division"] == data["division"]
         assert response.json()["position"] == data["position"]
         assert response.json()["position_raw"] == data["position_raw"]
@@ -250,7 +247,7 @@ def test_invalid_event_session_id(sample_client):
     }
 
     response = sample_client.post(
-        "/api/v1/event-results/",
+        "/api/v1/event-results",
         json=event_result_data,
     )
     assert response.status_code == 422

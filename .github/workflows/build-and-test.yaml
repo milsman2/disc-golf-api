@@ -54,5 +54,4 @@ jobs:
 
       - name: Test with pytest
         run: |
-          uv run pytest pytests/test_courses.py
-          uv run pytest pytests/test_event_result.py
+          uv run pytest pytests

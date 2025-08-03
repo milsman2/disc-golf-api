@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session, joinedload
 
 from src.models import Course, CourseLayout
 from src.models.hole import Hole
-from src.schemas.courses import CourseCreate
+from src.schemas.courses import CourseCreate, CourseUpdate
 
 
 def get_course(db: Session, course_id: int) -> Course | None:
@@ -39,43 +39,26 @@ def get_course_by_name(db: Session, name: str) -> Course | None:
 
 
 def create_course(db: Session, course: CourseCreate) -> Course:
-    db_course = Course(
-        name=course.name,
-        location=course.location,
-        description=course.description,
-        city=course.city,
-        state=course.state,
-        country=course.country,
-        holes=course.holes,
-        rating=course.rating,
-        reviews_count=course.reviews_count,
-        link=course.link,
-        conditions=course.conditions,
-        conditions_updated=course.conditions_updated,
-    )
+    course_data = course.model_dump(exclude={"layouts"})
+    db_course = Course(**course_data)
+
     db.add(db_course)
     db.commit()
     db.refresh(db_course)
 
     for layout in course.layouts:
-        db_layout = CourseLayout(
-            name=layout.name,
-            course_id=db_course.id,
-            par=layout.par,
-            length=layout.length,
-            difficulty=layout.difficulty,
-        )
+        layout_data = layout.model_dump(exclude={"holes", "course_id"})
+        layout_data["course_id"] = db_course.id
+        db_layout = CourseLayout(**layout_data)
+
         db.add(db_layout)
         db.commit()
         db.refresh(db_layout)
 
         for hole in layout.holes:
-            db_hole = Hole(
-                hole_name=hole.hole_name,
-                par=hole.par,
-                distance=hole.distance,
-                layout_id=db_layout.id,
-            )
+            hole_data = hole.model_dump()
+            hole_data["layout_id"] = db_layout.id
+            db_hole = Hole(**hole_data)
             db.add(db_hole)
         db.commit()
 
@@ -87,5 +70,17 @@ def delete_course(db: Session, course_id: int) -> Course | None:
     if db_course:
         db.delete(db_course)
         db.commit()
+        return db_course
+    return None
+
+
+def update_course(db: Session, course_id: int, course: CourseUpdate) -> Course | None:
+    db_course = db.query(Course).filter(Course.id == course_id).first()
+    if db_course:
+        update_data = course.model_dump(exclude_unset=True, exclude={"layouts"})
+        for field, value in update_data.items():
+            setattr(db_course, field, value)
+        db.commit()
+        db.refresh(db_course)
         return db_course
     return None

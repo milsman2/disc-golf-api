@@ -17,7 +17,7 @@ from src.utils import verify_password_reset_token
 router = APIRouter(prefix="/login", tags=["Login"])
 
 
-@router.post("/login/access-token")
+@router.post("/access-token")
 def login_access_token(
     response: Response,
     session: SessionDep,
@@ -48,7 +48,7 @@ def login_access_token(
     )
 
 
-@router.post("/login/test-token", response_model=UserPublic)
+@router.post("/test-token", response_model=UserPublic)
 def test_token(current_user: CurrentUser) -> Any:
     """
     Test access token
@@ -56,7 +56,7 @@ def test_token(current_user: CurrentUser) -> Any:
     return current_user
 
 
-@router.post("/reset-password/")
+@router.post("/reset-password", response_model=Message)
 def reset_password(session: SessionDep, body: NewPassword) -> Message:
     """
     Reset password

@@ -24,7 +24,7 @@ class CourseLayoutInDBBase(CourseLayoutBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
-    course_id: int | None = None
+    course_id: int
 
 
 class CourseLayoutPublic(CourseLayoutInDBBase):
