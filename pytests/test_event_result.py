@@ -24,7 +24,6 @@ Dependencies:
 import pandas as pd
 import pytest
 from fastapi.testclient import TestClient
-from icecream import ic
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
@@ -47,7 +46,6 @@ def session_fixture():
     Yields:
         Session: SQLAlchemy session connected to the in-memory test database.
     """
-    ic()
     engine = create_engine(
         "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
     )
@@ -147,7 +145,6 @@ def test_valid_event_result_with_layouts(
         - Response data matches input data for all fields
         - Foreign key relationships are properly established
     """
-    ic(sample_client)
     df = pd.read_csv(sample_csv_path)
     df.insert(0, "date", pd.to_datetime(1741820400, unit="s"))
     for _, row in df.iterrows():

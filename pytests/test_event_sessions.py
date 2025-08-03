@@ -24,12 +24,10 @@ Dependencies:
 
 import json
 
-import httpx
 import pytest
 from dateutil.parser import isoparse
 from fastapi.testclient import TestClient
 from icecream import ic
-from pydantic import ValidationError
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
@@ -136,33 +134,24 @@ def test_event_session_post(sample_csv_path, session: Session):
     ic(client)
     with open(sample_csv_path, encoding="utf-8") as f:
         event_session_data = json.load(f)
-        try:
-            event_session = EventSessionCreate.model_validate(event_session_data)
-        except ValidationError as e:
-            ic(e)
-            event_session = None
+        event_session = EventSessionCreate.model_validate(event_session_data)
         if event_session is not None:
-            try:
-                response = client.post(
-                    "/api/v1/event-sessions",
-                    json=event_session.model_dump(mode="json"),
-                    headers={"Content-Type": "application/json"},
-                )
-                response.raise_for_status()
-                assert (
-                    response.status_code == 201
-                ), f"Expected status code 201, got {response.status_code}"
-                data = response.json()
-                assert data["name"] == event_session_data["name"]
-                assert isoparse(data["start_date"]).replace(tzinfo=None) == isoparse(
-                    event_session_data["start_date"]
-                ).replace(tzinfo=None)
-                assert isoparse(data["end_date"]).replace(tzinfo=None) == isoparse(
-                    event_session_data["end_date"]
-                ).replace(tzinfo=None)
-                assert data["description"] == event_session_data["description"]
-                assert "id" in data
-            except httpx.HTTPStatusError as e:
-                ic(e)
-            except httpx.RequestError as e:
-                ic(e)
+            response = client.post(
+                "/api/v1/event-sessions",
+                json=event_session.model_dump(mode="json"),
+                headers={"Content-Type": "application/json"},
+            )
+            response.raise_for_status()
+            assert (
+                response.status_code == 201
+            ), f"Expected status code 201, got {response.status_code}"
+            data = response.json()
+            assert data["name"] == event_session_data["name"]
+            assert isoparse(data["start_date"]).replace(tzinfo=None) == isoparse(
+                event_session_data["start_date"]
+            ).replace(tzinfo=None)
+            assert isoparse(data["end_date"]).replace(tzinfo=None) == isoparse(
+                event_session_data["end_date"]
+            ).replace(tzinfo=None)
+            assert data["description"] == event_session_data["description"]
+            assert "id" in data

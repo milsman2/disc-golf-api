@@ -4,7 +4,6 @@ This module contains tests for the courses endpoints.
 
 import json
 
-import httpx
 import pytest
 from fastapi.testclient import TestClient
 from icecream import ic
@@ -84,10 +83,5 @@ def test_create_course(test_client):
     Test creating a course.
     """
     course_data = load_course_data()
-    try:
-        response = test_client.post("/api/v1/courses", json=course_data.model_dump())
-        assert response.status_code == 201
-    except httpx.HTTPStatusError as e:
-        ic(e)
-    except httpx.RequestError as e:
-        ic(e)
+    response = test_client.post("/api/v1/courses", json=course_data.model_dump())
+    assert response.status_code == 201
