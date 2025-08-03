@@ -1,6 +1,56 @@
 # CHANGELOG
 
 
+## v0.8.0 (2025-08-03)
+
+### Bug Fixes
+
+- Correct router import name for course layouts and add course layouts routes
+  ([`1ca6b72`](https://github.com/milsman2/disc-golf-api/commit/1ca6b7254bb1c8412cd343ec0ff37d0b3cdffef3))
+
+- Correct router import name for courses and update __all__ declaration
+  ([`f659054`](https://github.com/milsman2/disc-golf-api/commit/f659054f5d0dbd4eefa5c0108ef8fa573e1b44fc))
+
+- Correct string formatting in event session ID retrieval and adjust import order in main API module
+  ([`b40c741`](https://github.com/milsman2/disc-golf-api/commit/b40c741c23beccb786e1e4905746846d13de8af9))
+
+- Remove trailing slashes from API endpoint URLs in tests
+  ([`55102a1`](https://github.com/milsman2/disc-golf-api/commit/55102a165b0a3f4e7325ad07ba16f77ea2a5dc24))
+
+- Remove unnecessary blank lines in course layouts, courses, and event sessions route files
+  ([`9e206ea`](https://github.com/milsman2/disc-golf-api/commit/9e206ea66ff3a2d0a862a4bfed9559f592d70363))
+
+- Rename course router import and update __all__ declaration
+  ([`faa845e`](https://github.com/milsman2/disc-golf-api/commit/faa845e1a062bf2f61f83d1ba4327c7418cf76ae))
+
+- Update API endpoint paths for event sessions to use hyphenated format
+  ([`1658979`](https://github.com/milsman2/disc-golf-api/commit/165897984c627e5ee002df663584b4318b7deae1))
+
+- Update dependencies for aiohttp, aiosignal, fastapi, and starlette versions
+  ([`8164b06`](https://github.com/milsman2/disc-golf-api/commit/8164b06adf4987e1399cc9f7dcfe0ad75445e2fe))
+
+- Update login route paths for access and test token endpoints
+  ([`914454b`](https://github.com/milsman2/disc-golf-api/commit/914454b8391f8ecd0c103928137f11cf9e5d97bf))
+
+- Update pytest command to run all tests in the pytests directory
+  ([`67aa247`](https://github.com/milsman2/disc-golf-api/commit/67aa2473574011fe734423ce3042d48aa77139f4))
+
+- Update status codes for various routes and adjust response models
+  ([`feaff2b`](https://github.com/milsman2/disc-golf-api/commit/feaff2bfc0d314f007dc4f47a98e96b8b4839729))
+
+### Features
+
+- Add course retrieval by name and update course model handling
+  ([`46ecc98`](https://github.com/milsman2/disc-golf-api/commit/46ecc984fa334f74494378526e8791230fe35a74))
+
+- Implement event session ID retrieval and enhance CSV processing logic
+  ([`f2abd3c`](https://github.com/milsman2/disc-golf-api/commit/f2abd3c452778e25e5f228ce10f8a8da162b9027))
+
+- Update API routes to include 'id' in path for courses, course layouts, event results, and event
+  sessions
+  ([`3dc6492`](https://github.com/milsman2/disc-golf-api/commit/3dc64922d979ada17f909a2948f8bd4ee2cf2744))
+
+
 ## v0.7.0 (2025-07-13)
 
 ### Features
