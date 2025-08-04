@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.8.1 (2025-08-04)
+
+### Bug Fixes
+
+- Remove outdated event results Excel files
+  ([`2d61777`](https://github.com/milsman2/disc-golf-api/commit/2d6177793194ae9708eaef0337474c2eb9fa5073))
+
+
 ## v0.8.0 (2025-08-03)
 
 ### Bug Fixes
