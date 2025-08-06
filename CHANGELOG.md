@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.8.2 (2025-08-06)
+
+### Bug Fixes
+
+- Update .dockerignore to include additional ignored files
+  ([`b7d357e`](https://github.com/milsman2/disc-golf-api/commit/b7d357ef4eefe3d1ecf29f48d44ddf8d1b1f0ca3))
+
+
 ## v0.8.1 (2025-08-04)
 
 ### Bug Fixes
