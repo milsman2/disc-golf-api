@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.9.2 (2025-08-07)
+
+### Bug Fixes
+
+- Remove sensitive information from debug output in pre_start.sh
+  ([`935680c`](https://github.com/milsman2/disc-golf-api/commit/935680cf92dd34d68f10aade640b5965f6a4801e))
+
+
 ## v0.9.1 (2025-08-07)
 
 ### Bug Fixes
