@@ -272,7 +272,8 @@ def test_get_event_results_by_username(
     Args:
         sample_csv_path (str): Path to the test CSV file containing event result data.
         sample_client (TestClient): FastAPI test client with database override.
-        sample_event_session_id (int): ID of a valid event session for foreign key reference.
+        sample_event_session_id (int): ID of a valid event session for foreign 
+        key reference.
 
     Asserts:
         - Event results are successfully created
