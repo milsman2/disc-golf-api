@@ -13,6 +13,9 @@ Tests:
   schema and tests successful API creation with valid event session references.
 - test_invalid_event_session_id: Ensures that invalid event_session_id references
   return appropriate 422 HTTP error responses.
+- test_get_event_results_by_username: Validates retrieval of event results by
+  username, ensuring correct data is returned for existing users and 404 errors
+  for non-existent users.
 
 Dependencies:
 - pandas: Used to read and process CSV test data files.
@@ -252,3 +255,80 @@ def test_invalid_event_session_id(sample_client):
     )
     assert response.status_code == 422
     assert "does not exist" in response.json()["detail"]
+
+
+def test_get_event_results_by_username(
+    sample_csv_path, sample_client, sample_event_session_id
+):
+    """
+    Test retrieving event results by username using CSV data.
+
+    This test validates that:
+    1. Event results can be created from CSV data
+    2. Event results can be retrieved by username
+    3. The correct results are returned for a specific user
+    4. API returns 404 for non-existent usernames
+
+    Args:
+        sample_csv_path (str): Path to the test CSV file containing event result data.
+        sample_client (TestClient): FastAPI test client with database override.
+        sample_event_session_id (int): ID of a valid event session for foreign key reference.
+
+    Asserts:
+        - Event results are successfully created
+        - GET by username returns correct results
+        - Results contain expected user data
+        - 404 returned for non-existent username
+    """
+    df = pd.read_csv(sample_csv_path)
+    df.insert(0, "date", pd.to_datetime(1741906800, unit="s"))
+
+    created_usernames = set()
+    for i, (_, row) in enumerate(df.iterrows()):
+        if i >= 3:
+            break
+
+        data = {
+            "date": row["date"].isoformat(),
+            "division": row["division"],
+            "position": row["position"],
+            "position_raw": (
+                float(row["position_raw"])
+                if not pd.isna(row["position_raw"]) and row["position_raw"] != "DNF"
+                else None
+            ),
+            "name": row["name"],
+            "event_relative_score": int(row["event_relative_score"]),
+            "event_total_score": int(row["event_total_score"]),
+            "pdga_number": (
+                float(row["pdga_number"]) if not pd.isna(row["pdga_number"]) else None
+            ),
+            "username": f'test_{row["username"]}_{i}',
+            "round_relative_score": int(row["round_relative_score"]),
+            "round_total_score": int(row["round_total_score"]),
+            "course_layout_id": 1,
+            "event_session_id": sample_event_session_id,
+        }
+
+        event_result = EventResultCreate(**data)
+        response = sample_client.post(
+            "/api/v1/event-results/",
+            json=event_result.model_dump(mode="json", exclude_none=True),
+        )
+        assert response.status_code == 201
+        created_usernames.add(data["username"])
+
+    test_username = list(created_usernames)[0]
+    response = sample_client.get(f"/api/v1/event-results/username/{test_username}")
+    assert response.status_code == 200
+
+    results = response.json()
+    assert isinstance(results, list)
+    assert len(results) > 0
+
+    for result in results:
+        assert result["username"] == test_username
+
+    response = sample_client.get("/api/v1/event-results/username/nonexistentuser")
+    assert response.status_code == 404
+    assert "No events found for user" in response.json()["detail"]

@@ -20,6 +20,7 @@ from src.crud.event_result import (
     delete_event_result,
     get_event_result,
     get_event_results,
+    get_event_results_by_username,
     update_event_result,
 )
 from src.crud.event_session import (
@@ -55,4 +56,5 @@ __all__ = [
     "get_event_sessions",
     "delete_event_session",
     "update_event_session",
+    "get_event_results_by_username",
 ]

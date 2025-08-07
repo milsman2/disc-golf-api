@@ -30,6 +30,7 @@ from src.crud import (
     get_event_session,
     update_event_result,
 )
+from src.crud.event_result import get_event_results_by_username
 from src.schemas.event_results import (
     EventResultCreate,
     EventResultPublic,
@@ -72,6 +73,19 @@ def create_event_result_route(event_result: EventResultCreate, session: SessionD
                 f"event_session_id {event_result.event_session_id} does not exist."
             ),
         )
+
+    existing_results = get_event_results_by_username(
+        db=session, username=event_result.username
+    )
+    if existing_results:
+        for existing in existing_results:
+            if existing.date.date() == event_result.date.date():
+                raise HTTPException(
+                    status_code=409,
+                    detail=f"Event result for username '{event_result.username}' "
+                    f"on date '{event_result.date.date()}' already exists",
+                )
+
     return create_event_result(db=session, event_result=event_result)
 
 
@@ -116,3 +130,17 @@ def delete_event_result_route(event_result_id: int, session: SessionDep):
     success = delete_event_result(db=session, event_result_id=event_result_id)
     if not success:
         raise HTTPException(status_code=404, detail="EventResult not found")
+
+
+@router.get("/username/{event_user}")
+def get_event_results_by_user_route(event_user: str, session: SessionDep):
+    """
+    Retrieve event results by username.
+    Returns 404 if no results found for the user.
+    """
+    user_events = get_event_results_by_username(db=session, username=event_user)
+    if not user_events:
+        raise HTTPException(
+            status_code=404, detail=f"No events found for user: {event_user}"
+        )
+    return user_events
