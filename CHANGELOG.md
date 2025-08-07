@@ -1,6 +1,19 @@
 # CHANGELOG
 
 
+## v0.9.0 (2025-08-07)
+
+### Bug Fixes
+
+- Format docstring for test_get_event_results_by_username function
+  ([`ee2d20f`](https://github.com/milsman2/disc-golf-api/commit/ee2d20fab7b4780f9659b30aa90d28f694400669))
+
+### Features
+
+- Add functionality to retrieve event results by username
+  ([`12ef871`](https://github.com/milsman2/disc-golf-api/commit/12ef8717359ccc77e60147ef8143bfe86dc9383b))
+
+
 ## v0.8.2 (2025-08-06)
 
 ### Bug Fixes
