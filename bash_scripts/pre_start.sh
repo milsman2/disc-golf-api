@@ -25,13 +25,14 @@ until pg_isready -h "$POSTGRES_SERVER" -p "$POSTGRES_PORT" -U "$POSTGRES_OWNER";
 done
 
 # Use postgres superuser to create the database and owner
+set +x  # Disable debug output for sensitive commands
 if PGPASSWORD="$POSTGRES_PASSWORD" \
     psql -h "$POSTGRES_SERVER" -p "$POSTGRES_PORT" \
     -U postgres -lqt | cut -d \| -f 1 | grep -qw "$POSTGRES_DB"; then
     echo "Database $POSTGRES_DB already exists."
 else
     echo "Database $POSTGRES_DB not found. Creating..."
-    echo "Attempting to connect as postgres user with password: $POSTGRES_PASSWORD"
+    echo "Attempting to connect as postgres user..."
     # Create the owner role if it doesn't exist
     PGPASSWORD="$POSTGRES_PASSWORD" \
         psql -h "$POSTGRES_SERVER" -p "$POSTGRES_PORT" \
@@ -53,6 +54,8 @@ PGPASSWORD="$POSTGRES_PASSWORD" \
     THEN CREATE ROLE \"$POSTGRES_USER\" WITH LOGIN SUPERUSER CREATEDB \
     CREATEROLE INHERIT NOREPLICATION PASSWORD '$POSTGRES_PASSWORD'; \
     END IF; END \$\$;"
+
+set -x  # Re-enable debug output for remaining commands
 
 # Let the DB start
 python -m src.pre_start
