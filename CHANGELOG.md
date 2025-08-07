@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.9.1 (2025-08-07)
+
+### Bug Fixes
+
+- Remove POSTGRES_PASSWORD echo for security reasons
+  ([`b7f3608`](https://github.com/milsman2/disc-golf-api/commit/b7f3608df60043d1164f04dd847419eb0873072f))
+
+
 ## v0.9.0 (2025-08-07)
 
 ### Bug Fixes
