@@ -61,6 +61,13 @@ def get_event_results(
     )
 
 
+def get_event_results_by_username(db: Session, username: str):
+    db_event_results = (
+        db.query(EventResultModel).filter(EventResultModel.username == username).all()
+    )
+    return db_event_results
+
+
 def create_event_result(
     db: Session, event_result: EventResultCreate
 ) -> EventResultModel:
