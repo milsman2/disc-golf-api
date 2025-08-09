@@ -16,6 +16,9 @@ Tests:
 - test_get_event_results_by_username: Validates retrieval of event results by
   username, ensuring correct data is returned for existing users and 404 errors
   for non-existent users.
+- test_get_event_results_by_session: Validates retrieval of event results by
+  event session ID, ensuring correct data is returned for existing sessions and
+  404 errors for non-existent sessions.
 
 Dependencies:
 - pandas: Used to read and process CSV test data files.
@@ -272,7 +275,7 @@ def test_get_event_results_by_username(
     Args:
         sample_csv_path (str): Path to the test CSV file containing event result data.
         sample_client (TestClient): FastAPI test client with database override.
-        sample_event_session_id (int): ID of a valid event session for foreign 
+        sample_event_session_id (int): ID of a valid event session for foreign
         key reference.
 
     Asserts:
@@ -333,3 +336,104 @@ def test_get_event_results_by_username(
     response = sample_client.get("/api/v1/event-results/username/nonexistentuser")
     assert response.status_code == 404
     assert "No events found for user" in response.json()["detail"]
+
+
+def test_get_event_results_by_session(
+    sample_csv_path, sample_client, sample_event_session_id
+):
+    """
+    Test retrieving event results by event session ID using query parameters.
+
+    This test validates that:
+    1. Event results can be created from CSV data with specific session ID
+    2. Event results can be retrieved by event session ID using query params
+    3. All results belong to the correct event session
+    4. API returns proper response for non-existent session IDs
+
+    Args:
+        sample_csv_path (str): Path to the test CSV file containing event result data.
+        sample_client (TestClient): FastAPI test client with database override.
+        sample_event_session_id (int): ID of a valid event session for foreign
+        key reference.
+
+    Asserts:
+        - Event results are successfully created with session ID
+        - GET with session_id query param returns correct results
+        - All results have the correct event_session_id
+        - Proper response for non-existent session ID
+    """
+    second_session_data = {
+        "name": "Second Test Event Session",
+        "start_date": "2025-04-01T00:00:00Z",
+        "end_date": "2025-05-01T00:00:00Z",
+        "description": "Second test session",
+    }
+    second_session_response = sample_client.post(
+        "/api/v1/event-sessions/", json=second_session_data
+    )
+    assert second_session_response.status_code in (200, 201)
+    second_session_id = second_session_response.json()["id"]
+
+    df = pd.read_csv(sample_csv_path)
+    df.insert(0, "date", pd.to_datetime(1741993200, unit="s"))
+    created_results_count = 0
+    for i, (_, row) in enumerate(df.iterrows()):
+        if i >= 4:
+            break
+
+        data = {
+            "date": row["date"].isoformat(),
+            "division": row["division"],
+            "position": row["position"],
+            "position_raw": (
+                float(row["position_raw"])
+                if not pd.isna(row["position_raw"]) and row["position_raw"] != "DNF"
+                else None
+            ),
+            "name": row["name"],
+            "event_relative_score": int(row["event_relative_score"]),
+            "event_total_score": int(row["event_total_score"]),
+            "pdga_number": (
+                float(row["pdga_number"]) if not pd.isna(row["pdga_number"]) else None
+            ),
+            "username": f'session_test_{row["username"]}_{i}',
+            "round_relative_score": int(row["round_relative_score"]),
+            "round_total_score": int(row["round_total_score"]),
+            "course_layout_id": 1,
+            "event_session_id": sample_event_session_id,
+        }
+
+        event_result = EventResultCreate(**data)
+        response = sample_client.post(
+            "/api/v1/event-results/",
+            json=event_result.model_dump(mode="json", exclude_none=True),
+        )
+        assert response.status_code == 201
+        created_results_count += 1
+
+    response = sample_client.get(
+        f"/api/v1/event-results/?event_session_id={sample_event_session_id}"
+    )
+    assert response.status_code == 200
+
+    results = response.json()["event_results"]
+    assert isinstance(results, list)
+
+    session_results = [
+        r for r in results if r["event_session_id"] == sample_event_session_id
+    ]
+    assert len(session_results) >= created_results_count
+
+    for result in session_results:
+        assert result["event_session_id"] == sample_event_session_id
+
+    response = sample_client.get(
+        f"/api/v1/event-results/?event_session_id={second_session_id}"
+    )
+    assert response.status_code == 200
+    results = response.json()["event_results"]
+    session_results = [r for r in results if r["event_session_id"] == second_session_id]
+    assert len(session_results) == 0
+
+    response = sample_client.get("/api/v1/event-results/?event_session_id=99999")
+    assert response.status_code == 404
