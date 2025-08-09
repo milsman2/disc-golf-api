@@ -32,7 +32,7 @@ from src.crud.event_session import (
 )
 from src.schemas import EventSessionCreate, EventSessionPublic, EventSessionUpdate
 
-router = APIRouter(prefix="/event-sessions", tags=["event_sessions"])
+router = APIRouter(prefix="/event-sessions", tags=["Event Sessions"])
 
 
 @router.get("/", response_model=list[EventSessionPublic])
