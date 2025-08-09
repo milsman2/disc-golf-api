@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.9.3 (2025-08-09)
+
+### Bug Fixes
+
+- Add event results for TC Jester HFDS League Sessions 2
+  ([`bfcbc33`](https://github.com/milsman2/disc-golf-api/commit/bfcbc334d9c67c381a9019aec9d637bd958eb87f))
+
+
 ## v0.9.2 (2025-08-07)
 
 ### Bug Fixes
