@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.9.4 (2025-08-09)
+
+### Bug Fixes
+
+- Update tag name for event sessions in API router
+  ([`64f5de0`](https://github.com/milsman2/disc-golf-api/commit/64f5de0679ef760ce0d03c83c6a880c9f1cee398))
+
+
 ## v0.9.3 (2025-08-09)
 
 ### Bug Fixes
