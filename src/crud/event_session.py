@@ -27,6 +27,10 @@ def get_event_session(db: Session, event_session_id: int) -> EventSession | None
     return db.query(EventSession).filter(EventSession.id == event_session_id).first()
 
 
+def get_event_session_by_name(db: Session, name: str) -> EventSession | None:
+    return db.query(EventSession).filter(EventSession.name == name).first()
+
+
 def get_event_sessions(
     db: Session, skip: int = 0, limit: int = 100
 ) -> list[EventSession]:

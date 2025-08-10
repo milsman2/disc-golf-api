@@ -27,6 +27,7 @@ from src.crud import (
     delete_event_result,
     get_event_result,
     get_event_results,
+    get_event_results_by_session,
     get_event_session,
     update_event_result,
 )
@@ -48,15 +49,35 @@ def get_event_results_route(
     session: SessionDep,
     skip: int = 0,
     limit: int = 100,
+    event_session_id: int | None = None,
 ):
     """
-    Retrieve a list of EventResults with optional pagination.
-    Returns 404 if no results are found.
+    Retrieve a list of EventResults with optional pagination and filtering.
+
+    Query Parameters:
+    - event_session_id: Filter results by event session
+    - username: Filter results by username
+    - skip: Number of records to skip for pagination
+    - limit: Maximum number of records to return
     """
-    raw_results = get_event_results(db=session, skip=skip, limit=limit)
-    if not raw_results:
-        raise HTTPException(status_code=404, detail="No EventResults found")
-    return {"event_results": raw_results}
+    if event_session_id:
+        event_session = get_event_session(session, event_session_id)
+        if not event_session:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Event session with ID {event_session_id} not found",
+            )
+
+        raw_results = get_event_results_by_session(
+            db=session, event_session_id=event_session_id, skip=skip, limit=limit
+        )
+        # Return empty list for valid session with no results
+        return {"event_results": raw_results or []}
+    else:
+        raw_results = get_event_results(db=session, skip=skip, limit=limit)
+        if not raw_results:
+            raise HTTPException(status_code=404, detail="No EventResults found")
+        return {"event_results": raw_results}
 
 
 @router.post("/", response_model=EventResultPublic, status_code=201)

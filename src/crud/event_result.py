@@ -68,6 +68,30 @@ def get_event_results_by_username(db: Session, username: str):
     return db_event_results
 
 
+def get_event_results_by_session(
+    db: Session, event_session_id: int, skip: int = 0, limit: int = 100
+) -> list[EventResultModel]:
+    """
+    Retrieve all event results for a specific event session with pagination.
+
+    Args:
+        db: Database session
+        event_session_id: Event session ID to filter by
+        skip: Number of records to skip for pagination
+        limit: Maximum number of records to return
+
+    Returns:
+        List of EventResult objects for the session
+    """
+    return (
+        db.query(EventResultModel)
+        .filter(EventResultModel.event_session_id == event_session_id)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+
 def create_event_result(
     db: Session, event_result: EventResultCreate
 ) -> EventResultModel:

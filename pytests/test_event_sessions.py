@@ -38,7 +38,7 @@ from src.models.base import Base
 from src.schemas.event_sessions import EventSessionCreate
 
 
-@pytest.fixture(name="sample_csv_path")
+@pytest.fixture(name="sample_json_path")
 def get_sample():
     """
     Fixture to provide the file path to the sample JSON file for testing.
@@ -49,10 +49,6 @@ def get_sample():
 
     Returns:
         str: Path to the test JSON file containing event session data.
-
-    Note:
-        The fixture name uses 'csv_path' for historical reasons but actually
-        points to a JSON file containing event session test data.
     """
     return "./data/event_sessions/tcj_session_2025_1.json"
 
@@ -86,72 +82,98 @@ def session_fixture():
         yield session
 
 
-def test_event_session_post(sample_csv_path, session: Session):
+@pytest.fixture(name="sample_client")
+def client(session):
     """
-    Test creating an event session via the API endpoint.
+    Fixture to create a TestClient with database session dependency override.
 
-    This comprehensive test validates the complete flow of event session creation:
-    1. Loads event session data from a JSON file
-    2. Validates the data against the EventSessionCreate Pydantic schema
-    3. Makes a POST request to the API endpoint with valid data
-    4. Verifies the response contains the expected fields and values
-    5. Confirms the created event session is assigned a unique database ID
-
-    The test uses dependency injection to override the database session with
-    an in-memory test database, ensuring isolation from production data.
+    This fixture sets up a FastAPI TestClient that uses the in-memory test database
+    instead of the production database. It overrides the get_db dependency to ensure
+    all API calls during testing use the same test database session.
 
     Args:
-        sample_csv_path (str): Path to the JSON file containing test event session data.
-                              Despite the name, this contains JSON data, not CSV.
-        session (Session): SQLAlchemy session for database operations, provided by
-                          the session fixture for test isolation.
+        session: The SQLAlchemy session fixture for the test database.
 
-    Asserts:
-        - JSON data can be successfully loaded and parsed
-        - EventSessionCreate schema validation passes for the test data
-        - HTTP status code is 201 (Created) for successful creation
-        - Response data matches the input data for name, dates, and description
-        - Response includes a database-generated ID field
-        - Datetime fields are properly parsed and compared (timezone-aware)
-
-    Raises:
-        AssertionError: If any of the validation checks fail
-        FileNotFoundError: If the test JSON file cannot be found
-        ValidationError: If the JSON data doesn't match the EventSessionCreate schema
-        HTTPStatusError: If the API request fails with an HTTP error
-        RequestError: If there's a network or connection error during the request
-
-    Note:
-        The test includes comprehensive error handling with debug output using
-        icecream (ic) for troubleshooting test failures.
+    Returns:
+        TestClient: Configured FastAPI test client with database override.
     """
 
     def get_session_override():
         return session
 
     app.dependency_overrides[get_db] = get_session_override
-    client = TestClient(app)
-    ic(client)
-    with open(sample_csv_path, encoding="utf-8") as f:
+    return TestClient(app)
+
+
+def test_event_session_post(sample_json_path, sample_client: TestClient):
+    """
+    Test creating event sessions from JSON data with validation and duplicate checking.
+
+    This test validates that:
+    1. JSON data can be successfully parsed and converted to EventSessionCreate objects
+    2. Schema validation passes for all required fields
+    3. API POST requests succeed with valid data
+    4. Response data matches the input data for all fields
+    5. Duplicate event session names are properly rejected with 409 status
+    6. Date parsing and comparison work correctly
+
+    Args:
+        sample_json_path (str): Path to the JSON file containing event session data
+        session (Session): SQLAlchemy session for database operations
+        sample_client (TestClient): FastAPI test client with database override
+
+    Asserts:
+        - Schema validation succeeds for JSON data
+        - API returns 201 status code for successful creation
+        - Response data matches input data for all fields
+        - Date fields are properly parsed and formatted
+        - Duplicate names return 409 Conflict status
+    """
+    # Load and validate the event session data
+    with open(sample_json_path, encoding="utf-8") as f:
         event_session_data = json.load(f)
-        event_session = EventSessionCreate.model_validate(event_session_data)
-        if event_session is not None:
-            response = client.post(
-                "/api/v1/event-sessions",
-                json=event_session.model_dump(mode="json"),
-                headers={"Content-Type": "application/json"},
-            )
-            response.raise_for_status()
-            assert (
-                response.status_code == 201
-            ), f"Expected status code 201, got {response.status_code}"
-            data = response.json()
-            assert data["name"] == event_session_data["name"]
-            assert isoparse(data["start_date"]).replace(tzinfo=None) == isoparse(
-                event_session_data["start_date"]
-            ).replace(tzinfo=None)
-            assert isoparse(data["end_date"]).replace(tzinfo=None) == isoparse(
-                event_session_data["end_date"]
-            ).replace(tzinfo=None)
-            assert data["description"] == event_session_data["description"]
-            assert "id" in data
+
+    event_session = EventSessionCreate.model_validate(event_session_data)
+
+    assert event_session.name == event_session_data["name"]
+    assert event_session.description == event_session_data["description"]
+
+    expected_start = isoparse(event_session_data["start_date"])
+    expected_end = isoparse(event_session_data["end_date"])
+    assert event_session.start_date == expected_start
+    assert event_session.end_date == expected_end
+
+    # Test successful creation
+    response = sample_client.post(
+        "/api/v1/event-sessions/",
+        json=event_session.model_dump(mode="json"),
+    )
+    assert response.status_code == 201
+
+    # Verify response data matches input
+    response_data = response.json()
+    assert response_data["name"] == event_session_data["name"]
+    assert response_data["description"] == event_session_data["description"]
+
+    # Compare dates by converting both to the same timezone-aware format
+    response_start = isoparse(response_data["start_date"])
+    response_end = isoparse(response_data["end_date"])
+
+    # Convert to UTC for comparison if needed
+    if expected_start.tzinfo and not response_start.tzinfo:
+        response_start = response_start.replace(tzinfo=expected_start.tzinfo)
+    if expected_end.tzinfo and not response_end.tzinfo:
+        response_end = response_end.replace(tzinfo=expected_end.tzinfo)
+
+    assert response_start == expected_start
+    assert response_end == expected_end
+    assert "id" in response_data
+
+    # Test duplicate name rejection
+    duplicate_response = sample_client.post(
+        "/api/v1/event-sessions/",
+        json=event_session.model_dump(mode="json"),
+    )
+    assert duplicate_response.status_code == 409
+    assert "already exists" in duplicate_response.json()["detail"]
+    assert event_session.name in duplicate_response.json()["detail"]

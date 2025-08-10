@@ -27,12 +27,14 @@ def get_event_session_id_for_date(event_date: str) -> int:
         event_datetime = datetime.datetime.fromisoformat(
             event_date.replace("Z", "+00:00")
         )
+        ic(f"Looking for session for date: {event_datetime}")
 
         # Get all event sessions from the API
         with httpx.Client() as client:
             response = client.get("http://localhost:8000/api/v1/event-sessions/")
             response.raise_for_status()
             event_sessions = response.json()
+            ic(f"Found {len(event_sessions)} event sessions")
 
             # Find the event session that contains this date
             for session in event_sessions:
@@ -43,22 +45,28 @@ def get_event_session_id_for_date(event_date: str) -> int:
                     session["end_date"].replace("Z", "+00:00")
                 )
 
+                ic(
+                    f'Session {session["id"]}: '
+                    f'{session["name"]} ({start_date} to {end_date})'
+                )
+
                 if start_date <= event_datetime <= end_date:
-                    ic(f"Found event session ID {session["id"]} for date {event_date}")
+                    ic(f'✓ Date {event_datetime} falls within session {session["id"]}')
                     return session["id"]
+                else:
+                    ic(f'✗ Date {event_datetime} outside session {session["id"]} range')
 
             # If no session found, return the first available session ID
             if event_sessions:
                 ic(
                     f"No matching session found for {event_date}, using first "
-                    f"available session ID: {event_sessions[0]["id"]}"
+                    f'available session ID: {event_sessions[0]["id"]}'
                 )
                 return event_sessions[0]["id"]
 
     except (httpx.RequestError, httpx.HTTPStatusError, ValueError) as e:
         ic(f"Error getting event session ID for date {event_date}: {e}")
 
-    # Fallback to ID 1 if all else fails
     ic(f"Falling back to event session ID 1 for date {event_date}")
     return 1
 
