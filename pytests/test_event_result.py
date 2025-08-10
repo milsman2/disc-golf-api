@@ -33,6 +33,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
+import time
 
 from src.api.deps import get_db
 from src.main import app
@@ -101,14 +102,16 @@ def event_session_id(sample_client):
     Raises:
         AssertionError: If the event session creation fails (non-200/201 response).
     """
+    # Use timestamp to ensure unique names across test runs
+    timestamp = str(int(time.time() * 1000))
     data = {
-        "name": "Test Event Session",
+        "name": f"Test Event Session for Event Results {timestamp}",
         "start_date": "2025-03-01T00:00:00Z",
         "end_date": "2025-04-01T00:00:00Z",
-        "description": "Test session",
+        "description": "Test session for event result testing",
     }
     response = sample_client.post("/api/v1/event-sessions/", json=data)
-    assert response.status_code in (200, 201)
+    assert response.status_code in (200, 201), f"Failed to create event session: {response.status_code} - {response.text}"
     return response.json()["id"]
 
 

@@ -18,12 +18,12 @@ class EventSessionBase(BaseModel):
     creation and response schemas.
     """
 
-    name: str | None = Field(..., description="Name of the event session")
-    start_date: datetime.datetime | None = Field(
-        None, description="Start date of the event session in ISO format"
+    name: str = Field(..., description="Name of the event session")
+    start_date: datetime.datetime = Field(
+        ..., description="Start date of the event session in ISO format"
     )
-    end_date: datetime.datetime | None = Field(
-        None, description="End date of the event session in ISO format"
+    end_date: datetime.datetime = Field(
+        ..., description="End date of the event session in ISO format"
     )
     description: str | None = Field(
         None, description="Description of the event session"

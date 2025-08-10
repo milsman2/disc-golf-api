@@ -27,6 +27,7 @@ from src.crud.event_session import (
     create_event_session,
     delete_event_session,
     get_event_session,
+    get_event_session_by_name,
     get_event_sessions,
     update_event_session,
 )
@@ -51,10 +52,17 @@ def create_event_session_route(
     """
     Create a new event session.
     """
+    existing_session = get_event_session_by_name(db, event_session.name)
+    if existing_session:
+        raise HTTPException(
+            status_code=409,
+            detail=f"Event session with name '{event_session.name}' already exists"
+        )
+
     return create_event_session(db, event_session)
 
 
-@router.get("/{event_session_id}", response_model=EventSessionPublic)
+@router.get("/id/{event_session_id}", response_model=EventSessionPublic)
 def get_event_session_route(
     event_session_id: int,
     db: SessionDep,
