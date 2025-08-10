@@ -56,7 +56,7 @@ def create_event_session_route(
     if existing_session:
         raise HTTPException(
             status_code=409,
-            detail=f"Event session with name '{event_session.name}' already exists"
+            detail=f"Event session with name '{event_session.name}' already exists",
         )
 
     return create_event_session(db, event_session)

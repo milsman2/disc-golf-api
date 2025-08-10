@@ -27,13 +27,14 @@ Dependencies:
 - SQLAlchemy: For in-memory database session management during tests.
 """
 
+import time
+
 import pandas as pd
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
-import time
 
 from src.api.deps import get_db
 from src.main import app
@@ -111,7 +112,10 @@ def event_session_id(sample_client):
         "description": "Test session for event result testing",
     }
     response = sample_client.post("/api/v1/event-sessions/", json=data)
-    assert response.status_code in (200, 201), f"Failed to create event session: {response.status_code} - {response.text}"
+    assert response.status_code in (
+        200,
+        201,
+    ), f"Failed to create event session: {response.status_code} - {response.text}"
     return response.json()["id"]
 
 
