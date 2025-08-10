@@ -1,12 +1,42 @@
 # CHANGELOG
 
 
+## v0.10.0 (2025-08-10)
+
+### Bug Fixes
+
+- Correct formatting and import order in event session handling
+  ([`18f4176`](https://github.com/milsman2/disc-golf-api/commit/18f4176abfa13f3dac6f27a7dbf61f10b96544c4))
+
+- Merge branch 'main' into feat/event-session-processing
+  ([`78c41e3`](https://github.com/milsman2/disc-golf-api/commit/78c41e3bf516c2ec95eda556b5b004f673bb74e9))
+
+### Features
+
+- Add event session name uniqueness check and update related tests
+  ([`38750a1`](https://github.com/milsman2/disc-golf-api/commit/38750a127d524d8c41d21d3c0be33c9e52cc79b3))
+
+- Implemented a check in the event session creation route to prevent duplicate names. - Updated test
+  cases to validate the uniqueness of event session names. - Refactored test fixtures and improved
+  data handling in tests for clarity.
+
+
 ## v0.9.4 (2025-08-09)
 
 ### Bug Fixes
 
 - Update tag name for event sessions in API router
   ([`64f5de0`](https://github.com/milsman2/disc-golf-api/commit/64f5de0679ef760ce0d03c83c6a880c9f1cee398))
+
+### Features
+
+- Add event session processing and retrieval by session ID
+  ([`c93152e`](https://github.com/milsman2/disc-golf-api/commit/c93152ed3b8256e8bf5c759a888eda323d2ac412))
+
+- Implemented comprehensive error handling in event session posting. - Added functionality to
+  process all JSON files in the specified directory. - Introduced new API endpoint to retrieve event
+  results by event session ID. - Added tests for retrieving event results by session ID. - Created
+  new event session JSON file for testing.
 
 
 ## v0.9.3 (2025-08-09)
