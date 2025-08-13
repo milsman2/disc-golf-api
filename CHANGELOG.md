@@ -1,6 +1,30 @@
 # CHANGELOG
 
 
+## v0.11.0 (2025-08-13)
+
+### Bug Fixes
+
+- Centralize SQLAlchemy engine configuration and pool settings in config
+  ([`4d481d0`](https://github.com/milsman2/disc-golf-api/commit/4d481d0d793f60b6284b4152b7b8b7b7d3ae1c04))
+
+- Add `engine_kwargs` computed property to `Settings` for environment-based SQLAlchemy engine
+  options (pool_size, max_overflow, pool_timeout). - Refactor `db.py` to use
+  `**settings.engine_kwargs` for engine creation, enabling config-driven pool management. - Minor
+  docstring formatting cleanup in Locust
+
+### Features
+
+- Switch Dockerfile to Gunicorn for FastAPI sync code; add Locust event results test and dev
+  dependency
+  ([`d32033c`](https://github.com/milsman2/disc-golf-api/commit/d32033c585d36d04cd48a157cd9c1c7fe8ae4186))
+
+- Update Dockerfile to use Gunicorn with Uvicorn worker for better multi-core utilization in sync
+  FastAPI deployments. - Add `locust_tests/locust_event_results.py` with documentation and a basic
+  load test for event results endpoint. - Add Locust as a dev dependency in pyproject.toml for
+  easier load testing
+
+
 ## v0.10.0 (2025-08-10)
 
 ### Bug Fixes
