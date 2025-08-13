@@ -102,6 +102,17 @@ class Settings(BaseSettings):
             return {"check_same_thread": False}
         return {}
 
+    @computed_field
+    @property
+    def engine_kwargs(self) -> dict[str, int]:
+        """
+        Set the database engine arguments based on environment.
+        Needed for SQLite in local development.
+        """
+        if self.ENVIRONMENT == "local":
+            return {}
+        return {"pool_size": 10, "max_overflow": 20, "pool_timeout": 30}
+
     FIRST_SUPERUSER: EmailStr
     FIRST_SUPERUSER_PASSWORD: str
 

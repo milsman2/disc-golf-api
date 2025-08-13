@@ -1,7 +1,7 @@
 """
 Locust Event Results Load Test
 
-This file contains Locust load tests for the event results endpoints of 
+This file contains Locust load tests for the event results endpoints of
 the Disc Golf API.
 
 Usage:
@@ -9,7 +9,7 @@ Usage:
         pip install locust
     2. Run the tests:
         locust -f locust_tests/locust_event_results.py
-    3. Open your browser and go to http://localhost:8089 to start the test 
+    3. Open your browser and go to http://localhost:8089 to start the test
     and set parameters.
 
 Structure:

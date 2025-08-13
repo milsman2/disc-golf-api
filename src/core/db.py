@@ -12,7 +12,9 @@ from src.models import Base, User
 from src.schemas import UserCreate
 
 engine = create_engine(
-    str(settings.sql_alchemy_db_uri), connect_args=settings.sql_conn_args
+    str(settings.sql_alchemy_db_uri),
+    connect_args=settings.sql_conn_args,
+    **settings.engine_kwargs,
 )
 
 
