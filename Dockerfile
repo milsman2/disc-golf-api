@@ -56,4 +56,4 @@ RUN chmod +x /app/bash_scripts/pre_start.sh
 ENV PATH="/app/.venv/bin:$PATH"
 
 # Command to run the pre-start script and then start the FastAPI application
-CMD ["/bin/bash", "-c", "/app/bash_scripts/pre_start.sh && uv run uvicorn src.main:app --host 0.0.0.0 --port 8000"]
+CMD ["/bin/bash", "-c", "/app/bash_scripts/pre_start.sh && uv run gunicorn src.main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000"]
