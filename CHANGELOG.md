@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.11.1 (2025-08-16)
+
+### Bug Fixes
+
+- Add event results for session 3
+  ([`15ac5f3`](https://github.com/milsman2/disc-golf-api/commit/15ac5f38d5629c53123dc1dabb1b2982edd205fb))
+
+
 ## v0.11.0 (2025-08-13)
 
 ### Bug Fixes
