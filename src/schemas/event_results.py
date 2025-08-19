@@ -91,3 +91,33 @@ class EventResultsPublic(BaseModel):
     event_results: list[EventResultPublic] = Field(
         default=[], description="List of event results"
     )
+
+
+class MedianRoundScorePublic(BaseModel):
+    """
+    Schema for API responses returning median round score statistics.
+    Used for GET requests that return statistical analysis of round scores.
+    """
+
+    event_session_id: int = Field(..., description="ID of the event session")
+    division: str | None = Field(None, description="Division filter applied, if any")
+    median_score: float | None = Field(
+        None, description="Median round score, or None if no results"
+    )
+
+    model_config = ConfigDict(extra="forbid")
+
+
+class OverallMedianRoundScorePublic(BaseModel):
+    """
+    Schema for API responses returning overall median round score statistics
+    across all events.
+    Used for GET requests that return statistical analysis of all round scores.
+    """
+
+    division: str | None = Field(None, description="Division filter applied, if any")
+    median_score: float | None = Field(
+        None, description="Median round score across all results, or None if no results"
+    )
+
+    model_config = ConfigDict(extra="forbid")

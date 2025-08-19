@@ -9,6 +9,10 @@ EventResult data.
 Functions:
 - create_event_result: Create a new EventResult in the database.
 - get_event_result: Retrieve a single EventResult by its ID.
+- get_event_results: Get a list of EventResults with optional pagination.
+- get_event_results_by_username: Get all event results for a specific username.
+- get_event_results_by_session: Get all event results for a specific event session.
+- get_median_round_score: Calculate the median round score for an event session.
 - update_event_result: Update an existing EventResult by its ID.
 - delete_event_result: Delete an EventResult by its ID.
 
@@ -24,6 +28,7 @@ Modules Used:
 """
 
 from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.sql import functions
 
 from src.models.event_result import EventResult as EventResultModel
 from src.schemas.event_results import EventResultCreate
@@ -90,6 +95,67 @@ def get_event_results_by_session(
         .limit(limit)
         .all()
     )
+
+
+def get_median_round_score(
+    db: Session, event_session_id: int, division: str | None = None
+) -> float | None:
+    """
+    Calculate the median round score for a specific event session using SQL percentile function.
+
+    Args:
+        db: Database session
+        event_session_id: Event session ID to calculate median for
+        division: Optional division filter (e.g., 'GOLD', 'BLUE')
+
+    Returns:
+        float | None: The median round score, or None if no results found
+    """
+    query = (
+        db.query(
+            functions.percentile_cont(0.5)
+            .within_group(EventResultModel.round_total_score.asc())
+            .label("median_score")
+        )
+        .filter(EventResultModel.event_session_id == event_session_id)
+        .filter(EventResultModel.round_total_score.isnot(None))
+    )
+
+    # Add division filter if specified
+    if division:
+        query = query.filter(EventResultModel.division == division)
+
+    result = query.scalar()
+    return float(result) if result is not None else None
+
+
+def get_overall_median_round_score(
+    db: Session, division: str | None = None
+) -> float | None:
+    """
+    Calculate the median round score across all event results
+    using SQL percentile function.
+
+    Args:
+        db: Database session
+        division: Optional division filter (e.g., 'GOLD', 'BLUE')
+
+    Returns:
+        float | None: The median round score across all results,
+        or None if no results found
+    """
+    query = db.query(
+        functions.percentile_cont(0.5)
+        .within_group(EventResultModel.round_total_score.asc())
+        .label("median_score")
+    ).filter(EventResultModel.round_total_score.isnot(None))
+
+    # Add division filter if specified
+    if division:
+        query = query.filter(EventResultModel.division == division)
+
+    result = query.scalar()
+    return float(result) if result is not None else None
 
 
 def create_event_result(
