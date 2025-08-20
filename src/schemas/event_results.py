@@ -91,3 +91,15 @@ class EventResultsPublic(BaseModel):
     event_results: list[EventResultPublic] = Field(
         default=[], description="List of event results"
     )
+
+
+class EventResultStats(BaseModel):
+    event_session_id: int | None = Field(
+        None, description="ID of the event session if filtered"
+    )
+    division: str | None = Field(None, description="Division filter applied, if any")
+    median: float | None
+    mode: float | None
+    minimum: float | None
+    maximum: float | None
+    count: int

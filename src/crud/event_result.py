@@ -9,6 +9,10 @@ EventResult data.
 Functions:
 - create_event_result: Create a new EventResult in the database.
 - get_event_result: Retrieve a single EventResult by its ID.
+- get_event_results: Get a list of EventResults with optional pagination.
+- get_event_results_by_username: Get all event results for a specific username.
+- get_event_results_by_session: Get all event results for a specific event session.
+- get_median_round_score: Calculate the median round score for an event session.
 - update_event_result: Update an existing EventResult by its ID.
 - delete_event_result: Delete an EventResult by its ID.
 
@@ -24,9 +28,10 @@ Modules Used:
 """
 
 from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.sql import functions
 
 from src.models.event_result import EventResult as EventResultModel
-from src.schemas.event_results import EventResultCreate
+from src.schemas.event_results import EventResultCreate, EventResultStats
 
 
 def get_event_result(db: Session, event_result_id: int) -> EventResultModel | None:
@@ -89,6 +94,48 @@ def get_event_results_by_session(
         .offset(skip)
         .limit(limit)
         .all()
+    )
+
+
+def get_median_round_score(
+    db: Session, event_session_id: int | None = None, division: str | None = None
+):
+    base_query = db.query(EventResultModel.round_total_score).filter(
+        EventResultModel.round_total_score.isnot(None)
+    )
+    if event_session_id is not None:
+        base_query = base_query.filter(
+            EventResultModel.event_session_id == event_session_id
+        )
+    if division is not None:
+        base_query = base_query.filter(EventResultModel.division == division)
+
+    median = base_query.with_entities(
+        functions.percentile_cont(0.5).within_group(
+            EventResultModel.round_total_score.asc()
+        )
+    ).scalar()
+    mode = base_query.with_entities(
+        functions.mode().within_group(EventResultModel.round_total_score.asc())
+    ).scalar()
+    min_score = base_query.with_entities(
+        functions.min(EventResultModel.round_total_score)
+    ).scalar()
+    max_score = base_query.with_entities(
+        functions.max(EventResultModel.round_total_score)
+    ).scalar()
+    count = base_query.with_entities(
+        functions.count(EventResultModel.round_total_score)
+    ).scalar()
+
+    return EventResultStats(
+        event_session_id=event_session_id,
+        division=division,
+        median=float(median) if median is not None else None,
+        mode=float(mode) if mode is not None else None,
+        minimum=float(min_score) if min_score is not None else None,
+        maximum=float(max_score) if max_score is not None else None,
+        count=int(count) if count is not None else 0,
     )
 
 
