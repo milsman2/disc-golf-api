@@ -22,6 +22,7 @@ from src.crud.event_result import (
     get_event_results,
     get_event_results_by_session,
     get_event_results_by_username,
+    get_median_round_score,
     update_event_result,
 )
 from src.crud.event_session import (
@@ -61,4 +62,5 @@ __all__ = [
     "get_event_results_by_username",
     "get_event_results_by_session",
     "get_event_session_by_name",
+    "get_median_round_score",
 ]

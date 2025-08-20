@@ -13,6 +13,7 @@ from src.schemas.event_results import (
     EventResultCreate,
     EventResultPublic,
     EventResultsPublic,
+    EventResultStats,
 )
 from src.schemas.event_sessions import (
     EventSessionCreate,
@@ -64,4 +65,5 @@ __all__ = [
     "EventSessionCreate",
     "EventSessionUpdate",
     "CourseUpdate",
+    "EventResultStats",
 ]

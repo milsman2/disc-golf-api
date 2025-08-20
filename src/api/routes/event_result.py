@@ -29,6 +29,7 @@ from src.crud import (
     get_event_results,
     get_event_results_by_session,
     get_event_session,
+    get_median_round_score,
     update_event_result,
 )
 from src.crud.event_result import get_event_results_by_username
@@ -36,6 +37,7 @@ from src.schemas.event_results import (
     EventResultCreate,
     EventResultPublic,
     EventResultsPublic,
+    EventResultStats,
 )
 
 router = APIRouter(
@@ -108,6 +110,25 @@ def create_event_result_route(event_result: EventResultCreate, session: SessionD
                 )
 
     return create_event_result(db=session, event_result=event_result)
+
+
+@router.get(
+    "/aggregated", response_model=EventResultStats
+)
+def get_aggregated_event_results(
+    session: SessionDep,
+    event_session_id: int | None = None,
+    division: str | None = None,
+):
+    """
+    Retrieve aggregated event results.
+    """
+    stats = get_median_round_score(
+        db=session, event_session_id=event_session_id, division=division
+    )
+    if not stats:
+        raise HTTPException(status_code=404, detail="No event results found.")
+    return stats
 
 
 @router.get("/id/{event_result_id}", response_model=EventResultPublic)
