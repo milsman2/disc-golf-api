@@ -112,9 +112,7 @@ def create_event_result_route(event_result: EventResultCreate, session: SessionD
     return create_event_result(db=session, event_result=event_result)
 
 
-@router.get(
-    "/aggregated", response_model=EventResultStats
-)
+@router.get("/aggregated", response_model=EventResultStats)
 def get_aggregated_event_results(
     session: SessionDep,
     event_session_id: int | None = None,
