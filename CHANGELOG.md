@@ -1,6 +1,22 @@
 # CHANGELOG
 
 
+## v0.12.0 (2025-08-20)
+
+### Code Style
+
+- Format get_aggregated_event_results route definition for consistency
+  ([`cb932aa`](https://github.com/milsman2/disc-golf-api/commit/cb932aa59ba91026e525f24aa61fecc3ad736ecc))
+
+### Features
+
+- Add aggregated event results endpoint and median round score calculations
+  ([`4dfc52b`](https://github.com/milsman2/disc-golf-api/commit/4dfc52ba2a63de28db7870df3cc6cc2bbe5ee9eb))
+
+- Add median round score calculations and schemas for event results
+  ([`d906907`](https://github.com/milsman2/disc-golf-api/commit/d906907601acd748ee4f587240c3453e63c00a2a))
+
+
 ## v0.11.1 (2025-08-16)
 
 ### Bug Fixes
