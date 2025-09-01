@@ -191,9 +191,6 @@ def import_and_process_csv(file_path):
         ic(f"ParserError: {e}")
     except ValueError as e:
         ic(f"ValueError: {e}")
-    except Exception as e:
-        ic(f"Unexpected error processing {file_path}: {e}")
-        raise
 
 
 def process_all_csv_files(folder_path):

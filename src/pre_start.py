@@ -6,7 +6,7 @@ from icecream import ic
 from sqlalchemy import Engine, select
 from sqlalchemy.orm import Session
 from tenacity import retry, stop_after_attempt, wait_fixed
-
+from sqlalchemy.exc import SQLAlchemyError
 from src.core import engine
 
 max_tries = 60 * 5
@@ -35,7 +35,7 @@ def init(db_engine: Engine) -> None:
     try:
         with Session(db_engine) as session:
             session.execute(select(1))
-    except Exception as e:
+    except SQLAlchemyError as e:
         ic(e)
         raise e
 
