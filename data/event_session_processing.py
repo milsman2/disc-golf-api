@@ -17,7 +17,7 @@ from pydantic import ValidationError
 from src.schemas.event_sessions import EventSessionCreate
 
 
-def post_event_session(data_directory: str = "data/event_sessions/") -> None:
+def create_event_sessions(data_directory: str = "data/event_sessions/") -> None:
     """
     Reads all JSON files in the specified directory, validates each as an
     EventSessionCreate object, and posts valid event sessions to the API endpoint.
@@ -72,4 +72,4 @@ def post_event_session(data_directory: str = "data/event_sessions/") -> None:
 
 
 if __name__ == "__main__":
-    post_event_session()
+    create_event_sessions()

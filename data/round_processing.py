@@ -23,20 +23,15 @@ def get_event_session_id_for_date(event_date: str) -> int:
     :return: Event session ID or 1 as fallback
     """
     try:
-        # Convert the event date to a datetime object for comparison
         event_datetime = datetime.datetime.fromisoformat(
             event_date.replace("Z", "+00:00")
         )
         ic(f"Looking for session for date: {event_datetime}")
-
-        # Get all event sessions from the API
         with httpx.Client() as client:
             response = client.get("http://localhost:8000/api/v1/event-sessions/")
             response.raise_for_status()
             event_sessions = response.json()
             ic(f"Found {len(event_sessions)} event sessions")
-
-            # Find the event session that contains this date
             for session in event_sessions:
                 start_date = datetime.datetime.fromisoformat(
                     session["start_date"].replace("Z", "+00:00")
@@ -49,14 +44,11 @@ def get_event_session_id_for_date(event_date: str) -> int:
                     f'Session {session["id"]}: '
                     f'{session["name"]} ({start_date} to {end_date})'
                 )
-
                 if start_date <= event_datetime <= end_date:
                     ic(f'✓ Date {event_datetime} falls within session {session["id"]}')
                     return session["id"]
                 else:
                     ic(f'✗ Date {event_datetime} outside session {session["id"]} range')
-
-            # If no session found, return the first available session ID
             if event_sessions:
                 ic(
                     f"No matching session found for {event_date}, using first "
@@ -66,7 +58,6 @@ def get_event_session_id_for_date(event_date: str) -> int:
 
     except (httpx.RequestError, httpx.HTTPStatusError, ValueError) as e:
         ic(f"Error getting event session ID for date {event_date}: {e}")
-
     ic(f"Falling back to event session ID 1 for date {event_date}")
     return 1
 
@@ -77,33 +68,26 @@ def assign_points(df: pd.DataFrame) -> pd.DataFrame:
     :return: DataFrame with assigned points.
     """
     ic()
-
     points_dict = {}
     for key in range(1, 31):
         points_dict[key] = 31 - key
-
     df_clean = df.copy()
     df_clean["position_raw"] = pd.to_numeric(df_clean["position_raw"], errors="coerce")
-
     df2 = (
         df_clean.groupby(["division", "position_raw"], as_index=False)
         .agg(players=("name", "nunique"))
         .reset_index()
     )
-
     df2["points_value"] = df2["position_raw"].map(points_dict).fillna(0)
-
     df2["adjusted_points"] = (
         df2["points_value"] + (df2["points_value"] + 1) - df2["players"]
     ) / 2
-
     df3 = pd.merge(
         df_clean,
         df2[["division", "position_raw", "adjusted_points"]],
         on=["position_raw", "division"],
         how="left",
     )
-
     return df3
 
 
@@ -132,11 +116,8 @@ def import_and_process_csv(file_path):
     """
     ic(f"Processing file: {file_path}")
     try:
-        # Set pandas display options
         pd.set_option("display.max_rows", None)
         pd.set_option("display.max_columns", None)
-
-        # Extract date from filename
         match = re.search(r"(\d{4}-\d{2}-\d{2})", str(file_path))
         if match:
             date_str = match.group(1)
@@ -144,47 +125,28 @@ def import_and_process_csv(file_path):
             date_val = dt.isoformat()
         else:
             date_val = None
-
-        # Read CSV file
         ic(f"Reading CSV file: {file_path}")
         df = pd.read_csv(file_path)
         ic(f"Loaded {len(df)} rows from CSV")
-
-        # Assign points
         ic("Assigning points...")
         df = assign_points(df)
-
-        # Add date column
         df.insert(0, "date", date_val)
-
-        # Remove hole columns
         df = df.loc[:, ~df.columns.str.startswith("hole_")]
-
-        # Handle infinite values
         df = df.replace([float("inf"), -float("inf")], pd.NA)
         df = df.where(pd.notnull(df), None)
-
-        # Convert position_raw to numeric
         df.loc[:, "position_raw"] = pd.to_numeric(
             df["position_raw"],
             errors="coerce",
             downcast="float",
         )
-
         ic(f"Processing {len(df)} rows for API posting...")
-
-        # Get the correct event session ID for this date
         event_session_id = get_event_session_id_for_date(date_val) if date_val else 1
-
-        # Process each row
         for row_index, row in df.iterrows():
             if isinstance(row_index, int) and row_index % 10 == 0:  # Progress indicator
                 ic(f"Processing row {row_index + 1}/{len(df)}")
-
             pdga_number = row.get("pdga_number")
             if isinstance(pdga_number, float) and math.isnan(pdga_number):
                 pdga_number = None
-
             position_raw = row.get("position_raw")
             if position_raw is None or (
                 isinstance(position_raw, float) and math.isnan(position_raw)
@@ -194,7 +156,6 @@ def import_and_process_csv(file_path):
             else:
                 position = str(position_raw)
                 position_raw_clean = float(position_raw)
-
             course_layout_id = 1
             event_result = {
                 "date": row.get("date"),
@@ -212,17 +173,13 @@ def import_and_process_csv(file_path):
                 "round_points": row.get("adjusted_points", 0.0),
                 "event_session_id": event_session_id,
             }
-
             try:
                 EventResultCreate(**event_result)
             except ValidationError as e:
                 ic(f"Validation error for row {row_index}: {e}")
                 continue
-
             post_event_result(event_result)
-
         ic(f"Completed processing file: {file_path}")
-
     except KeyboardInterrupt:
         ic("Processing interrupted by user")
         raise
@@ -250,6 +207,8 @@ def process_all_csv_files(folder_path):
     for csv_file in csv_files:
         import_and_process_csv(csv_file)
 
+def create_event_rounds():
+    process_all_csv_files("data/event_sessions")
 
 if __name__ == "__main__":
-    process_all_csv_files("data/event_sessions")
+    create_event_rounds()
