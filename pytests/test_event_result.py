@@ -127,7 +127,10 @@ def get_sample():
     Returns:
         str: Path to the CSV file containing test event result data.
     """
-    return "./data/event_results/tc-jester-hfds-league-tc-jester-hfds-league-2025-03-12.csv"
+    return (
+        "./data/event_results/"
+        "tc-jester-hfds-league-tc-jester-hfds-league-2025-03-12.csv"
+    )
 
 
 def test_valid_event_result_with_layouts(
