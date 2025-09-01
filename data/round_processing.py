@@ -204,8 +204,10 @@ def process_all_csv_files(folder_path):
     for csv_file in csv_files:
         import_and_process_csv(csv_file)
 
+
 def create_event_rounds():
     process_all_csv_files("data/event_sessions")
+
 
 if __name__ == "__main__":
     create_event_rounds()

@@ -4,9 +4,10 @@ This module is used to check if the database is awake before starting the servic
 
 from icecream import ic
 from sqlalchemy import Engine, select
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 from tenacity import retry, stop_after_attempt, wait_fixed
-from sqlalchemy.exc import SQLAlchemyError
+
 from src.core import engine
 
 max_tries = 60 * 5
