@@ -1,6 +1,28 @@
 # CHANGELOG
 
 
+## v0.13.0 (2025-09-02)
+
+### Bug Fixes
+
+- Clean up import statements in pre_start.py and enhance structure in round_processing.py
+  ([`45ac1fe`](https://github.com/milsman2/disc-golf-api/commit/45ac1fe412c3051e7921045f71907f86f19ec3cc))
+
+- Correct sample CSV path in test_event_result.py
+  ([`33e0cba`](https://github.com/milsman2/disc-golf-api/commit/33e0cba281193c3af466600d75bcdd9084250743))
+
+- Improve readability of sample CSV path in test_event_result.py
+  ([`ad7b185`](https://github.com/milsman2/disc-golf-api/commit/ad7b1859579e00e6f9ff110925134b253f23121a))
+
+- Refine error handling in CSV processing and database initialization
+  ([`aed203e`](https://github.com/milsman2/disc-golf-api/commit/aed203e31dbd1b919b939da0f7b2429f841fd08e))
+
+### Features
+
+- Add event results CSV and update event session processing functions
+  ([`7f5492c`](https://github.com/milsman2/disc-golf-api/commit/7f5492cd707f14b130a2df69a449cd5c1477d2e4))
+
+
 ## v0.12.0 (2025-08-20)
 
 ### Code Style
