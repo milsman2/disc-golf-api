@@ -4,6 +4,7 @@ This module is used to check if the database is awake before starting the servic
 
 from icecream import ic
 from sqlalchemy import Engine, select
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 from tenacity import retry, stop_after_attempt, wait_fixed
 
@@ -35,7 +36,7 @@ def init(db_engine: Engine) -> None:
     try:
         with Session(db_engine) as session:
             session.execute(select(1))
-    except Exception as e:
+    except SQLAlchemyError as e:
         ic(e)
         raise e
 

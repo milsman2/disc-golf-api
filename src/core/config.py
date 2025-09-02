@@ -53,6 +53,14 @@ class Settings(BaseSettings):
             return f"http://{self.DOMAIN}"
         return f"https://{self.DOMAIN}"
 
+    @computed_field
+    @property
+    def api_base_url(self) -> str:
+        """
+        Determine base API URL based on environment
+        """
+        return f"http://{self.server_host}{self.API_V1_STR}"
+
     CORS: Annotated[list[AnyUrl] | str, BeforeValidator(parse_cors)] = []
 
     @computed_field
