@@ -8,17 +8,17 @@ from src.schemas.course_layouts import (
     CourseLayoutsPublic,
 )
 from src.schemas.courses import CourseCreate, CoursePublic, CoursesPublic, CourseUpdate
+from src.schemas.disc_events import (
+    DiscEventCreate,
+    DiscEventPublic,
+    DiscEventUpdate,
+)
 from src.schemas.event_results import (
     EventResultBase,
     EventResultCreate,
     EventResultPublic,
     EventResultsPublic,
     EventResultStats,
-)
-from src.schemas.event_sessions import (
-    EventSessionCreate,
-    EventSessionPublic,
-    EventSessionUpdate,
 )
 from src.schemas.holes import HoleCreate, HolePublic, HoleUpdate
 from src.schemas.users import (
@@ -61,9 +61,9 @@ __all__ = [
     "EventResultCreate",
     "EventResultPublic",
     "EventResultsPublic",
-    "EventSessionPublic",
-    "EventSessionCreate",
-    "EventSessionUpdate",
+    "DiscEventPublic",
+    "DiscEventCreate",
+    "DiscEventUpdate",
     "CourseUpdate",
     "EventResultStats",
 ]

@@ -44,7 +44,7 @@ def client(test_session):
     return TestClient(app)
 
 
-def load_course_data():
+def load_course_layout_data():
     """
     Loads and normalizes course data from the test JSON file.
     """
@@ -82,6 +82,6 @@ def test_create_course(test_client):
     """
     Test creating a course.
     """
-    course_data = load_course_data()
+    course_data = load_course_layout_data()
     response = test_client.post("/api/v1/courses", json=course_data.model_dump())
     assert response.status_code == 201

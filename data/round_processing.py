@@ -1,6 +1,6 @@
 """
 Calculates round points based on position_raw for each division in a CSV file
-and posts event results to an API endpoint.
+and posts event results to an API endpoint. Associates results with disc events.
 """
 
 import datetime
@@ -16,45 +16,45 @@ from pydantic import ValidationError
 from src.schemas.event_results import EventResultCreate
 
 
-def get_event_session_id_for_date(event_date: str) -> int:
+def get_disc_event_id_for_date(event_date: str) -> int:
     """
-    Get the appropriate event session ID for a given date.
+    Get the appropriate disc event ID for a given date.
     :param event_date: Date string in ISO format (YYYY-MM-DDTHH:MM:SS)
-    :return: Event session ID or 1 as fallback
+    :return: Disc event ID or 1 as fallback
     """
     try:
         event_datetime = datetime.datetime.fromisoformat(
             event_date.replace("Z", "+00:00")
         )
-        ic(f"Looking for session for date: {event_datetime}")
+        ic(f"Looking for disc event for date: {event_datetime}")
         with httpx.Client() as client:
-            response = client.get("http://localhost:8000/api/v1/event-sessions/")
+            response = client.get("http://localhost:8000/api/v1/disc-events/")
             response.raise_for_status()
-            event_sessions = response.json()
-            ic(f"Found {len(event_sessions)} event sessions")
-            for session in event_sessions:
+            disc_events = response.json()
+            ic(f"Found {len(disc_events)} disc events")
+            for event in disc_events:
                 start_date = datetime.datetime.fromisoformat(
-                    session["start_date"].replace("Z", "+00:00")
+                    event["start_date"].replace("Z", "+00:00")
                 )
                 end_date = datetime.datetime.fromisoformat(
-                    session["end_date"].replace("Z", "+00:00")
+                    event["end_date"].replace("Z", "+00:00")
                 )
 
                 ic(
-                    f'Session {session["id"]}: '
-                    f'{session["name"]} ({start_date} to {end_date})'
+                    f'DiscEvent {event["id"]}: '
+                    f'{event["name"]} ({start_date} to {end_date})'
                 )
                 if start_date <= event_datetime <= end_date:
-                    ic(f'✓ Date {event_datetime} falls within session {session["id"]}')
-                    return session["id"]
+                    ic(f'✓ Date {event_datetime} falls within disc event {event["id"]}')
+                    return event["id"]
                 else:
-                    ic(f'✗ Date {event_datetime} outside session {session["id"]} range')
-            if event_sessions:
+                    ic(f'✗ Date {event_datetime} out of disc event {event["id"]} range')
+            if disc_events:
                 ic(
-                    f"No matching session found for {event_date}, using first "
-                    f'available session ID: {event_sessions[0]["id"]}'
+                    f"No matching disc event found for {event_date}, using first "
+                    f'available disc event ID: {disc_events[0]["id"]}'
                 )
-                return event_sessions[0]["id"]
+                return disc_events[0]["id"]
 
     except (httpx.RequestError, httpx.HTTPStatusError, ValueError) as e:
         ic(f"Error getting event session ID for date {event_date}: {e}")
@@ -140,7 +140,7 @@ def import_and_process_csv(file_path):
             downcast="float",
         )
         ic(f"Processing {len(df)} rows for API posting...")
-        event_session_id = get_event_session_id_for_date(date_val) if date_val else 1
+        disc_event_id = get_disc_event_id_for_date(date_val) if date_val else 1
         for row_index, row in df.iterrows():
             if isinstance(row_index, int) and row_index % 10 == 0:  # Progress indicator
                 ic(f"Processing row {row_index + 1}/{len(df)}")
@@ -171,7 +171,7 @@ def import_and_process_csv(file_path):
                 "round_total_score": row.get("round_total_score"),
                 "course_layout_id": course_layout_id,
                 "round_points": row.get("adjusted_points", 0.0),
-                "event_session_id": event_session_id,
+                "disc_event_id": disc_event_id,
             }
             try:
                 EventResultCreate(**event_result)
@@ -206,7 +206,7 @@ def process_all_csv_files(folder_path):
 
 
 def create_event_rounds():
-    process_all_csv_files("data/event_sessions")
+    process_all_csv_files("data/disc_events")
 
 
 if __name__ == "__main__":

@@ -25,10 +25,10 @@ from src.api.deps import SessionDep
 from src.crud import (
     create_event_result,
     delete_event_result,
+    get_disc_event,
     get_event_result,
     get_event_results,
-    get_event_results_by_session,
-    get_event_session,
+    get_event_results_by_disc_event,
     get_median_round_score,
     update_event_result,
 )
@@ -51,29 +51,29 @@ def get_event_results_route(
     session: SessionDep,
     skip: int = 0,
     limit: int = 100,
-    event_session_id: int | None = None,
+    disc_event_id: int | None = None,
 ):
     """
     Retrieve a list of EventResults with optional pagination and filtering.
 
     Query Parameters:
-    - event_session_id: Filter results by event session
+    - disc_event_id: Filter results by disc event
     - username: Filter results by username
     - skip: Number of records to skip for pagination
     - limit: Maximum number of records to return
     """
-    if event_session_id:
-        event_session = get_event_session(session, event_session_id)
-        if not event_session:
+    if disc_event_id:
+        disc_event = get_disc_event(session, disc_event_id)
+        if not disc_event:
             raise HTTPException(
                 status_code=404,
-                detail=f"Event session with ID {event_session_id} not found",
+                detail=f"Disc event with ID {disc_event_id} not found",
             )
 
-        raw_results = get_event_results_by_session(
-            db=session, event_session_id=event_session_id, skip=skip, limit=limit
+        raw_results = get_event_results_by_disc_event(
+            db=session, disc_event_id=disc_event_id, skip=skip, limit=limit
         )
-        # Return empty list for valid session with no results
+        # Return empty list for valid disc event with no results
         return {"event_results": raw_results or []}
     else:
         raw_results = get_event_results(db=session, skip=skip, limit=limit)
@@ -88,13 +88,11 @@ def create_event_result_route(event_result: EventResultCreate, session: SessionD
     Create a new EventResult.
     Returns the created EventResult.
     """
-    event_session = get_event_session(session, event_result.event_session_id)
-    if not event_session:
+    disc_event = get_disc_event(session, event_result.disc_event_id)
+    if not disc_event:
         raise HTTPException(
             status_code=422,
-            detail=(
-                f"event_session_id {event_result.event_session_id} does not exist."
-            ),
+            detail=(f"disc_event_id {event_result.disc_event_id} does not exist."),
         )
 
     existing_results = get_event_results_by_username(
@@ -115,14 +113,14 @@ def create_event_result_route(event_result: EventResultCreate, session: SessionD
 @router.get("/aggregated", response_model=EventResultStats)
 def get_aggregated_event_results(
     session: SessionDep,
-    event_session_id: int | None = None,
+    disc_event_id: int | None = None,
     division: str | None = None,
 ):
     """
     Retrieve aggregated event results.
     """
     stats = get_median_round_score(
-        db=session, event_session_id=event_session_id, division=division
+        db=session, disc_event_id=disc_event_id, division=division
     )
     if not stats:
         raise HTTPException(status_code=404, detail="No event results found.")

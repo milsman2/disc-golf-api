@@ -13,7 +13,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models.base import Base
 from src.models.course_layout import CourseLayout
-from src.models.event_session import EventSession
+from src.models.disc_event import DiscEvent
 
 
 class EventResult(Base):
@@ -58,19 +58,13 @@ class EventResult(Base):
     round_total_score: Mapped[int] = mapped_column(Integer, nullable=False)
     round_points: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
 
-    event_session_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("event_sessions.id"), nullable=False
+    disc_event_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("disc_events.id"), nullable=False
     )
 
-    event_session: Mapped["EventSession"] = relationship(
-        "EventSession", back_populates="event_results"
+    disc_event: Mapped["DiscEvent"] = relationship(
+        "DiscEvent", back_populates="event_results"
     )
-    """
-    Relationship to the EventSession model.
-
-    This establishes a many-to-one relationship between EventResult and EventSession,
-    where each event result is associated with a specific event session.
-    """
 
     course_layout_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("course_layouts.id"), nullable=False

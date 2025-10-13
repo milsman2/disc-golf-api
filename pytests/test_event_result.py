@@ -11,7 +11,7 @@ for CSV data loading, database session setup, and event session creation.
 Tests:
 - test_valid_event_result_with_layouts: Validates CSV data against the EventResultCreate
   schema and tests successful API creation with valid event session references.
-- test_invalid_event_session_id: Ensures that invalid event_session_id references
+- test_invalid_disc_event_id: Ensures that invalid disc_event_id references
   return appropriate 422 HTTP error responses.
 - test_get_event_results_by_username: Validates retrieval of event results by
   username, ensuring correct data is returned for existing users and 404 errors
@@ -85,12 +85,12 @@ def client(session):
     return TestClient(app)
 
 
-@pytest.fixture(name="sample_event_session_id")
-def event_session_id(sample_client):
+@pytest.fixture(name="sample_disc_event_id")
+def disc_event_id(sample_client):
     """
-    Fixture to create a test event session and return its database ID.
+    Fixture to create a test disc event and return its database ID.
 
-    Creates a sample event session via the API to ensure that event results
+    Creates a sample disc event via the API to ensure that event results
     have a valid foreign key reference during testing. This prevents foreign
     key constraint violations when creating test event results.
 
@@ -98,24 +98,24 @@ def event_session_id(sample_client):
         sample_client: The TestClient fixture for making API requests.
 
     Returns:
-        int: The database ID of the created event session.
+        int: The database ID of the created disc event.
 
     Raises:
-        AssertionError: If the event session creation fails (non-200/201 response).
+        AssertionError: If the disc event creation fails (non-200/201 response).
     """
     # Use timestamp to ensure unique names across test runs
     timestamp = str(int(time.time() * 1000))
     data = {
-        "name": f"Test Event Session for Event Results {timestamp}",
+        "name": f"Test Disc Event for Event Results {timestamp}",
         "start_date": "2025-03-01T00:00:00Z",
         "end_date": "2025-04-01T00:00:00Z",
-        "description": "Test session for event result testing",
+        "description": "Test event for event result testing",
     }
-    response = sample_client.post("/api/v1/event-sessions/", json=data)
+    response = sample_client.post("/api/v1/disc-events/", json=data)
     assert response.status_code in (
         200,
         201,
-    ), f"Failed to create event session: {response.status_code} - {response.text}"
+    ), f"Failed to create disc event: {response.status_code} - {response.text}"
     return response.json()["id"]
 
 
@@ -134,7 +134,7 @@ def get_sample():
 
 
 def test_valid_event_result_with_layouts(
-    sample_csv_path, sample_client, sample_event_session_id
+    sample_csv_path, sample_client, sample_disc_event_id
 ):
     """
     Test that valid CSV data fits the EventResultCreate schema and API endpoints.
@@ -144,7 +144,7 @@ def test_valid_event_result_with_layouts(
     2. Schema validation passes for all required fields
     3. API POST requests succeed with valid data
     4. Response data matches the input data for all fields
-    5. Foreign key relationships (event_session_id) are properly handled
+    5. Foreign key relationships (disc_event_id) are properly handled
 
     The test processes each row in the CSV file, validates it against the Pydantic
     schema, and then makes API calls to ensure end-to-end functionality works.
@@ -152,8 +152,8 @@ def test_valid_event_result_with_layouts(
     Args:
         sample_csv_path (str): Path to the test CSV file containing event result data.
         sample_client (TestClient): FastAPI test client with database override.
-        sample_event_session_id (int): ID of a valid event session for foreign
-        key reference.
+    sample_disc_event_id (int): ID of a valid disc event for foreign
+    key reference.
 
     Asserts:
         - Schema validation succeeds for all CSV rows
@@ -187,7 +187,7 @@ def test_valid_event_result_with_layouts(
             "round_relative_score": int(row["round_relative_score"]),
             "round_total_score": int(row["round_total_score"]),
             "course_layout_id": 1,
-            "event_session_id": sample_event_session_id,
+            "disc_event_id": sample_disc_event_id,
         }
 
         event_result = EventResultCreate(**data)
@@ -225,19 +225,13 @@ def test_valid_event_result_with_layouts(
         assert response.json()["round_points"] == 0.0
 
 
-def test_invalid_event_session_id(sample_client):
+def test_invalid_disc_event_id(sample_client):
     """
-    Test that invalid event_session_id references return proper 422 HTTP errors.
+    Test that invalid disc_event_id references return proper 422 HTTP errors.
 
     This test ensures that the API properly validates foreign key references
     and returns meaningful error messages when attempting to create an event
-    result with a non-existent event_session_id.
-
-    The test verifies that:
-    1. Invalid foreign key references are caught at the API level
-    2. A 422 Unprocessable Entity status code is returned
-    3. The error message contains helpful information about the validation failure
-
+    result with a non-existent disc_event_id.
     Args:
         sample_client (TestClient): FastAPI test client with database override.
 
@@ -259,7 +253,7 @@ def test_invalid_event_session_id(sample_client):
         "round_relative_score": -5,
         "round_total_score": 25,
         "course_layout_id": 1,
-        "event_session_id": 99999,  # Non-existent event_session_id
+        "disc_event_id": 99999,  # Non-existent disc_event_id
     }
 
     response = sample_client.post(
@@ -267,11 +261,11 @@ def test_invalid_event_session_id(sample_client):
         json=event_result_data,
     )
     assert response.status_code == 422
-    assert "does not exist" in response.json()["detail"]
+    assert "does not exist" in str(response.json()["detail"])
 
 
 def test_get_event_results_by_username(
-    sample_csv_path, sample_client, sample_event_session_id
+    sample_csv_path, sample_client, sample_disc_event_id
 ):
     """
     Test retrieving event results by username using CSV data.
@@ -282,11 +276,11 @@ def test_get_event_results_by_username(
     3. The correct results are returned for a specific user
     4. API returns 404 for non-existent usernames
 
+
     Args:
         sample_csv_path (str): Path to the test CSV file containing event result data.
         sample_client (TestClient): FastAPI test client with database override.
-        sample_event_session_id (int): ID of a valid event session for foreign
-        key reference.
+        sample_disc_event_id (int): ID of a valid disc event for foreign key reference.
 
     Asserts:
         - Event results are successfully created
@@ -298,6 +292,7 @@ def test_get_event_results_by_username(
     df.insert(0, "date", pd.to_datetime(1741906800, unit="s"))
 
     created_usernames = set()
+
     for i, (_, row) in enumerate(df.iterrows()):
         if i >= 3:
             break
@@ -321,12 +316,12 @@ def test_get_event_results_by_username(
             "round_relative_score": int(row["round_relative_score"]),
             "round_total_score": int(row["round_total_score"]),
             "course_layout_id": 1,
-            "event_session_id": sample_event_session_id,
+            "disc_event_id": sample_disc_event_id,
         }
 
         event_result = EventResultCreate(**data)
         response = sample_client.post(
-            "/api/v1/event-results/",
+            "/api/v1/event-results",
             json=event_result.model_dump(mode="json", exclude_none=True),
         )
         assert response.status_code == 201
@@ -349,7 +344,7 @@ def test_get_event_results_by_username(
 
 
 def test_get_event_results_by_session(
-    sample_csv_path, sample_client, sample_event_session_id
+    sample_csv_path, sample_client, sample_disc_event_id
 ):
     """
     Test retrieving event results by event session ID using query parameters.
@@ -367,26 +362,28 @@ def test_get_event_results_by_session(
         key reference.
 
     Asserts:
-        - Event results are successfully created with session ID
-        - GET with session_id query param returns correct results
-        - All results have the correct event_session_id
-        - Proper response for non-existent session ID
+        - Event results are successfully created with disc_event_id
+        - GET with disc_event_id query param returns correct results
+        - All results have the correct disc_event_id
+        - Proper response for non-existent disc_event_id
     """
-    second_session_data = {
-        "name": "Second Test Event Session",
+
+    second_event_data = {
+        "name": "Second Test Disc Event",
         "start_date": "2025-04-01T00:00:00Z",
         "end_date": "2025-05-01T00:00:00Z",
-        "description": "Second test session",
+        "description": "Second test event",
     }
-    second_session_response = sample_client.post(
-        "/api/v1/event-sessions/", json=second_session_data
+    second_event_response = sample_client.post(
+        "/api/v1/disc-events/", json=second_event_data
     )
-    assert second_session_response.status_code in (200, 201)
-    second_session_id = second_session_response.json()["id"]
+    assert second_event_response.status_code in (200, 201)
+    second_event_id = second_event_response.json()["id"]
 
     df = pd.read_csv(sample_csv_path)
     df.insert(0, "date", pd.to_datetime(1741993200, unit="s"))
     created_results_count = 0
+
     for i, (_, row) in enumerate(df.iterrows()):
         if i >= 4:
             break
@@ -410,40 +407,38 @@ def test_get_event_results_by_session(
             "round_relative_score": int(row["round_relative_score"]),
             "round_total_score": int(row["round_total_score"]),
             "course_layout_id": 1,
-            "event_session_id": sample_event_session_id,
+            "disc_event_id": sample_disc_event_id,
         }
 
         event_result = EventResultCreate(**data)
         response = sample_client.post(
-            "/api/v1/event-results/",
+            "/api/v1/event-results",
             json=event_result.model_dump(mode="json", exclude_none=True),
         )
         assert response.status_code == 201
         created_results_count += 1
 
     response = sample_client.get(
-        f"/api/v1/event-results/?event_session_id={sample_event_session_id}"
+        f"/api/v1/event-results/?disc_event_id={sample_disc_event_id}"
     )
     assert response.status_code == 200
 
     results = response.json()["event_results"]
     assert isinstance(results, list)
 
-    session_results = [
-        r for r in results if r["event_session_id"] == sample_event_session_id
-    ]
-    assert len(session_results) >= created_results_count
+    event_results = [r for r in results if r["disc_event_id"] == sample_disc_event_id]
+    assert len(event_results) >= created_results_count
 
-    for result in session_results:
-        assert result["event_session_id"] == sample_event_session_id
+    for result in event_results:
+        assert result["disc_event_id"] == sample_disc_event_id
 
     response = sample_client.get(
-        f"/api/v1/event-results/?event_session_id={second_session_id}"
+        f"/api/v1/event-results/?disc_event_id={second_event_id}"
     )
     assert response.status_code == 200
     results = response.json()["event_results"]
-    session_results = [r for r in results if r["event_session_id"] == second_session_id]
-    assert len(session_results) == 0
+    event_results = [r for r in results if r["disc_event_id"] == second_event_id]
+    assert len(event_results) == 0
 
-    response = sample_client.get("/api/v1/event-results/?event_session_id=99999")
+    response = sample_client.get("/api/v1/event-results/?disc_event_id=99999")
     assert response.status_code == 404

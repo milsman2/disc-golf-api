@@ -73,24 +73,24 @@ def get_event_results_by_username(db: Session, username: str):
     return db_event_results
 
 
-def get_event_results_by_session(
-    db: Session, event_session_id: int, skip: int = 0, limit: int = 100
+def get_event_results_by_disc_event(
+    db: Session, disc_event_id: int, skip: int = 0, limit: int = 100
 ) -> list[EventResultModel]:
     """
-    Retrieve all event results for a specific event session with pagination.
+    Retrieve all event results for a specific disc event with pagination.
 
     Args:
         db: Database session
-        event_session_id: Event session ID to filter by
+        disc_event_id: Disc event ID to filter by
         skip: Number of records to skip for pagination
         limit: Maximum number of records to return
 
     Returns:
-        List of EventResult objects for the session
+        List of EventResult objects for the disc event
     """
     return (
         db.query(EventResultModel)
-        .filter(EventResultModel.event_session_id == event_session_id)
+        .filter(EventResultModel.disc_event_id == disc_event_id)
         .offset(skip)
         .limit(limit)
         .all()
@@ -98,15 +98,13 @@ def get_event_results_by_session(
 
 
 def get_median_round_score(
-    db: Session, event_session_id: int | None = None, division: str | None = None
+    db: Session, disc_event_id: int | None = None, division: str | None = None
 ):
     base_query = db.query(EventResultModel.round_total_score).filter(
         EventResultModel.round_total_score.isnot(None)
     )
-    if event_session_id is not None:
-        base_query = base_query.filter(
-            EventResultModel.event_session_id == event_session_id
-        )
+    if disc_event_id is not None:
+        base_query = base_query.filter(EventResultModel.disc_event_id == disc_event_id)
     if division is not None:
         base_query = base_query.filter(EventResultModel.division == division)
 
@@ -129,7 +127,7 @@ def get_median_round_score(
     ).scalar()
 
     return EventResultStats(
-        event_session_id=event_session_id,
+        disc_event_id=disc_event_id,
         division=division,
         median=float(median) if median is not None else None,
         mode=float(mode) if mode is not None else None,

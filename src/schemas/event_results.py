@@ -51,8 +51,8 @@ class EventResultCreate(EventResultBase):
     course_layout_id: int = Field(
         ..., description="ID of the course layout where the event took place"
     )
-    event_session_id: int = Field(
-        ..., description="ID of the event session this result belongs to"
+    disc_event_id: int = Field(
+        ..., description="ID of the disc event this result belongs to"
     )
 
 
@@ -77,8 +77,8 @@ class EventResultPublic(EventResultBase):
     course_layout_id: int = Field(
         ..., description="ID of the course layout where the event took place"
     )
-    event_session_id: int = Field(
-        ..., description="ID of the event session this result belongs to"
+    disc_event_id: int = Field(
+        ..., description="ID of the disc event this result belongs to"
     )
 
 
@@ -94,8 +94,8 @@ class EventResultsPublic(BaseModel):
 
 
 class EventResultStats(BaseModel):
-    event_session_id: int | None = Field(
-        None, description="ID of the event session if filtered"
+    disc_event_id: int | None = Field(
+        None, description="ID of the disc event if filtered"
     )
     division: str | None = Field(None, description="Division filter applied, if any")
     median: float | None

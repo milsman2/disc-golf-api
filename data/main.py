@@ -5,7 +5,7 @@ Run all data processing tasks for the Disc Golf API.
 from icecream import ic
 
 from data.course_processing import create_courses
-from data.event_session_processing import create_event_sessions
+from data.disc_event_processing import create_disc_event
 from data.round_processing import create_event_rounds
 
 
@@ -15,7 +15,7 @@ def main():
     """
     ic()
     create_courses()
-    create_event_sessions()
+    create_disc_event()
     create_event_rounds()
 
 
