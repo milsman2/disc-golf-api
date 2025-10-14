@@ -17,7 +17,7 @@ from pydantic import ValidationError
 from src.schemas.disc_events import DiscEventCreate
 
 
-def create_disc_event(data_directory: str = "data/event_sessions/") -> None:
+def create_disc_event(data_directory: str = "data/disc_events/") -> None:
     """
     Reads all JSON files in the specified directory, validates each as a
     DiscEventCreate object, and posts valid disc events to the API endpoint.
@@ -28,7 +28,7 @@ def create_disc_event(data_directory: str = "data/event_sessions/") -> None:
 
     Args:
         data_directory (str): Path to the directory containing disc event JSON files.
-                             Defaults to "data/event_sessions/".
+                             Defaults to "data/disc_events/".
 
     Returns:
         None

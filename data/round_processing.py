@@ -206,7 +206,7 @@ def process_all_csv_files(folder_path):
 
 
 def create_event_rounds():
-    process_all_csv_files("data/disc_events")
+    process_all_csv_files("data/event_results/")
 
 
 if __name__ == "__main__":
