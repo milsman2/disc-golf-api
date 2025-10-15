@@ -26,12 +26,13 @@ class CourseLayout(Base):
         Integer, primary_key=True, index=True, nullable=False, autoincrement=True
     )
     name: Mapped[str] = mapped_column(String, nullable=False)
-    course_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("courses.id"), nullable=False
-    )
     par: Mapped[int | None] = mapped_column(Integer, nullable=True)
     length: Mapped[float | None] = mapped_column(Float, nullable=True)
     difficulty: Mapped[str | None] = mapped_column(String, nullable=True)
+
+    course_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("courses.id"), nullable=False
+    )
 
     course: Mapped["Course"] = relationship("Course", back_populates="layouts")
     holes: Mapped[list["Hole"]] = relationship(

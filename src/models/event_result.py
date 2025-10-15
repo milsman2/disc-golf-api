@@ -32,8 +32,7 @@ class EventResult(Base):
         username (str): The player's username in the system.
         round_relative_score (int): The player's score relative to par for the round.
         round_total_score (int): The player's total score for the round.
-        course_layout_id (int): The foreign key referencing the CourseLayout
-        model.
+        course_layout_id (int): The foreign key referencing the CourseLayout model.
         course_layout (CourseLayout): The CourseLayout associated with the event
         round_points (float): The points earned by the player for the round.
     """
@@ -42,6 +41,7 @@ class EventResult(Base):
     __table_args__ = (
         UniqueConstraint("date", "username", name="uq_eventresult_date_username"),
     )
+
     id: Mapped[int] = mapped_column(
         Integer, primary_key=True, index=True, autoincrement=True, nullable=False
     )
@@ -58,6 +58,9 @@ class EventResult(Base):
     round_total_score: Mapped[int] = mapped_column(Integer, nullable=False)
     round_points: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
 
+    course_layout_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("course_layouts.id"), nullable=False
+    )
     disc_event_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("disc_events.id"), nullable=False
     )
@@ -65,17 +68,6 @@ class EventResult(Base):
     disc_event: Mapped["DiscEvent"] = relationship(
         "DiscEvent", back_populates="event_results"
     )
-
-    course_layout_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("course_layouts.id"), nullable=False
-    )
-
     course_layout: Mapped["CourseLayout"] = relationship(
         "CourseLayout", back_populates="event_results"
     )
-    """
-    Relationship to the CourseLayout model.
-
-    This establishes a many-to-one relationship between EventResult and CourseLayout,
-    where each event result is associated with a specific course layout.
-    """

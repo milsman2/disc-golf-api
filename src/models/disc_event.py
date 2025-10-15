@@ -47,6 +47,7 @@ class DiscEvent(Base):
     description: Mapped[str | None] = mapped_column(
         String, nullable=True, doc="A brief description of the event."
     )
+
     event_results = relationship(
         "EventResult",
         back_populates="disc_event",
