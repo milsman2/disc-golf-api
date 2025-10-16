@@ -16,6 +16,28 @@ from pydantic import ValidationError
 from src.schemas.event_results import EventResultCreate
 
 
+def convert_xlsx_to_csv(folder_path):
+    """
+    Convert all .xlsx files in the specified folder to .csv files using pandas.
+    :param folder_path: Path to the folder containing .xlsx files.
+    """
+    ic(f"Looking for XLSX files in folder: {folder_path}")
+    xlsx_files = Path(folder_path).glob("*.xlsx")
+    for xlsx_file in xlsx_files:
+        try:
+            df = pd.read_excel(xlsx_file)
+            csv_file = xlsx_file.with_suffix(".csv")
+            df.to_csv(csv_file, index=False)
+            ic(f"Converted {xlsx_file} to {csv_file}")
+        except (
+            pd.errors.EmptyDataError,
+            pd.errors.ParserError,
+            OSError,
+            ValueError,
+        ) as e:
+            ic(f"Failed to convert {xlsx_file}: {e}")
+
+
 def get_disc_event_id_for_date(event_date: str) -> int:
     """
     Get the appropriate disc event ID for a given date.
@@ -206,7 +228,9 @@ def process_all_csv_files(folder_path):
 
 
 def create_event_rounds():
-    process_all_csv_files("data/event_results/")
+    folder = "data/event_results/"
+    convert_xlsx_to_csv(folder)
+    process_all_csv_files(folder)
 
 
 if __name__ == "__main__":
