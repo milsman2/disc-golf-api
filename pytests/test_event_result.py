@@ -442,3 +442,57 @@ def test_get_event_results_by_session(
 
     response = sample_client.get("/api/v1/event-results/?disc_event_id=99999")
     assert response.status_code == 404
+
+
+def test_get_event_results_grouped_by_division(
+    sample_csv_path, sample_client, sample_disc_event_id
+):
+    """
+    Test the grouped-by-division response for a given disc_event_id.
+    """
+    # Create a few results for the disc event
+    df = pd.read_csv(sample_csv_path)
+    df.insert(0, "date", pd.to_datetime(1741993200, unit="s"))
+    for i, (_, row) in enumerate(df.iterrows()):
+        if i >= 6:
+            break
+        data = {
+            "date": row["date"].isoformat(),
+            "division": row["division"],
+            "position": row["position"],
+            "position_raw": (
+                float(row["position_raw"]) if row["position_raw"] != "DNF" else None
+            ),
+            "name": row["name"],
+            "event_relative_score": int(row["event_relative_score"]),
+            "event_total_score": int(row["event_total_score"]),
+            "pdga_number": (
+                float(row["pdga_number"]) if not pd.isna(row["pdga_number"]) else None
+            ),
+            "username": f'group_test_{row["username"]}_{i}',
+            "round_relative_score": int(row["round_relative_score"]),
+            "round_total_score": int(row["round_total_score"]),
+            "course_layout_id": 1,
+            "disc_event_id": sample_disc_event_id,
+        }
+        event_result = EventResultCreate(**data)
+        response = sample_client.post(
+            "/api/v1/event-results",
+            json=event_result.model_dump(mode="json", exclude_none=True),
+        )
+        assert response.status_code == 201
+
+    # Request grouped results
+    response = sample_client.get(
+        f"/api/v1/event-results/?disc_event_id={sample_disc_event_id}&group_by_division=true&sort_by_position_raw=true"
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert "grouped" in body
+    assert isinstance(body["grouped"], list)
+    # Each group's results should be sorted by position_raw (None at end)
+    for group in body["grouped"]:
+        positions = [r.get("position_raw") for r in group["results"]]
+        # Filter out None for ordering check
+        numeric = [p for p in positions if p is not None]
+        assert numeric == sorted(numeric)

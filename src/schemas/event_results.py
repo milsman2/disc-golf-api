@@ -93,6 +93,24 @@ class EventResultsPublic(BaseModel):
     )
 
 
+class DivisionResults(BaseModel):
+    """Event results grouped for a single division, sorted by position_raw."""
+
+    division: str
+    # Use the DB-aware schema so ORM objects are serialized correctly
+    results: list[EventResultInDBBase] = Field(
+        default=[], description="Results for the division"
+    )
+
+
+class EventResultsGroupedPublic(BaseModel):
+    """Top-level schema for grouped event results by division."""
+
+    grouped: list[DivisionResults] = Field(
+        default=[], description="Event results grouped by division"
+    )
+
+
 class EventResultStats(BaseModel):
     disc_event_id: int | None = Field(
         None, description="ID of the disc event if filtered"

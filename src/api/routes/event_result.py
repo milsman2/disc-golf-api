@@ -19,6 +19,8 @@ Dependencies:
 - CRUD operations with proper error handling
 """
 
+from typing import Union
+
 from fastapi import APIRouter, HTTPException
 
 from src.api.deps import SessionDep
@@ -36,6 +38,7 @@ from src.crud.event_result import get_event_results_by_username
 from src.schemas.event_results import (
     EventResultCreate,
     EventResultPublic,
+    EventResultsGroupedPublic,
     EventResultsPublic,
     EventResultStats,
 )
@@ -46,12 +49,14 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=EventResultsPublic)
+@router.get("/", response_model=Union[EventResultsPublic, EventResultsGroupedPublic])
 def get_event_results_route(
     session: SessionDep,
     skip: int = 0,
     limit: int = 100,
     disc_event_id: int | None = None,
+    group_by_division: bool = False,
+    sort_by_position_raw: bool = False,
 ):
     """
     Retrieve a list of EventResults with optional pagination and filtering.
@@ -61,6 +66,11 @@ def get_event_results_route(
     - username: Filter results by username
     - skip: Number of records to skip for pagination
     - limit: Maximum number of records to return
+        - group_by_division: If true, group results by `division` and return a structure
+            where each division contains its list of results.
+        - sort_by_position_raw: If true, sort results by `position_raw` (numeric positions
+            first, None values such as DNF last). This flag works for both grouped and
+            ungrouped responses and can be combined with `group_by_division`.
     """
     if disc_event_id:
         disc_event = get_disc_event(session, disc_event_id)
@@ -73,12 +83,41 @@ def get_event_results_route(
         raw_results = get_event_results_by_disc_event(
             db=session, disc_event_id=disc_event_id, skip=skip, limit=limit
         )
+        # Optionally group results by division
+        if group_by_division:
+            divisions: dict[str, list] = {}
+            for r in raw_results:
+                divisions.setdefault(r.division, []).append(r)
+            grouped = []
+            for division, items in sorted(divisions.items()):
+                if sort_by_position_raw:
+                    items_sorted = sorted(
+                        items, key=lambda x: (x.position_raw is None, x.position_raw)
+                    )
+                else:
+                    items_sorted = items
+                grouped.append({"division": division, "results": items_sorted})
+            return {"grouped": grouped}
         # Return empty list for valid disc event with no results
         return {"event_results": raw_results or []}
     else:
         raw_results = get_event_results(db=session, skip=skip, limit=limit)
         if not raw_results:
             raise HTTPException(status_code=404, detail="No EventResults found")
+        if group_by_division:
+            divisions: dict[str, list] = {}
+            for r in raw_results:
+                divisions.setdefault(r.division, []).append(r)
+            grouped = []
+            for division, items in sorted(divisions.items()):
+                if sort_by_position_raw:
+                    items_sorted = sorted(
+                        items, key=lambda x: (x.position_raw is None, x.position_raw)
+                    )
+                else:
+                    items_sorted = items
+                grouped.append({"division": division, "results": items_sorted})
+            return {"grouped": grouped}
         return {"event_results": raw_results}
 
 
