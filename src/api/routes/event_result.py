@@ -68,9 +68,10 @@ def get_event_results_route(
     - limit: Maximum number of records to return
         - group_by_division: If true, group results by `division` and return a structure
             where each division contains its list of results.
-        - sort_by_position_raw: If true, sort results by `position_raw` (numeric positions
-            first, None values such as DNF last). This flag works for both grouped and
-            ungrouped responses and can be combined with `group_by_division`.
+        - sort_by_position_raw: If true, sort results by `position_raw` (numeric
+          positions first, None values such as DNF last). This flag works for
+          both grouped and ungrouped responses and can be combined with
+          `group_by_division`.
     """
     if disc_event_id:
         disc_event = get_disc_event(session, disc_event_id)

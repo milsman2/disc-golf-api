@@ -484,7 +484,8 @@ def test_get_event_results_grouped_by_division(
 
     # Request grouped results
     response = sample_client.get(
-        f"/api/v1/event-results/?disc_event_id={sample_disc_event_id}&group_by_division=true&sort_by_position_raw=true"
+        f"/api/v1/event-results/?disc_event_id={sample_disc_event_id}&"
+        "group_by_division=true&sort_by_position_raw=true"
     )
     assert response.status_code == 200
     body = response.json()
