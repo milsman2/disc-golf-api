@@ -1,10 +1,11 @@
-"""
-CRUD operations for disc golf event sessions.
+"""CRUD operations for DiscEvent (disc golf events).
 
-This module provides functions to create, retrieve, update, and
-delete EventSession records in the database using SQLAlchemy ORM.
-It supports operations for single event sessions as well as listing
-multiple sessions with pagination.
+Provides helpers to create, read, update and delete DiscEvent records.
+Notable behavior:
+- `create_disc_event` persists a new DiscEvent.
+- `update_disc_event` intentionally ignores `None` values in the provided
+    `DiscEventUpdate` schema to support partial-update semantics (fields not
+    provided will not overwrite existing values).
 """
 
 from sqlalchemy.orm import Session

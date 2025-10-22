@@ -1,5 +1,12 @@
-"""
-CRUD operations for the Course model
+"""CRUD operations for the Course model.
+
+This module contains helpers to create, read, update and delete `Course`
+objects. The `create_course` implementation builds a complete object graph
+(Course -> CourseLayout -> Hole) in memory and persists it with a single
+commit. This relies on SQLAlchemy relationship cascades to set foreign keys
+and persist child objects automatically.
+
+The single-commit pattern reduces DB round-trips and keeps creation atomic.
 """
 
 from sqlalchemy.orm import Session, joinedload

@@ -1,22 +1,21 @@
-"""
-API routes for managing EventResult resources.
+"""API routes for EventResult resources.
 
-This module provides RESTful endpoints for CRUD operations on EventResult objects.
-Event results represent individual player performances in disc golf events.
+This module exposes endpoints to create, read, update and delete EventResult
+records. EventResult objects represent a player's performance in a disc event
+and are stored in the database with links to a `CourseLayout` and a
+`DiscEvent`.
 
-Routes (grouped by endpoint path, ordered by HTTP method):
-- Collection endpoints (/event-results):
-  - GET /event-results: Retrieve all event results with pagination
-  - POST /event-results: Create a new event result
-- Item endpoints (/event-results/id/{id}):
-  - GET /event-results/id/{event_result_id}: Retrieve a single event result by ID
-  - PUT /event-results/id/{event_result_id}: Update an existing event result
-  - DELETE /event-results/id/{event_result_id}: Delete an event result
+Notable behaviors:
+- GET `/event-results` accepts `group_by_division` and `sort_by_position_raw`
+    query parameters. Grouping returns a `{ "grouped": [{ "division":...,
+    "results": [...] }] }` structure, while `sort_by_position_raw` controls
+    numeric ordering (None values last).
+- POST `/event-results` validates foreign key references (e.g. `disc_event_id`).
+- PUT `/event-results/id/{id}` updates an existing record.
 
 Dependencies:
-- SessionDep: Database session dependency injection
-- Pydantic schemas for request/response validation
-- CRUD operations with proper error handling
+- `SessionDep` is used for DB session injection;
+- CRUD helpers in :mod:`src.crud.event_result` perform DB operations.
 """
 
 from typing import Union

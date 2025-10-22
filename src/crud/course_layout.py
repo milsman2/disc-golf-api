@@ -1,5 +1,10 @@
-"""
-CRUD for Course Layout
+"""CRUD helpers for CourseLayout.
+
+`create_course_layout` accepts a `CourseLayoutCreate` schema and will persist
+the layout. If `holes` are present on the input schema, Hole model instances
+are constructed and attached to the `CourseLayout.holes` relationship before
+committing — SQLAlchemy will persist child holes in the same transaction when
+the relationship is configured with cascade (``all, delete-orphan``).
 """
 
 from sqlalchemy.orm import Session
