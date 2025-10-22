@@ -13,6 +13,7 @@ from sqlalchemy.pool import StaticPool
 from src.api.deps import get_db
 from src.main import app
 from src.models.base import Base
+from datetime import datetime as _dt, timezone as _tz
 
 
 @pytest.fixture(scope="module", name="test_session")
@@ -128,7 +129,8 @@ def test_delete_disc_event(test_client):
 
 def test_partial_update_disc_event(test_client):
     """
-    Test that updating a single field on a DiscEvent works and other fields remain unchanged.
+    Test that updating a single field on a DiscEvent works
+    and other fields remain unchanged.
     """
     event_data = {
         "name": "Partial Update Event",
@@ -151,8 +153,6 @@ def test_partial_update_disc_event(test_client):
     # Ensure other fields remain unchanged
     assert updated["name"] == event_data["name"]
     # Normalize ISO timestamps (server may strip trailing Z / timezone representation)
-    from datetime import datetime as _dt
-    from datetime import timezone as _tz
 
     def _norm(iso_str: str) -> _dt:
         dt = _dt.fromisoformat(iso_str.replace("Z", "+00:00"))
