@@ -39,13 +39,26 @@ class DiscEventCreate(DiscEventBase):
     pass
 
 
-class DiscEventUpdate(DiscEventBase):
+class DiscEventUpdate(BaseModel):
     """
     Schema for validating data when updating an existing DiscEvent.
+
     All fields are optional to allow partial updates via PUT/PATCH requests.
+    Use this schema in update endpoints to accept partial payloads.
     """
 
-    pass
+    name: str | None = Field(default=None, description="Name of the disc event")
+    start_date: datetime.datetime | None = Field(
+        default=None, description="Start date of the disc event in ISO format"
+    )
+    end_date: datetime.datetime | None = Field(
+        default=None, description="End date of the disc event in ISO format"
+    )
+    description: str | None = Field(
+        default=None, description="Description of the disc event"
+    )
+
+    model_config = ConfigDict(extra="forbid")
 
 
 class DiscEventInDBBase(DiscEventBase):

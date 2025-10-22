@@ -46,7 +46,10 @@ def update_disc_event(
 ) -> DiscEvent | None:
     db_disc_event = db.query(DiscEvent).filter(DiscEvent.id == disc_event_id).first()
     if db_disc_event:
+        # Only set attributes that are explicitly provided (not None)
         for key, value in disc_event_data.model_dump().items():
+            if value is None:
+                continue
             setattr(db_disc_event, key, value)
         db.commit()
         db.refresh(db_disc_event)

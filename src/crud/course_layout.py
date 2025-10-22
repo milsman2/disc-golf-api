@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from src.models import CourseLayout
 from src.schemas import CourseLayoutCreate
+from src.models.hole import Hole
 
 
 def get_course_layout(db: Session, course_layout_id: int) -> CourseLayout | None:
@@ -21,7 +22,19 @@ def get_course_layouts(
 def create_course_layout(
     db: Session, course_layout: CourseLayoutCreate
 ) -> CourseLayout:
-    db_course_layout = CourseLayout(**course_layout.model_dump())
+    # Build CourseLayout instance from schema, excluding holes
+    layout_data = course_layout.model_dump(exclude={"holes"})
+    db_course_layout = CourseLayout(**layout_data)
+
+    # If holes are provided, construct Hole instances and attach them
+    holes_payload = getattr(course_layout, "holes", None)
+    if holes_payload:
+        hole_objs: list[Hole] = []
+        for hole in holes_payload:
+            hole_data = hole.model_dump()
+            hole_objs.append(Hole(**hole_data))
+        db_course_layout.holes = hole_objs
+
     db.add(db_course_layout)
     db.commit()
     db.refresh(db_course_layout)

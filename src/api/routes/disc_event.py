@@ -83,6 +83,14 @@ def update_disc_event_route(
 ):
     """
     Update a disc event by ID.
+
+    Partial-update semantics:
+    - The request body should be a `DiscEventUpdate` where all fields are optional.
+    - Only provided fields (non-null) will be updated; fields omitted or set to `null`
+        in the payload will be ignored and not overwrite existing values.
+    - If you want to explicitly clear a value (set it to NULL in the DB), the
+        current implementation treats `null` as "not provided"; explicit-clearing
+        behavior can be added later if desired.
     """
     disc_event = update_disc_event(db, disc_event_id, disc_event_data)
     if not disc_event:

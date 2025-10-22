@@ -124,3 +124,42 @@ def test_delete_disc_event(test_client):
     if get_response.status_code == 404:
         print("Get After Delete 404 Response:", get_response.json())
     assert get_response.status_code == 404
+
+
+def test_partial_update_disc_event(test_client):
+    """
+    Test that updating a single field on a DiscEvent works and other fields remain unchanged.
+    """
+    event_data = {
+        "name": "Partial Update Event",
+        "start_date": "2025-10-20T00:00:00Z",
+        "end_date": "2025-10-21T00:00:00Z",
+        "description": "Original description",
+    }
+    create_response = test_client.post("/api/v1/disc-events/", json=event_data)
+    assert create_response.status_code in (200, 201)
+    event_id = create_response.json()["id"]
+
+    # Partial update: only change description
+    patch_data = {"description": "Updated description only"}
+    update_response = test_client.put(
+        f"/api/v1/disc-events/id/{event_id}", json=patch_data
+    )
+    assert update_response.status_code == 200
+    updated = update_response.json()
+    assert updated["description"] == "Updated description only"
+    # Ensure other fields remain unchanged
+    assert updated["name"] == event_data["name"]
+    # Normalize ISO timestamps (server may strip trailing Z / timezone representation)
+    from datetime import datetime as _dt
+    from datetime import timezone as _tz
+
+    def _norm(iso_str: str) -> _dt:
+        dt = _dt.fromisoformat(iso_str.replace("Z", "+00:00"))
+        # ensure aware UTC for comparison
+        if dt.tzinfo is None:
+            return dt.replace(tzinfo=_tz.utc)
+        return dt.astimezone(_tz.utc)
+
+    assert _norm(updated["start_date"]) == _norm(event_data["start_date"])
+    assert _norm(updated["end_date"]) == _norm(event_data["end_date"])
