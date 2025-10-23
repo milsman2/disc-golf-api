@@ -10,8 +10,8 @@ the relationship is configured with cascade (``all, delete-orphan``).
 from sqlalchemy.orm import Session
 
 from src.models import CourseLayout
-from src.schemas import CourseLayoutCreate
 from src.models.hole import Hole
+from src.schemas import CourseLayoutCreate
 
 
 def get_course_layout(db: Session, course_layout_id: int) -> CourseLayout | None:

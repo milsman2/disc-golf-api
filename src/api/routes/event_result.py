@@ -18,8 +18,6 @@ Dependencies:
 - CRUD helpers in :mod:`src.crud.event_result` perform DB operations.
 """
 
-from typing import Union
-
 from fastapi import APIRouter, HTTPException
 
 from src.api.deps import SessionDep
@@ -48,7 +46,7 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=Union[EventResultsPublic, EventResultsGroupedPublic])
+@router.get("/", response_model=EventResultsPublic | EventResultsGroupedPublic)
 def get_event_results_route(
     session: SessionDep,
     skip: int = 0,

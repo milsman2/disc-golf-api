@@ -4,6 +4,9 @@ Unit tests for disc event endpoints.
 This module tests the creation, retrieval, and deletion of disc events via the API.
 """
 
+from datetime import datetime as _dt
+from datetime import timezone as _tz
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -13,7 +16,6 @@ from sqlalchemy.pool import StaticPool
 from src.api.deps import get_db
 from src.main import app
 from src.models.base import Base
-from datetime import datetime as _dt, timezone as _tz
 
 
 @pytest.fixture(scope="module", name="test_session")
