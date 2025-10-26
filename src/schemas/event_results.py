@@ -51,8 +51,8 @@ class EventResultCreate(EventResultBase):
     course_layout_id: int = Field(
         ..., description="ID of the course layout where the event took place"
     )
-    event_session_id: int = Field(
-        ..., description="ID of the event session this result belongs to"
+    disc_event_id: int = Field(
+        ..., description="ID of the disc event this result belongs to"
     )
 
 
@@ -77,8 +77,8 @@ class EventResultPublic(EventResultBase):
     course_layout_id: int = Field(
         ..., description="ID of the course layout where the event took place"
     )
-    event_session_id: int = Field(
-        ..., description="ID of the event session this result belongs to"
+    disc_event_id: int = Field(
+        ..., description="ID of the disc event this result belongs to"
     )
 
 
@@ -93,9 +93,27 @@ class EventResultsPublic(BaseModel):
     )
 
 
+class DivisionResults(BaseModel):
+    """Event results grouped for a single division, sorted by position_raw."""
+
+    division: str
+    # Use the DB-aware schema so ORM objects are serialized correctly
+    results: list[EventResultInDBBase] = Field(
+        default=[], description="Results for the division"
+    )
+
+
+class EventResultsGroupedPublic(BaseModel):
+    """Top-level schema for grouped event results by division."""
+
+    grouped: list[DivisionResults] = Field(
+        default=[], description="Event results grouped by division"
+    )
+
+
 class EventResultStats(BaseModel):
-    event_session_id: int | None = Field(
-        None, description="ID of the event session if filtered"
+    disc_event_id: int | None = Field(
+        None, description="ID of the disc event if filtered"
     )
     division: str | None = Field(None, description="Division filter applied, if any")
     median: float | None

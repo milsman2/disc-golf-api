@@ -1,5 +1,12 @@
-"""
-CRUD operations for the Course model
+"""CRUD operations for the Course model.
+
+This module contains helpers to create, read, update and delete `Course`
+objects. The `create_course` implementation builds a complete object graph
+(Course -> CourseLayout -> Hole) in memory and persists it with a single
+commit. This relies on SQLAlchemy relationship cascades to set foreign keys
+and persist child objects automatically.
+
+The single-commit pattern reduces DB round-trips and keeps creation atomic.
 """
 
 from sqlalchemy.orm import Session, joinedload
@@ -39,29 +46,35 @@ def get_course_by_name(db: Session, name: str) -> Course | None:
 
 
 def create_course(db: Session, course: CourseCreate) -> Course:
+    # Build Course model instance (exclude nested layouts)
     course_data = course.model_dump(exclude={"layouts"})
     db_course = Course(**course_data)
 
+    # If layouts provided, build CourseLayout and Hole model instances and attach
+    layouts_payload = getattr(course, "layouts", None)
+    if layouts_payload:
+        layout_objs: list[CourseLayout] = []
+        for layout in layouts_payload:
+            layout_data = layout.model_dump(exclude={"holes", "course_id"})
+            db_layout = CourseLayout(**layout_data)
+
+            # build holes and attach to layout (SQLAlchemy will set layout_id on flush)
+            holes_payload = getattr(layout, "holes", None)
+            if holes_payload:
+                hole_objs: list[Hole] = []
+                for hole in holes_payload:
+                    hole_data = hole.model_dump()
+                    hole_objs.append(Hole(**hole_data))
+                db_layout.holes = hole_objs
+
+            layout_objs.append(db_layout)
+
+        db_course.layouts = layout_objs
+
+    # Persist the complete object graph in one transaction
     db.add(db_course)
     db.commit()
     db.refresh(db_course)
-
-    for layout in course.layouts:
-        layout_data = layout.model_dump(exclude={"holes", "course_id"})
-        layout_data["course_id"] = db_course.id
-        db_layout = CourseLayout(**layout_data)
-
-        db.add(db_layout)
-        db.commit()
-        db.refresh(db_layout)
-
-        for hole in layout.holes:
-            hole_data = hole.model_dump()
-            hole_data["layout_id"] = db_layout.id
-            db_hole = Hole(**hole_data)
-            db.add(db_hole)
-        db.commit()
-
     return db_course
 
 

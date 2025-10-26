@@ -56,6 +56,7 @@ dependencies = [
     "mypy-extensions==1.1.0",
     "numpy==2.2.6",
     "nvidia-ml-py==12.575.51",
+    "openpyxl>=3.1.5",
     "packaging==25.0",
     "pandas==2.3.0",
     "passlib==1.7.4",

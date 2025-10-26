@@ -23,12 +23,13 @@ class Hole(Base):
     id: Mapped[int] = mapped_column(
         Integer, primary_key=True, index=True, nullable=False, autoincrement=True
     )
-    layout_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("course_layouts.id"), nullable=False
-    )
     hole_name: Mapped[str] = mapped_column(String, nullable=False)
     par: Mapped[int | None] = mapped_column(Integer, nullable=False)
     distance: Mapped[int | None] = mapped_column(Integer, nullable=True)
+
+    layout_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("course_layouts.id"), nullable=False
+    )
 
     layout: Mapped["CourseLayout"] = relationship(
         "CourseLayout", back_populates="holes"
