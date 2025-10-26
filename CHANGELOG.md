@@ -1,6 +1,52 @@
 # CHANGELOG
 
 
+## v0.14.0 (2025-10-26)
+
+### Bug Fixes
+
+- Improve docstring formatting and clarity in CRUD modules for EventResult, Course, CourseLayout,
+  and DiscEvent
+  ([`c3c6529`](https://github.com/milsman2/disc-golf-api/commit/c3c6529ca9a3bf7439e294bc577efc994add86f7))
+
+- Improve readability of API documentation and test case for event results
+  ([`be57cbf`](https://github.com/milsman2/disc-golf-api/commit/be57cbfda3137569b66f0008cc4f02dd1912a558))
+
+- Refactor code structure for improved readability and maintainability
+  ([`0f42bb5`](https://github.com/milsman2/disc-golf-api/commit/0f42bb5415ba3f06f6aa6e6a5168ceb7ff5ad25e))
+
+- Remove redundant datetime imports in test_partial_update_disc_event
+  ([`908bc0d`](https://github.com/milsman2/disc-golf-api/commit/908bc0d5220a02d9a505094029aa35768509544b))
+
+- Remove redundant imports and improve type hinting in event result and course layout modules
+  ([`10672c1`](https://github.com/milsman2/disc-golf-api/commit/10672c18319bb32b6302cdb076c1f3213663c011))
+
+- Reorder course_id and layout_id definitions in models for consistency
+  ([`1418f46`](https://github.com/milsman2/disc-golf-api/commit/1418f4627ffd22f99844bb5eebaa52aa27873b78))
+
+- Update data directory paths in disc_event_processing.py and round_processing.py for consistency
+  ([`c9630c6`](https://github.com/milsman2/disc-golf-api/commit/c9630c67dda40495c1f5bec004cbbc7524824c74))
+
+- Update down_revision in migration file to correct reference
+  ([`a593aff`](https://github.com/milsman2/disc-golf-api/commit/a593aff0777a5506ad8cc02d6fae4851c4db2a1c))
+
+### Chores
+
+- Remove outdated Excel files for Jester HFDS league sessions
+  ([`ce9251c`](https://github.com/milsman2/disc-golf-api/commit/ce9251cd29d2573409361b76f5227f0ae01dc4df))
+
+- Uv package updates
+  ([`36c2f79`](https://github.com/milsman2/disc-golf-api/commit/36c2f7938a31dc41425d9b967c13866a3389d4c5))
+
+### Features
+
+- Add partial update functionality for disc events and enhance related schemas
+  ([`c01941a`](https://github.com/milsman2/disc-golf-api/commit/c01941a96c68085710efbb65a56636ff717e1d0e))
+
+- Implement grouping of event results by division with sorting options
+  ([`b1809bc`](https://github.com/milsman2/disc-golf-api/commit/b1809bc3eb00bd3a35f2655a45ca175b54f57950))
+
+
 ## v0.13.0 (2025-09-02)
 
 ### Bug Fixes
