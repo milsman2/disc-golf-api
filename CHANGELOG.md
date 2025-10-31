@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.14.1 (2025-10-31)
+
+### Bug Fixes
+
+- Add event results for league sessions 5 week 4, week 5, and week 6
+  ([`0cadc31`](https://github.com/milsman2/disc-golf-api/commit/0cadc31a3bf2351f527041f4a1b3b7d7b003240a))
+
+
 ## v0.14.0 (2025-10-26)
 
 ### Bug Fixes
