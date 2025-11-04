@@ -1,7 +1,258 @@
 # CHANGELOG
 
 
+## v0.15.1 (2025-11-04)
+
+### Bug Fixes
+
+- Resolve dependency conflicts by removing incompatible version pins
+  ([`c84fc5b`](https://github.com/milsman2/disc-golf-api/commit/c84fc5bba760a3dacbd12738a1a5c698af2ed9e7))
+
+- Upgrade dependencies with uv sync --upgrade
+  ([`3d016ac`](https://github.com/milsman2/disc-golf-api/commit/3d016acda4f8b6b87289ac940b61c7163c1ba6b1))
+
+### Chores
+
+- **deps**: Bump actions/checkout from 4 to 5
+  ([`841dfb8`](https://github.com/milsman2/disc-golf-api/commit/841dfb80a1098fc0ec93d08132d1c70249ca3082))
+
+Bumps [actions/checkout](https://github.com/actions/checkout) from 4 to 5. - [Release
+  notes](https://github.com/actions/checkout/releases) -
+  [Changelog](https://github.com/actions/checkout/blob/main/CHANGELOG.md) -
+  [Commits](https://github.com/actions/checkout/compare/v4...v5)
+
+--- updated-dependencies: - dependency-name: actions/checkout dependency-version: '5'
+
+dependency-type: direct:production
+
+update-type: version-update:semver-major ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps**: Bump actions/setup-python from 5 to 6
+  ([`8547dff`](https://github.com/milsman2/disc-golf-api/commit/8547dffd10bec6ef2915960d93487559667ebce6))
+
+Bumps [actions/setup-python](https://github.com/actions/setup-python) from 5 to 6. - [Release
+  notes](https://github.com/actions/setup-python/releases) -
+  [Commits](https://github.com/actions/setup-python/compare/v5...v6)
+
+--- updated-dependencies: - dependency-name: actions/setup-python dependency-version: '6'
+
+dependency-type: direct:production
+
+update-type: version-update:semver-major ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps**: Bump aquasecurity/trivy-action from 0.28.0 to 0.33.1
+  ([`8383fd7`](https://github.com/milsman2/disc-golf-api/commit/8383fd7adbb8b7f60af78ef07550868367487168))
+
+Bumps [aquasecurity/trivy-action](https://github.com/aquasecurity/trivy-action) from 0.28.0 to
+  0.33.1. - [Release notes](https://github.com/aquasecurity/trivy-action/releases) -
+  [Commits](https://github.com/aquasecurity/trivy-action/compare/0.28.0...0.33.1)
+
+--- updated-dependencies: - dependency-name: aquasecurity/trivy-action dependency-version: 0.33.1
+
+dependency-type: direct:production
+
+update-type: version-update:semver-minor ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps**: Bump pytest in the development-dependencies group
+  ([`6e74c47`](https://github.com/milsman2/disc-golf-api/commit/6e74c479af6b2adc34dcb773b7eb984648a853bf))
+
+Bumps the development-dependencies group with 1 update:
+  [pytest](https://github.com/pytest-dev/pytest).
+
+Updates `pytest` from 8.4.1 to 8.4.2 - [Release
+  notes](https://github.com/pytest-dev/pytest/releases) -
+  [Changelog](https://github.com/pytest-dev/pytest/blob/main/CHANGELOG.rst) -
+  [Commits](https://github.com/pytest-dev/pytest/compare/8.4.1...8.4.2)
+
+--- updated-dependencies: - dependency-name: pytest dependency-version: 8.4.2
+
+dependency-type: direct:production
+
+update-type: version-update:semver-patch
+
+dependency-group: development-dependencies ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps**: Bump python-semantic-release/publish-action
+  ([`87964f3`](https://github.com/milsman2/disc-golf-api/commit/87964f3df514eec0e623270522dc39ea7bcc93ab))
+
+Bumps
+  [python-semantic-release/publish-action](https://github.com/python-semantic-release/publish-action)
+  from 9.21.0 to 10.4.1. - [Release
+  notes](https://github.com/python-semantic-release/publish-action/releases) -
+  [Changelog](https://github.com/python-semantic-release/publish-action/blob/main/releaserc.toml) -
+  [Commits](https://github.com/python-semantic-release/publish-action/compare/v9.21.0...v10.4.1)
+
+--- updated-dependencies: - dependency-name: python-semantic-release/publish-action
+  dependency-version: 10.4.1
+
+dependency-type: direct:production
+
+update-type: version-update:semver-major ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+### Refactoring
+
+- Rename SessionDep to session_dep for consistency across modules
+  ([`8008d9d`](https://github.com/milsman2/disc-golf-api/commit/8008d9dcf589daf2900473795e68c11ac85d0b17))
+
+
 ## v0.15.0 (2025-11-04)
+
+### Chores
+
+- **deps**: Bump the production-dependencies group with 64 updates
+  ([`fa2cdb9`](https://github.com/milsman2/disc-golf-api/commit/fa2cdb95666f065603391ccceda10be2201c4551))
+
+--- updated-dependencies: - dependency-name: aiohttp dependency-version: 3.13.2
+
+dependency-type: direct:production
+
+update-type: version-update:semver-minor
+
+dependency-group: production-dependencies
+
+- dependency-name: alembic dependency-version: 1.17.1
+
+- dependency-name: anyio dependency-version: 4.11.0
+
+- dependency-name: astroid dependency-version: 4.0.1
+
+update-type: version-update:semver-major
+
+- dependency-name: attrs dependency-version: 25.4.0
+
+- dependency-name: bcrypt dependency-version: 5.0.0
+
+- dependency-name: black dependency-version: 25.9.0
+
+- dependency-name: certifi dependency-version: 2025.10.5
+
+- dependency-name: charset-normalizer dependency-version: 3.4.4
+
+update-type: version-update:semver-patch
+
+- dependency-name: click dependency-version: 8.3.0
+
+- dependency-name: click-option-group dependency-version: 0.5.9
+
+- dependency-name: cloudpickle dependency-version: 3.1.2
+
+- dependency-name: deprecated dependency-version: 1.3.1
+
+- dependency-name: discord-py dependency-version: 2.6.4
+
+- dependency-name: dnspython dependency-version: 2.8.0
+
+- dependency-name: email-validator dependency-version: 2.3.0
+
+- dependency-name: executing dependency-version: 2.2.1
+
+- dependency-name: fastapi dependency-version: 0.121.0
+
+- dependency-name: fastapi-cli dependency-version: 0.0.14
+
+- dependency-name: frozenlist dependency-version: 1.8.0
+
+- dependency-name: gitpython dependency-version: 3.1.45
+
+- dependency-name: greenlet dependency-version: 3.2.4
+
+- dependency-name: httptools dependency-version: 0.7.1
+
+- dependency-name: icecream dependency-version: 2.1.8
+
+- dependency-name: idna dependency-version: '3.11'
+
+- dependency-name: iniconfig dependency-version: 2.3.0
+
+- dependency-name: isort dependency-version: 7.0.0
+
+- dependency-name: markdown-it-py dependency-version: 4.0.0
+
+- dependency-name: markupsafe dependency-version: 3.0.3
+
+- dependency-name: multidict dependency-version: 6.7.0
+
+- dependency-name: numpy dependency-version: 2.3.4
+
+- dependency-name: nvidia-ml-py dependency-version: 13.580.82
+
+- dependency-name: pandas dependency-version: 2.3.3
+
+- dependency-name: platformdirs dependency-version: 4.5.0
+
+- dependency-name: playwright dependency-version: 1.55.0
+
+- dependency-name: propcache dependency-version: 0.4.1
+
+- dependency-name: psutil dependency-version: 7.1.3
+
+- dependency-name: psycopg dependency-version: 3.2.12
+
+- dependency-name: psycopg-binary dependency-version: 3.2.12
+
+- dependency-name: pydantic dependency-version: 2.12.3
+
+- dependency-name: pydantic-core dependency-version: 2.41.4
+
+- dependency-name: pydantic-settings dependency-version: 2.11.0
+
+- dependency-name: pygments dependency-version: 2.19.2
+
+- dependency-name: pylint dependency-version: 4.0.2
+
+- dependency-name: pylint-plugin-utils dependency-version: 0.9.0
+
+- dependency-name: pylint-pydantic dependency-version: 0.4.1
+
+- dependency-name: python-dotenv dependency-version: 1.2.1
+
+- dependency-name: python-gitlab dependency-version: 7.0.0
+
+- dependency-name: python-semantic-release dependency-version: 10.4.1
+
+- dependency-name: pyyaml dependency-version: 6.0.3
+
+- dependency-name: requests dependency-version: 2.32.5
+
+- dependency-name: rich dependency-version: 14.2.0
+
+- dependency-name: rich-toolkit dependency-version: 0.15.1
+
+- dependency-name: sqlalchemy dependency-version: 2.0.44
+
+- dependency-name: starlette dependency-version: 0.50.0
+
+- dependency-name: tomli dependency-version: 2.3.0
+
+- dependency-name: typer dependency-version: 0.20.0
+
+- dependency-name: typing-extensions dependency-version: 4.15.0
+
+- dependency-name: typing-inspection dependency-version: 0.4.2
+
+- dependency-name: uvicorn dependency-version: 0.38.0
+
+- dependency-name: uvloop dependency-version: 0.22.1
+
+- dependency-name: watchfiles dependency-version: 1.1.1
+
+- dependency-name: wrapt dependency-version: 2.0.0
+
+- dependency-name: yarl dependency-version: 1.22.0
+
+dependency-group: production-dependencies ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
 
 ### Features
 
