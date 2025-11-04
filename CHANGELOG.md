@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.15.0 (2025-11-04)
+
+### Features
+
+- Add dependabot configuration for automated dependency updates
+  ([`b964e24`](https://github.com/milsman2/disc-golf-api/commit/b964e24a402bf3b68ff4873d2651e5146ce421c6))
+
+
 ## v0.14.1 (2025-10-31)
 
 ### Bug Fixes
