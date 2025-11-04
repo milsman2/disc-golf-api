@@ -14,13 +14,13 @@ Notable behaviors:
 - PUT `/event-results/id/{id}` updates an existing record.
 
 Dependencies:
-- `SessionDep` is used for DB session injection;
+- `session_dep` is used for DB session injection;
 - CRUD helpers in :mod:`src.crud.event_result` perform DB operations.
 """
 
 from fastapi import APIRouter, HTTPException
 
-from src.api.deps import SessionDep
+from src.api.deps import session_dep
 from src.crud import (
     create_event_result,
     delete_event_result,
@@ -48,7 +48,7 @@ router = APIRouter(
 
 @router.get("/", response_model=EventResultsPublic | EventResultsGroupedPublic)
 def get_event_results_route(
-    session: SessionDep,
+    session: session_dep,
     skip: int = 0,
     limit: int = 100,
     disc_event_id: int | None = None,
@@ -120,7 +120,7 @@ def get_event_results_route(
 
 
 @router.post("/", response_model=EventResultPublic, status_code=201)
-def create_event_result_route(event_result: EventResultCreate, session: SessionDep):
+def create_event_result_route(event_result: EventResultCreate, session: session_dep):
     """
     Create a new EventResult.
     Returns the created EventResult.
@@ -149,7 +149,7 @@ def create_event_result_route(event_result: EventResultCreate, session: SessionD
 
 @router.get("/aggregated", response_model=EventResultStats)
 def get_aggregated_event_results(
-    session: SessionDep,
+    session: session_dep,
     disc_event_id: int | None = None,
     division: str | None = None,
 ):
@@ -165,7 +165,7 @@ def get_aggregated_event_results(
 
 
 @router.get("/id/{event_result_id}", response_model=EventResultPublic)
-def get_event_result_route(event_result_id: int, session: SessionDep):
+def get_event_result_route(event_result_id: int, session: session_dep):
     """
     Retrieve a single EventResult by its ID.
     Returns 404 if not found.
@@ -180,7 +180,7 @@ def get_event_result_route(event_result_id: int, session: SessionDep):
 def update_event_result_route(
     event_result_id: int,
     updated_event_result: EventResultCreate,
-    session: SessionDep,
+    session: session_dep,
 ):
     """
     Update an existing EventResult by its ID.
@@ -197,7 +197,7 @@ def update_event_result_route(
 
 
 @router.delete("/id/{event_result_id}", status_code=204)
-def delete_event_result_route(event_result_id: int, session: SessionDep):
+def delete_event_result_route(event_result_id: int, session: session_dep):
     """
     Delete an EventResult by its ID.
     Returns 204 No Content if successful, or 404 if not found.
@@ -208,7 +208,7 @@ def delete_event_result_route(event_result_id: int, session: SessionDep):
 
 
 @router.get("/username/{event_user}")
-def get_event_results_by_user_route(event_user: str, session: SessionDep):
+def get_event_results_by_user_route(event_user: str, session: session_dep):
     """
     Retrieve event results by username.
     Returns 404 if no results found for the user.

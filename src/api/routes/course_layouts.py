@@ -15,14 +15,14 @@ Routes (grouped by endpoint path, ordered by HTTP method):
   - GET /course-layouts/search: Search course layouts by course name
 
 Dependencies:
-- SessionDep: Database session dependency injection
+- session_dep: Database session dependency injection
 - Pydantic schemas for request/response validation
 - CRUD operations with proper error handling
 """
 
 from fastapi import APIRouter, HTTPException
 
-from src.api.deps import SessionDep
+from src.api.deps import session_dep
 from src.crud.course import get_course_by_name
 from src.crud.course_layout import (
     create_course_layout,
@@ -41,7 +41,7 @@ router = APIRouter(prefix="/course-layouts", tags=["Course Layouts"])
 
 @router.get("/", response_model=CourseLayoutsPublic)
 def read_course_layouts(
-    session: SessionDep,
+    session: session_dep,
     skip: int = 0,
     limit: int = 100,
 ):
@@ -53,7 +53,7 @@ def read_course_layouts(
 
 
 @router.post("/", response_model=CourseLayoutPublic, status_code=201)
-def create_new_course_layout(session: SessionDep, course_layout: CourseLayoutCreate):
+def create_new_course_layout(session: session_dep, course_layout: CourseLayoutCreate):
     """
     Create a new course layout.
     """
@@ -61,7 +61,7 @@ def create_new_course_layout(session: SessionDep, course_layout: CourseLayoutCre
 
 
 @router.get("/id/{course_layout_id}", response_model=CourseLayoutPublic)
-def read_course_layout(session: SessionDep, course_layout_id: int):
+def read_course_layout(session: session_dep, course_layout_id: int):
     """
     Retrieve a single course layout by ID.
     """
@@ -72,7 +72,7 @@ def read_course_layout(session: SessionDep, course_layout_id: int):
 
 
 @router.delete("/id/{course_layout_id}", status_code=204)
-def delete_existing_course_layout(session: SessionDep, course_layout_id: int):
+def delete_existing_course_layout(session: session_dep, course_layout_id: int):
     """
     Delete a course layout by ID.
     """
@@ -84,7 +84,7 @@ def delete_existing_course_layout(session: SessionDep, course_layout_id: int):
 
 
 @router.get("/search", response_model=CourseLayoutsPublic)
-def search_course_layouts(session: SessionDep, name: str):
+def search_course_layouts(session: session_dep, name: str):
     """
     Search course layouts by course name.
     """
