@@ -1,0 +1,37 @@
+version: 2
+updates:
+  # Enable version updates for Python dependencies
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # Set a maximum number of open pull requests for version updates
+    open-pull-requests-limit: 5
+    # Allow both minor and patch updates
+    allow:
+      - dependency-type: "all"
+    # Group updates by dependency type
+    groups:
+      production-dependencies:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "*dev*"
+          - "*test*"
+      development-dependencies:
+        patterns:
+          - "*dev*"
+          - "*test*"
+    # Add labels to PRs
+    labels:
+      - "dependencies"
+      - "python"
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "github-actions"
