@@ -29,13 +29,13 @@ def get_db() -> Generator[Session, None, None]:
         yield session
 
 
-SessionDep = Annotated[Session, Depends(get_db)]
-TokenDep = Annotated[str, Depends(reusable_oauth2)]
+session_dep = Annotated[Session, Depends(get_db)]
+token_dep = Annotated[str, Depends(reusable_oauth2)]
 
 secret_key = settings.SECRET_KEY
 
 
-def get_current_user(session: SessionDep, token: TokenDep) -> User:
+def get_current_user(session: session_dep, token: token_dep) -> User:
     """
     Get the current user from the token.
     """
@@ -55,10 +55,10 @@ def get_current_user(session: SessionDep, token: TokenDep) -> User:
     return user
 
 
-CurrentUser = Annotated[User, Depends(get_current_user)]
+current_user_dep = Annotated[User, Depends(get_current_user)]
 
 
-def get_current_active_superuser(current_user: CurrentUser) -> User:
+def get_current_active_superuser(current_user: current_user_dep) -> User:
     if not current_user.is_superuser:
         raise HTTPException(
             status_code=403, detail="The user doesn't have enough privileges"

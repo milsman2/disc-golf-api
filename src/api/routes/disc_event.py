@@ -14,14 +14,14 @@ Routes (grouped by endpoint path, ordered by HTTP method):
     - DELETE /disc-events/id/{disc_event_id}: Delete a disc event
 
 Dependencies:
-- SessionDep: Database session dependency injection
+- session_dep: Database session dependency injection
 - Pydantic schemas for request/response validation
 - CRUD operations with proper error handling
 """
 
 from fastapi import APIRouter, HTTPException
 
-from src.api.deps import SessionDep
+from src.api.deps import session_dep
 from src.crud import (
     create_disc_event,
     delete_disc_event,
@@ -36,7 +36,7 @@ router = APIRouter(prefix="/disc-events", tags=["Disc Events"])
 
 
 @router.get("/", response_model=list[DiscEventPublic])
-def get_disc_events_route(db: SessionDep, skip: int = 0, limit: int = 100):
+def get_disc_events_route(db: session_dep, skip: int = 0, limit: int = 100):
     """
     Get a list of disc events with pagination.
     """
@@ -46,7 +46,7 @@ def get_disc_events_route(db: SessionDep, skip: int = 0, limit: int = 100):
 @router.post("/", response_model=DiscEventPublic, status_code=201)
 def create_disc_event_route(
     disc_event: DiscEventCreate,
-    db: SessionDep,
+    db: session_dep,
 ):
     """
     Create a new disc event.
@@ -64,7 +64,7 @@ def create_disc_event_route(
 @router.get("/id/{disc_event_id}", response_model=DiscEventPublic)
 def get_disc_event_route(
     disc_event_id: int,
-    db: SessionDep,
+    db: session_dep,
 ):
     """
     Get a disc event by ID.
@@ -79,7 +79,7 @@ def get_disc_event_route(
 def update_disc_event_route(
     disc_event_id: int,
     disc_event_data: DiscEventUpdate,
-    db: SessionDep,
+    db: session_dep,
 ):
     """
     Update a disc event by ID.
@@ -101,7 +101,7 @@ def update_disc_event_route(
 @router.delete("/id/{disc_event_id}", status_code=204)
 def delete_disc_event_route(
     disc_event_id: int,
-    db: SessionDep,
+    db: session_dep,
 ):
     """
     Delete a disc event by ID.
