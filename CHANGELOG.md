@@ -1,6 +1,20 @@
 # CHANGELOG
 
 
+## v0.15.2 (2025-11-06)
+
+### Bug Fixes
+
+- Database URL escaping in migrations and downgrade bcrypt version
+  ([`c2b179f`](https://github.com/milsman2/disc-golf-api/commit/c2b179f7442a15b990731dc575b08314aca0c39f))
+
+- Updated the `get_url` function in `migrations/env.py` to escape '%' characters in the database URL
+  before setting it in the configuration. - Modified the database connection to use the original URL
+  instead of the escaped version when running migrations online. - Downgraded the `bcrypt`
+  dependency from version 5.0.0 to 4.0.1 in `pyproject.toml` and updated the corresponding entries
+  in `uv.lock`.
+
+
 ## v0.15.1 (2025-11-04)
 
 ### Bug Fixes
