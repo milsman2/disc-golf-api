@@ -19,12 +19,14 @@ if config.config_file_name is not None:
 target_metadata = Base.metadata
 
 
-def get_url() -> str:
+def get_url():
     return str(settings.sql_alchemy_db_uri)
 
 
 url = get_url()
-config.set_main_option("sqlalchemy.url", url)
+# Escape % characters in URL for ConfigParser (% -> %%)
+url_escaped = str(url).replace("%", "%%")
+config.set_main_option("sqlalchemy.url", url_escaped)
 
 
 def run_migrations_offline() -> None:
@@ -69,13 +71,15 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
+    # Use original URL for database connection (not the escaped version)
     connectable = create_engine(
-        url,
+        get_url(),
         poolclass=pool.NullPool,
     )
 
     with connectable.connect() as conn:
-        if re.search(r"sqlite", url, re.IGNORECASE):
+        original_url = get_url()
+        if re.search(r"sqlite", original_url, re.IGNORECASE):
             ic("SQLite detected, enabling batch mode ONLINE.")
             context.configure(
                 connection=conn,
