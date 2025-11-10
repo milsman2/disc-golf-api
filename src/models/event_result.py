@@ -41,7 +41,6 @@ class EventResult(Base):
     __table_args__ = (
         UniqueConstraint("date", "username", name="uq_eventresult_date_username"),
     )
-
     id: Mapped[int] = mapped_column(
         Integer, primary_key=True, index=True, autoincrement=True, nullable=False
     )

@@ -152,7 +152,8 @@ def delete_event_result(db: Session, event_result_id: int) -> bool:
 def get_division_stats(
     db: Session, disc_event_id: int, division: str
 ) -> DivisionStats | None:
-    """Calculate comprehensive statistics for a specific division within a disc event."""
+    """Calculate comprehensive statistics for a specific division
+    within a disc event."""
     query = db.query(EventResultModel).filter(
         EventResultModel.disc_event_id == disc_event_id,
         EventResultModel.division == division,
