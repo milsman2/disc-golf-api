@@ -49,7 +49,7 @@ def read_course_layouts(
     Retrieve all course layouts with optional pagination.
     """
     course_layouts = get_course_layouts(db=session, skip=skip, limit=limit)
-    return course_layouts
+    return {"course_layouts": course_layouts, "count": len(course_layouts)}
 
 
 @router.post("/", response_model=CourseLayoutPublic, status_code=201)
@@ -92,5 +92,8 @@ def search_course_layouts(session: session_dep, name: str):
         db_course = get_course_by_name(db=session, name=name)
         if db_course is None:
             raise HTTPException(status_code=404, detail="Course not found")
-        return db_course.layouts
+        layouts = db_course.layouts or []
+        return {"course_layouts": layouts, "count": len(layouts)}
+    else:
+        return {"course_layouts": [], "count": 0}
     raise HTTPException(status_code=400, detail="Name parameter is required")

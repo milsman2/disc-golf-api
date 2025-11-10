@@ -2,7 +2,7 @@
 Expose the router from the main module.
 """
 
-from src.api.deps import session_dep, get_current_user
+from src.api.deps import get_current_user, session_dep
 from src.api.main import api_router
 
 __all__ = ["api_router", "get_current_user", "session_dep"]

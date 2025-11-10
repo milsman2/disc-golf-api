@@ -103,7 +103,6 @@ def disc_event_id(sample_client):
     Raises:
         AssertionError: If the disc event creation fails (non-200/201 response).
     """
-    # Use timestamp to ensure unique names across test runs
     timestamp = str(int(time.time() * 1000))
     data = {
         "name": f"Test Disc Event for Event Results {timestamp}",
@@ -253,7 +252,7 @@ def test_invalid_disc_event_id(sample_client):
         "round_relative_score": -5,
         "round_total_score": 25,
         "course_layout_id": 1,
-        "disc_event_id": 99999,  # Non-existent disc_event_id
+        "disc_event_id": 99999,
     }
 
     response = sample_client.post(
@@ -331,7 +330,10 @@ def test_get_event_results_by_username(
     response = sample_client.get(f"/api/v1/event-results/username/{test_username}")
     assert response.status_code == 200
 
-    results = response.json()
+    response_data = response.json()
+    assert isinstance(response_data, dict)
+    assert "event_results" in response_data
+    results = response_data["event_results"]
     assert isinstance(results, list)
     assert len(results) > 0
 
@@ -450,7 +452,6 @@ def test_get_event_results_grouped_by_division(
     """
     Test the grouped-by-division response for a given disc_event_id.
     """
-    # Create a few results for the disc event
     df = pd.read_csv(sample_csv_path)
     df.insert(0, "date", pd.to_datetime(1741993200, unit="s"))
     for i, (_, row) in enumerate(df.iterrows()):
@@ -491,9 +492,7 @@ def test_get_event_results_grouped_by_division(
     body = response.json()
     assert "grouped" in body
     assert isinstance(body["grouped"], list)
-    # Each group's results should be sorted by position_raw (None at end)
     for group in body["grouped"]:
         positions = [r.get("position_raw") for r in group["results"]]
-        # Filter out None for ordering check
         numeric = [p for p in positions if p is not None]
         assert numeric == sorted(numeric)
