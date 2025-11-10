@@ -1,11 +1,4 @@
-"""
-Pydantic schemas for disc golf event results.
-
-This module defines data validation and serialization schemas for
-EventResult objects, including base, creation, update, database,
-and public response models. These schemas are used for request validation,
-response formatting, and ORM integration in the disc golf API.
-"""
+"""Pydantic schemas for disc golf event results."""
 
 import datetime
 
@@ -13,10 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class EventResultBase(BaseModel):
-    """
-    Base schema for EventResult containing shared attributes used across
-    creation and response schemas for disc golf event results.
-    """
+    """Base schema for EventResult containing shared attributes."""
 
     date: datetime.datetime = Field(..., description="Date when the event occurred")
     division: str = Field(..., description="Division category (e.g., MPO, FPO, MA1)")
@@ -43,10 +33,7 @@ class EventResultBase(BaseModel):
 
 
 class EventResultCreate(EventResultBase):
-    """
-    Schema for validating data when creating a new EventResult.
-    Used for POST requests to create event results with required foreign key references.
-    """
+    """Schema for creating a new EventResult."""
 
     course_layout_id: int = Field(
         ..., description="ID of the course layout where the event took place"
@@ -57,10 +44,7 @@ class EventResultCreate(EventResultBase):
 
 
 class EventResultInDBBase(EventResultBase):
-    """
-    Schema representing an EventResult as stored in the database.
-    Includes the database-generated ID and enables ORM attribute mapping.
-    """
+    """Schema for EventResult as stored in the database."""
 
     id: int = Field(..., description="Unique identifier for the event result")
 
@@ -68,10 +52,7 @@ class EventResultInDBBase(EventResultBase):
 
 
 class EventResultPublic(EventResultBase):
-    """
-    Schema for API responses, representing an EventResult with its ID
-    and foreign key references. Used for GET requests and public-facing API responses.
-    """
+    """Schema for public API responses with EventResult data."""
 
     id: int = Field(..., description="Unique identifier for the event result")
     course_layout_id: int = Field(
@@ -83,10 +64,7 @@ class EventResultPublic(EventResultBase):
 
 
 class EventResultsPublic(BaseModel):
-    """
-    Schema for API responses returning a collection of EventResults.
-    Used for GET requests that return multiple event results.
-    """
+    """Schema for collections of EventResults."""
 
     event_results: list[EventResultPublic] = Field(
         default=[], description="List of event results"
@@ -103,11 +81,81 @@ class DivisionResults(BaseModel):
     )
 
 
+class DivisionStats(BaseModel):
+    """Statistics for a single division within an event."""
+
+    division: str = Field(..., description="Division name (e.g., MPO, FPO, MA1)")
+    count: int = Field(..., description="Number of players in this division")
+    average_round_score: float | None = Field(
+        None, description="Average round score for this division"
+    )
+    median_round_score: float | None = Field(
+        None, description="Median round score for this division"
+    )
+    average_event_score: float | None = Field(
+        None, description="Average total event score for this division"
+    )
+    median_event_score: float | None = Field(
+        None, description="Median total event score for this division"
+    )
+    best_round_score: int | None = Field(
+        None, description="Best (lowest) round score in this division"
+    )
+    worst_round_score: int | None = Field(
+        None, description="Worst (highest) round score in this division"
+    )
+    best_event_score: int | None = Field(
+        None, description="Best (lowest) total event score in this division"
+    )
+    worst_event_score: int | None = Field(
+        None, description="Worst (highest) total event score in this division"
+    )
+
+
+class DivisionResultsWithStats(BaseModel):
+    """Event results grouped for a single division with statistics."""
+
+    division: str
+    stats: DivisionStats
+    results: list[EventResultInDBBase] = Field(
+        default=[], description="Results for the division"
+    )
+
+
 class EventResultsGroupedPublic(BaseModel):
     """Top-level schema for grouped event results by division."""
 
     grouped: list[DivisionResults] = Field(
         default=[], description="Event results grouped by division"
+    )
+
+
+class EventResultsGroupedWithStatsPublic(BaseModel):
+    """Top-level schema for grouped event results by division with statistics."""
+
+    disc_event_id: int | None = Field(None, description="Disc event ID if filtered")
+    grouped: list[DivisionResultsWithStats] = Field(
+        default=[], description="Event results grouped by division with statistics"
+    )
+
+
+class DiscEventSummary(BaseModel):
+    """Summary of a disc event with division statistics for frontend tables."""
+
+    disc_event_id: int = Field(..., description="Disc event ID")
+    event_name: str | None = Field(None, description="Event name")
+    event_date: datetime.datetime | None = Field(None, description="Event date")
+    total_players: int = Field(..., description="Total number of players")
+    division_stats: list[DivisionStats] = Field(
+        default=[], description="Statistics broken down by division"
+    )
+
+
+class MultiEventSummaryPublic(BaseModel):
+    """Summary of multiple disc events for frontend dashboard/tables."""
+
+    events: list[DiscEventSummary] = Field(
+        default=[], description="List of disc event summaries"
     )
 
 
