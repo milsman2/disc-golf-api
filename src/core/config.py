@@ -38,20 +38,16 @@ class Settings(BaseSettings):
 
     API_V1_STR: str = "/api/v1"
     DOMAIN: str = "localhost"
+    API_PORT: int = 8000
+    API_HOST: str = "localhost"  # Allow API_HOST from env
+    API_BASE_URL: str | None = None
     ENVIRONMENT: Literal["local", "dev", "staging", "production"] = "local"
     FRONTEND_HOST: str = "http://localhost:3000"
     SECRET_KEY: str = secrets.token_urlsafe(32)
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
 
-    @computed_field
-    @property
-    def server_host(self) -> str:
-        """
-        Determine server host based on environment
-        """
-        if self.ENVIRONMENT == "local":
-            return f"http://{self.DOMAIN}"
-        return f"https://{self.DOMAIN}"
+    # Redis configuration
+    REDIS_URL: str = "redis://localhost:6379"
 
     @computed_field
     @property
@@ -59,7 +55,17 @@ class Settings(BaseSettings):
         """
         Determine base API URL based on environment
         """
-        return f"http://{self.server_host}{self.API_V1_STR}"
+        if self.API_BASE_URL:
+            return self.API_BASE_URL
+        host = (
+            self.API_HOST
+            if hasattr(self, "API_HOST") and self.API_HOST
+            else self.DOMAIN
+        )
+        if self.ENVIRONMENT in ["local", "dev"]:
+            return f"http://{host}:{self.API_PORT}{self.API_V1_STR}"
+        else:
+            return f"https://{host}{self.API_V1_STR}"
 
     CORS: Annotated[list[AnyUrl] | str, BeforeValidator(parse_cors)] = []
 
@@ -147,7 +153,10 @@ class Settings(BaseSettings):
 
         return self
 
-    model_config = SettingsConfigDict(env_file_encoding="utf-8", env_file=".env")
+    model_config = SettingsConfigDict(
+        env_file_encoding="utf-8",
+        env_file=[".env", ".env.local.bridge"],
+    )
 
 
 settings = Settings.model_validate({})

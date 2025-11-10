@@ -15,6 +15,7 @@ import httpx
 from icecream import ic
 from pydantic import ValidationError
 
+from src.core.config import settings
 from src.schemas.courses import CourseCreate
 
 
@@ -54,20 +55,33 @@ def create_courses(data_directory: str = "data/courses/") -> None:
                 except ValidationError as e:
                     ic(f"ValidationError: {e}")
                     raise
-                with httpx.Client(base_url="http://localhost:8000/api/v1") as client:
+
+                with httpx.Client(
+                    base_url=settings.api_base_url, timeout=30.0  # 30 second timeout
+                ) as client:
                     try:
+                        ic(f"Posting to: {settings.api_base_url}/courses/")
                         response = client.post(
                             "/courses/",
                             json=course_data_model.model_dump(exclude_unset=True),
                             headers={"Content-Type": "application/json"},
                         )
                         response.raise_for_status()
+                        ic(f"Successfully created course: {response.json()}")
+                    except httpx.ConnectError as e:
+                        ic(f"Connection error posting {filename}: {e}")
+                        ic(f"Make sure API is running at: {settings.api_base_url}")
+                        continue
+                    except httpx.TimeoutException as e:
+                        ic(f"Timeout error posting {filename}: {e}")
+                        continue
                     except httpx.HTTPStatusError as e:
-                        ic(e)
+                        ic(f"HTTP error posting {filename}: {e}")
+                        ic(f"Response content: {e.response.text}")
+                        continue
                     except httpx.RequestError as e:
-                        ic(e)
-                    except json.JSONDecodeError as e:
-                        ic(e)
+                        ic(f"Request error posting {filename}: {e}")
+                        continue
 
 
 if __name__ == "__main__":

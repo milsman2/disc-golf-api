@@ -13,6 +13,7 @@ import pandas as pd
 from icecream import ic
 from pydantic import ValidationError
 
+from src.core.config import settings
 from src.schemas.event_results import EventResultCreate
 
 
@@ -49,10 +50,13 @@ def get_disc_event_id_for_date(event_date: str) -> int:
             event_date.replace("Z", "+00:00")
         )
         ic(f"Looking for disc event for date: {event_datetime}")
-        with httpx.Client() as client:
-            response = client.get("http://localhost:8000/api/v1/disc-events/")
+
+        with httpx.Client(base_url=settings.api_base_url, timeout=30.0) as client:
+            ic(f"Fetching disc events from: {settings.api_base_url}/disc-events/")
+            response = client.get("/disc-events/")
             response.raise_for_status()
             disc_events = response.json()
+
             ic(f"Found {len(disc_events)} disc events")
             for event in disc_events:
                 start_date = datetime.datetime.fromisoformat(
@@ -71,6 +75,7 @@ def get_disc_event_id_for_date(event_date: str) -> int:
                     return event["id"]
                 else:
                     ic(f'✗ Date {event_datetime} out of disc event {event["id"]} range')
+
             if disc_events:
                 ic(
                     f"No matching disc event found for {event_date}, using first "
@@ -78,8 +83,14 @@ def get_disc_event_id_for_date(event_date: str) -> int:
                 )
                 return disc_events[0]["id"]
 
+    except httpx.ConnectError as e:
+        ic(f"Connection error getting disc events: {e}")
+        ic(f"Make sure API is running at: {settings.api_base_url}")
+    except httpx.TimeoutException as e:
+        ic(f"Timeout error getting disc events: {e}")
     except (httpx.RequestError, httpx.HTTPStatusError, ValueError) as e:
         ic(f"Error getting event session ID for date {event_date}: {e}")
+
     ic(f"Falling back to event session ID 1 for date {event_date}")
     return 1
 
@@ -118,13 +129,17 @@ def post_event_result(event_result: dict):
     Post an event result to the API endpoint.
     :param event_result: Dictionary containing event result data.
     """
-    api_url = "http://localhost:8000/api/v1/event-results/"
-    ic(f"Posting event result to {api_url}: {event_result}")
+    ic(f"Posting event result to {settings.api_base_url}/event-results/")
     try:
-        with httpx.Client() as client:
-            response = client.post(api_url, json=event_result)
+        with httpx.Client(base_url=settings.api_base_url, timeout=30.0) as client:
+            response = client.post("/event-results/", json=event_result)
             response.raise_for_status()
             ic(f"Successfully posted event result: {response.json()}")
+    except httpx.ConnectError as e:
+        ic(f"Connection error posting event result: {e}")
+        ic(f"Make sure API is running at: {settings.api_base_url}")
+    except httpx.TimeoutException as e:
+        ic(f"Timeout error posting event result: {e}")
     except httpx.HTTPStatusError as e:
         ic(f"HTTPStatusError: {e.response.status_code} - {e.response.text}")
     except httpx.RequestError as e:

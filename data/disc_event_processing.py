@@ -14,6 +14,7 @@ import httpx
 from icecream import ic
 from pydantic import ValidationError
 
+from src.core.config import settings
 from src.schemas.disc_events import DiscEventCreate
 
 
@@ -53,20 +54,35 @@ def create_disc_event(data_directory: str = "data/disc_events/") -> None:
                     ic(e)
                     continue
                 try:
-                    response = httpx.post(
-                        "http://localhost:8000/api/v1/disc-events/",
-                        json=disc_event.model_dump(mode="json"),
-                        headers={"Content-Type": "application/json"},
-                    )
-                    response.raise_for_status()
-                    ic(
-                        "Successfully posted disc event from "
-                        f"{filename}: {response.json()}"
-                    )
+                    with httpx.Client(
+                        base_url=settings.api_base_url,
+                        timeout=30.0,  # 30 second timeout
+                    ) as client:
+                        ic(f"Posting to: {settings.api_base_url}/disc-events/")
+                        response = client.post(
+                            "/disc-events/",
+                            json=disc_event.model_dump(mode="json"),
+                            headers={"Content-Type": "application/json"},
+                        )
+                        response.raise_for_status()
+                        ic(
+                            "Successfully posted disc event from "
+                            f"{filename}: {response.json()}"
+                        )
+                except httpx.ConnectError as e:
+                    ic(f"Connection error posting {filename}: {e}")
+                    ic(f"Make sure API is running at: {settings.api_base_url}")
+                    continue
+                except httpx.TimeoutException as e:
+                    ic(f"Timeout error posting {filename}: {e}")
+                    continue
                 except httpx.HTTPStatusError as e:
                     ic(f"HTTP error posting {filename}: {e}")
+                    ic(f"Response content: {e.response.text}")
+                    continue
                 except httpx.RequestError as e:
                     ic(f"Request error posting {filename}: {e}")
+                    continue
 
 
 if __name__ == "__main__":
