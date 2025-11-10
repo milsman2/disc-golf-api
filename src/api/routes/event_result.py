@@ -1,22 +1,4 @@
-"""API routes for EventResult resources.
-
-This module exposes endpoints to create, read, update and delete EventResult
-records. EventResult objects represent a player's performance in a disc event
-and are stored in the database with links to a `CourseLayout` and a
-`DiscEvent`.
-
-Notable behaviors:
-- GET `/event-results` accepts `group_by_division` and `sort_by_position_raw`
-    query parameters. Grouping returns a `{ "grouped": [{ "division":...,
-    "results": [...] }] }` structure, while `sort_by_position_raw` controls
-    numeric ordering (None values last).
-- POST `/event-results` validates foreign key references (e.g. `disc_event_id`).
-- PUT `/event-results/id/{id}` updates an existing record.
-
-Dependencies:
-- `session_dep` is used for DB session injection;
-- CRUD helpers in :mod:`src.crud.event_result` perform DB operations.
-"""
+"""API routes for EventResult resources."""
 
 from fastapi import APIRouter, HTTPException
 
@@ -25,19 +7,25 @@ from src.crud import (
     create_event_result,
     delete_event_result,
     get_disc_event,
+    get_disc_event_summary,
     get_event_result,
     get_event_results,
     get_event_results_by_disc_event,
-    get_median_round_score,
+    get_event_results_with_division_stats,
+    get_multiple_disc_event_summaries,
+    get_round_score_statistics,
     update_event_result,
 )
 from src.crud.event_result import get_event_results_by_username
 from src.schemas.event_results import (
+    DiscEventSummary,
     EventResultCreate,
     EventResultPublic,
     EventResultsGroupedPublic,
+    EventResultsGroupedWithStatsPublic,
     EventResultsPublic,
     EventResultStats,
+    MultiEventSummaryPublic,
 )
 
 router = APIRouter(
@@ -46,7 +34,12 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=EventResultsPublic | EventResultsGroupedPublic)
+@router.get(
+    "/",
+    response_model=EventResultsPublic
+    | EventResultsGroupedPublic
+    | EventResultsGroupedWithStatsPublic,
+)
 def get_event_results_route(
     session: session_dep,
     skip: int = 0,
@@ -54,22 +47,9 @@ def get_event_results_route(
     disc_event_id: int | None = None,
     group_by_division: bool = False,
     sort_by_position_raw: bool = False,
+    include_stats: bool = False,
 ):
-    """
-    Retrieve a list of EventResults with optional pagination and filtering.
-
-    Query Parameters:
-    - disc_event_id: Filter results by disc event
-    - username: Filter results by username
-    - skip: Number of records to skip for pagination
-    - limit: Maximum number of records to return
-        - group_by_division: If true, group results by `division` and return a structure
-            where each division contains its list of results.
-        - sort_by_position_raw: If true, sort results by `position_raw` (numeric
-          positions first, None values such as DNF last). This flag works for
-          both grouped and ungrouped responses and can be combined with
-          `group_by_division`.
-    """
+    """Retrieve event results with optional pagination, filtering, and grouping."""
     if disc_event_id:
         disc_event = get_disc_event(session, disc_event_id)
         if not disc_event:
@@ -78,10 +58,26 @@ def get_event_results_route(
                 detail=f"Disc event with ID {disc_event_id} not found",
             )
 
+        # Enhanced grouping with statistics
+        if group_by_division and include_stats:
+            division_data = get_event_results_with_division_stats(
+                db=session, disc_event_id=disc_event_id, skip=skip, limit=limit
+            )
+            grouped_with_stats = []
+            for division, data_dict in sorted(division_data.items()):
+                grouped_with_stats.append(
+                    {
+                        "division": division,
+                        "stats": data_dict["stats"],
+                        "results": data_dict["results"],
+                    }
+                )
+            return {"disc_event_id": disc_event_id, "grouped": grouped_with_stats}
+
+        # Original grouping logic
         raw_results = get_event_results_by_disc_event(
             db=session, disc_event_id=disc_event_id, skip=skip, limit=limit
         )
-        # Optionally group results by division
         if group_by_division:
             divisions: dict[str, list] = {}
             for r in raw_results:
@@ -96,12 +92,14 @@ def get_event_results_route(
                     items_sorted = items
                 grouped.append({"division": division, "results": items_sorted})
             return {"grouped": grouped}
-        # Return empty list for valid disc event with no results
+
         return {"event_results": raw_results or []}
     else:
+        # Handle case where no specific disc_event_id is provided
         raw_results = get_event_results(db=session, skip=skip, limit=limit)
         if not raw_results:
             raise HTTPException(status_code=404, detail="No EventResults found")
+
         if group_by_division:
             divisions: dict[str, list] = {}
             for r in raw_results:
@@ -121,10 +119,7 @@ def get_event_results_route(
 
 @router.post("/", response_model=EventResultPublic, status_code=201)
 def create_event_result_route(event_result: EventResultCreate, session: session_dep):
-    """
-    Create a new EventResult.
-    Returns the created EventResult.
-    """
+    """Create a new EventResult."""
     disc_event = get_disc_event(session, event_result.disc_event_id)
     if not disc_event:
         raise HTTPException(
@@ -153,10 +148,8 @@ def get_aggregated_event_results(
     disc_event_id: int | None = None,
     division: str | None = None,
 ):
-    """
-    Retrieve aggregated event results.
-    """
-    stats = get_median_round_score(
+    """Retrieve aggregated event results statistics."""
+    stats = get_round_score_statistics(
         db=session, disc_event_id=disc_event_id, division=division
     )
     if not stats:
@@ -166,10 +159,7 @@ def get_aggregated_event_results(
 
 @router.get("/id/{event_result_id}", response_model=EventResultPublic)
 def get_event_result_route(event_result_id: int, session: session_dep):
-    """
-    Retrieve a single EventResult by its ID.
-    Returns 404 if not found.
-    """
+    """Retrieve an EventResult by ID."""
     db_event_result = get_event_result(db=session, event_result_id=event_result_id)
     if not db_event_result:
         raise HTTPException(status_code=404, detail="EventResult not found")
@@ -182,10 +172,7 @@ def update_event_result_route(
     updated_event_result: EventResultCreate,
     session: session_dep,
 ):
-    """
-    Update an existing EventResult by its ID.
-    Returns the updated EventResult, or 404 if not found.
-    """
+    """Update an EventResult by ID."""
     db_event_result = update_event_result(
         db=session,
         event_result_id=event_result_id,
@@ -198,10 +185,7 @@ def update_event_result_route(
 
 @router.delete("/id/{event_result_id}", status_code=204)
 def delete_event_result_route(event_result_id: int, session: session_dep):
-    """
-    Delete an EventResult by its ID.
-    Returns 204 No Content if successful, or 404 if not found.
-    """
+    """Delete an EventResult by ID."""
     success = delete_event_result(db=session, event_result_id=event_result_id)
     if not success:
         raise HTTPException(status_code=404, detail="EventResult not found")
@@ -209,13 +193,50 @@ def delete_event_result_route(event_result_id: int, session: session_dep):
 
 @router.get("/username/{event_user}", response_model=EventResultsPublic)
 def get_event_results_by_user_route(event_user: str, session: session_dep):
-    """
-    Retrieve event results by username.
-    Returns 404 if no results found for the user.
-    """
+    """Retrieve event results by username."""
     user_events = get_event_results_by_username(db=session, username=event_user)
     if not user_events:
         raise HTTPException(
             status_code=404, detail=f"No events found for user: {event_user}"
         )
     return {"event_results": user_events}
+
+
+@router.get("/event-summary/{disc_event_id}", response_model=DiscEventSummary)
+def get_disc_event_summary_route(disc_event_id: int, session: session_dep):
+    """Get comprehensive summary of a disc event including division statistics."""
+    summary = get_disc_event_summary(db=session, disc_event_id=disc_event_id)
+    if not summary:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No event results found for disc event ID {disc_event_id}",
+        )
+    return summary
+
+
+@router.get("/event-summaries", response_model=MultiEventSummaryPublic)
+def get_multiple_event_summaries_route(
+    session: session_dep,
+    event_ids: str | None = None,
+    skip: int = 0,
+    limit: int = 20,
+):
+    """Get summaries for multiple disc events with division statistics."""
+    disc_event_ids = None
+    if event_ids:
+        try:
+            disc_event_ids = [int(id.strip()) for id in event_ids.split(",")]
+        except ValueError as exc:
+            raise HTTPException(
+                status_code=422,
+                detail="event_ids must be a comma-separated list of integers",
+            ) from exc
+
+    summaries = get_multiple_disc_event_summaries(
+        db=session, disc_event_ids=disc_event_ids, skip=skip, limit=limit
+    )
+
+    if not summaries:
+        raise HTTPException(status_code=404, detail="No event summaries found")
+
+    return {"events": summaries}

@@ -5,6 +5,8 @@ This module defines the DiscEvent ORM class, representing
 disc golf events in the database.
 """
 
+import datetime
+
 from sqlalchemy import DateTime, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -38,10 +40,10 @@ class DiscEvent(Base):
     name: Mapped[str] = mapped_column(
         String, nullable=False, doc="The name of the event."
     )
-    start_date: Mapped[DateTime] = mapped_column(
+    start_date: Mapped[datetime.datetime] = mapped_column(
         DateTime, nullable=False, doc="The start date and time of the event."
     )
-    end_date: Mapped[DateTime] = mapped_column(
+    end_date: Mapped[datetime.datetime] = mapped_column(
         DateTime, nullable=False, doc="The end date and time of the event."
     )
     description: Mapped[str | None] = mapped_column(
