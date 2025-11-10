@@ -191,29 +191,6 @@ def delete_event_result_route(event_result_id: int, session: session_dep):
         raise HTTPException(status_code=404, detail="EventResult not found")
 
 
-@router.get("/username/{event_user}", response_model=EventResultsPublic)
-def get_event_results_by_user_route(event_user: str, session: session_dep):
-    """Retrieve event results by username."""
-    user_events = get_event_results_by_username(db=session, username=event_user)
-    if not user_events:
-        raise HTTPException(
-            status_code=404, detail=f"No events found for user: {event_user}"
-        )
-    return {"event_results": user_events}
-
-
-@router.get("/event-summary/{disc_event_id}", response_model=DiscEventSummary)
-def get_disc_event_summary_route(disc_event_id: int, session: session_dep):
-    """Get comprehensive summary of a disc event including division statistics."""
-    summary = get_disc_event_summary(db=session, disc_event_id=disc_event_id)
-    if not summary:
-        raise HTTPException(
-            status_code=404,
-            detail=f"No event results found for disc event ID {disc_event_id}",
-        )
-    return summary
-
-
 @router.get("/event-summaries", response_model=MultiEventSummaryPublic)
 def get_multiple_event_summaries_route(
     session: session_dep,
@@ -240,3 +217,26 @@ def get_multiple_event_summaries_route(
         raise HTTPException(status_code=404, detail="No event summaries found")
 
     return {"events": summaries}
+
+
+@router.get("/event-summary/{disc_event_id}", response_model=DiscEventSummary)
+def get_disc_event_summary_route(disc_event_id: int, session: session_dep):
+    """Get comprehensive summary of a disc event including division statistics."""
+    summary = get_disc_event_summary(db=session, disc_event_id=disc_event_id)
+    if not summary:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No event results found for disc event ID {disc_event_id}",
+        )
+    return summary
+
+
+@router.get("/username/{event_user}", response_model=EventResultsPublic)
+def get_event_results_by_user_route(event_user: str, session: session_dep):
+    """Retrieve event results by username."""
+    user_events = get_event_results_by_username(db=session, username=event_user)
+    if not user_events:
+        raise HTTPException(
+            status_code=404, detail=f"No events found for user: {event_user}"
+        )
+    return {"event_results": user_events}
