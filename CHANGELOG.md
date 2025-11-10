@@ -1,6 +1,22 @@
 # CHANGELOG
 
 
+## v0.17.0 (2025-11-10)
+
+### Bug Fixes
+
+- Update division stats docstring for clarity and remove unnecessary whitespace
+  ([`adb2f79`](https://github.com/milsman2/disc-golf-api/commit/adb2f79a3eb4d02ad80114efb101123baa038a3b))
+
+### Features
+
+- Enhance event result API with new summary and statistics endpoints
+  ([`d2f2cb6`](https://github.com/milsman2/disc-golf-api/commit/d2f2cb66d0b4889b5fd45391c9784cc85a1aba8b))
+
+- Refactor API interactions to use dynamic base URL from settings and improve error handling
+  ([`51fedf4`](https://github.com/milsman2/disc-golf-api/commit/51fedf46867de6adb03b2c5c7bc4abad3c79f81e))
+
+
 ## v0.16.0 (2025-11-10)
 
 ### Features
