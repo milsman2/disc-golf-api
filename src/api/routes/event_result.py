@@ -207,7 +207,7 @@ def delete_event_result_route(event_result_id: int, session: session_dep):
         raise HTTPException(status_code=404, detail="EventResult not found")
 
 
-@router.get("/username/{event_user}")
+@router.get("/username/{event_user}", response_model=EventResultsPublic)
 def get_event_results_by_user_route(event_user: str, session: session_dep):
     """
     Retrieve event results by username.
@@ -218,4 +218,4 @@ def get_event_results_by_user_route(event_user: str, session: session_dep):
         raise HTTPException(
             status_code=404, detail=f"No events found for user: {event_user}"
         )
-    return user_events
+    return {"event_results": user_events}
