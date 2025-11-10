@@ -1,6 +1,24 @@
 # CHANGELOG
 
 
+## v0.16.0 (2025-11-10)
+
+### Features
+
+- Enhance API response structure and add Docker support
+  ([`aee0e05`](https://github.com/milsman2/disc-golf-api/commit/aee0e05d1df291cf0f6d039b240b8c08a3cb1b8e))
+
+- Updated .gitignore to include environment files and templates. - Added
+  docker-compose.local-bridge.yaml for local development with Redis. - Corrected port mapping for
+  PostgreSQL in docker-compose.yaml. - Improved response structure for course layouts and event
+  results endpoints. - Added comprehensive response validation tests for API endpoints.
+
+### Refactoring
+
+- Clean up comments and improve response validation in event result tests
+  ([`2891e88`](https://github.com/milsman2/disc-golf-api/commit/2891e88788cb0e7479c063006984a6eb68a00ade))
+
+
 ## v0.15.2 (2025-11-06)
 
 ### Bug Fixes
