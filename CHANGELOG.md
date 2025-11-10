@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.17.1 (2025-11-10)
+
+### Bug Fixes
+
+- Reorder event result routes for improved organization
+  ([`8170bbe`](https://github.com/milsman2/disc-golf-api/commit/8170bbe3f9bec76f2d0b2e2a7a43c934947b89b5))
+
+
 ## v0.17.0 (2025-11-10)
 
 ### Bug Fixes
