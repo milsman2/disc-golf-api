@@ -23,3 +23,4 @@ Query parameters:
 
 Example: `/api/v1/event-results/?disc_event_id=1&group_by_division=true&sort_by_position_raw=true`
 
+# Trigger release workflow
