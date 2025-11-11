@@ -135,11 +135,6 @@ markers = [
     "unit: marks tests as unit tests",
 ]
 
-[project.scripts]
-test = "uv run pytest"
-test-cov = "uv run pytest --cov=src --cov-report=html"
-test-fast = "uv run pytest -m \"not slow\""
-
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
