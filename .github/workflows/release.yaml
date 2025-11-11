@@ -39,6 +39,9 @@ jobs:
           ref: ${{ github.ref_name }}
           fetch-depth: 0
 
+      - name: Sync | Update remote refs
+        run: git fetch origin main
+
       - name: Setup | Force release branch to be at workflow sha
         run: |
           git reset --hard ${{ github.sha }}
