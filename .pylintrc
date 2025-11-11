@@ -145,6 +145,7 @@ disable=R,
         zip-builtin-not-iterating,
         bad-continuation,
         bad-whitespace,
+        unsubscriptable-object,
         E203,
         E701
 
