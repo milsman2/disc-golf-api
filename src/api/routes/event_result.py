@@ -34,6 +34,106 @@ router = APIRouter(
 )
 
 
+@router.get("/aggregated", response_model=EventResultStats)
+def get_aggregated_event_results(
+    session: session_dep,
+    disc_event_id: int | None = None,
+    division: str | None = None,
+):
+    """Retrieve aggregated event results statistics."""
+    stats = get_round_score_statistics(
+        db=session, disc_event_id=disc_event_id, division=division
+    )
+    if not stats:
+        raise HTTPException(status_code=404, detail="No event results found.")
+    return stats
+
+
+@router.get("/event-summaries", response_model=MultiEventSummaryPublic)
+def get_multiple_event_summaries_route(
+    session: session_dep,
+    event_ids: str | None = None,
+    skip: int = 0,
+    limit: int = 20,
+):
+    """Get summaries for multiple disc events with division statistics."""
+    disc_event_ids = None
+    if event_ids:
+        try:
+            disc_event_ids = [int(id.strip()) for id in event_ids.split(",")]
+        except ValueError as exc:
+            raise HTTPException(
+                status_code=422,
+                detail="event_ids must be a comma-separated list of integers",
+            ) from exc
+
+    summaries = get_multiple_disc_event_summaries(
+        db=session, disc_event_ids=disc_event_ids, skip=skip, limit=limit
+    )
+
+    if not summaries:
+        raise HTTPException(status_code=404, detail="No event summaries found")
+
+    return {"events": summaries}
+
+
+@router.get("/event-summary/{disc_event_id}", response_model=DiscEventSummary)
+def get_disc_event_summary_route(disc_event_id: int, session: session_dep):
+    """Get comprehensive summary of a disc event including division statistics."""
+    summary = get_disc_event_summary(db=session, disc_event_id=disc_event_id)
+    if not summary:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No event results found for disc event ID {disc_event_id}",
+        )
+    return summary
+
+
+@router.get("/id/{event_result_id}", response_model=EventResultPublic)
+def get_event_result_route(event_result_id: int, session: session_dep):
+    """Retrieve an EventResult by ID."""
+    db_event_result = get_event_result(db=session, event_result_id=event_result_id)
+    if not db_event_result:
+        raise HTTPException(status_code=404, detail="EventResult not found")
+    return db_event_result
+
+
+@router.put("/id/{event_result_id}", response_model=EventResultPublic)
+def update_event_result_route(
+    event_result_id: int,
+    updated_event_result: EventResultCreate,
+    session: session_dep,
+):
+    """Update an EventResult by ID."""
+    db_event_result = update_event_result(
+        db=session,
+        event_result_id=event_result_id,
+        updated_event_result=updated_event_result,
+    )
+    if not db_event_result:
+        raise HTTPException(status_code=404, detail="EventResult not found")
+    return db_event_result
+
+
+@router.delete("/id/{event_result_id}", status_code=204)
+def delete_event_result_route(event_result_id: int, session: session_dep):
+    """Delete an EventResult by ID."""
+    success = delete_event_result(db=session, event_result_id=event_result_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="EventResult not found")
+
+
+@router.get("/username/{event_user}", response_model=EventResultsPublic)
+def get_event_results_by_user_route(event_user: str, session: session_dep):
+    """Retrieve event results by username."""
+    user_events = get_event_results_by_username(db=session, username=event_user)
+    if not user_events:
+        raise HTTPException(
+            status_code=404, detail=f"No events found for user: {event_user}"
+        )
+    return {"event_results": user_events}
+
+
 @router.get(
     "/",
     response_model=EventResultsPublic
@@ -140,103 +240,3 @@ def create_event_result_route(event_result: EventResultCreate, session: session_
                 )
 
     return create_event_result(db=session, event_result=event_result)
-
-
-@router.get("/aggregated", response_model=EventResultStats)
-def get_aggregated_event_results(
-    session: session_dep,
-    disc_event_id: int | None = None,
-    division: str | None = None,
-):
-    """Retrieve aggregated event results statistics."""
-    stats = get_round_score_statistics(
-        db=session, disc_event_id=disc_event_id, division=division
-    )
-    if not stats:
-        raise HTTPException(status_code=404, detail="No event results found.")
-    return stats
-
-
-@router.get("/id/{event_result_id}", response_model=EventResultPublic)
-def get_event_result_route(event_result_id: int, session: session_dep):
-    """Retrieve an EventResult by ID."""
-    db_event_result = get_event_result(db=session, event_result_id=event_result_id)
-    if not db_event_result:
-        raise HTTPException(status_code=404, detail="EventResult not found")
-    return db_event_result
-
-
-@router.put("/id/{event_result_id}", response_model=EventResultPublic)
-def update_event_result_route(
-    event_result_id: int,
-    updated_event_result: EventResultCreate,
-    session: session_dep,
-):
-    """Update an EventResult by ID."""
-    db_event_result = update_event_result(
-        db=session,
-        event_result_id=event_result_id,
-        updated_event_result=updated_event_result,
-    )
-    if not db_event_result:
-        raise HTTPException(status_code=404, detail="EventResult not found")
-    return db_event_result
-
-
-@router.delete("/id/{event_result_id}", status_code=204)
-def delete_event_result_route(event_result_id: int, session: session_dep):
-    """Delete an EventResult by ID."""
-    success = delete_event_result(db=session, event_result_id=event_result_id)
-    if not success:
-        raise HTTPException(status_code=404, detail="EventResult not found")
-
-
-@router.get("/event-summaries", response_model=MultiEventSummaryPublic)
-def get_multiple_event_summaries_route(
-    session: session_dep,
-    event_ids: str | None = None,
-    skip: int = 0,
-    limit: int = 20,
-):
-    """Get summaries for multiple disc events with division statistics."""
-    disc_event_ids = None
-    if event_ids:
-        try:
-            disc_event_ids = [int(id.strip()) for id in event_ids.split(",")]
-        except ValueError as exc:
-            raise HTTPException(
-                status_code=422,
-                detail="event_ids must be a comma-separated list of integers",
-            ) from exc
-
-    summaries = get_multiple_disc_event_summaries(
-        db=session, disc_event_ids=disc_event_ids, skip=skip, limit=limit
-    )
-
-    if not summaries:
-        raise HTTPException(status_code=404, detail="No event summaries found")
-
-    return {"events": summaries}
-
-
-@router.get("/event-summary/{disc_event_id}", response_model=DiscEventSummary)
-def get_disc_event_summary_route(disc_event_id: int, session: session_dep):
-    """Get comprehensive summary of a disc event including division statistics."""
-    summary = get_disc_event_summary(db=session, disc_event_id=disc_event_id)
-    if not summary:
-        raise HTTPException(
-            status_code=404,
-            detail=f"No event results found for disc event ID {disc_event_id}",
-        )
-    return summary
-
-
-@router.get("/username/{event_user}", response_model=EventResultsPublic)
-def get_event_results_by_user_route(event_user: str, session: session_dep):
-    """Retrieve event results by username."""
-    user_events = get_event_results_by_username(db=session, username=event_user)
-    if not user_events:
-        raise HTTPException(
-            status_code=404, detail=f"No events found for user: {event_user}"
-        )
-    return {"event_results": user_events}
