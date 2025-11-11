@@ -37,9 +37,8 @@ class Settings(BaseSettings):
     """
 
     API_V1_STR: str = "/api/v1"
-    DOMAIN: str = "localhost"
     API_PORT: int = 8000
-    API_HOST: str = "localhost"  # Allow API_HOST from env
+    API_HOST: str = "localhost"
     API_BASE_URL: str | None = None
     ENVIRONMENT: Literal["local", "dev", "staging", "production"] = "local"
     FRONTEND_HOST: str = "http://localhost:3000"
@@ -57,15 +56,11 @@ class Settings(BaseSettings):
         """
         if self.API_BASE_URL:
             return self.API_BASE_URL
-        host = (
-            self.API_HOST
-            if hasattr(self, "API_HOST") and self.API_HOST
-            else self.DOMAIN
-        )
+
         if self.ENVIRONMENT in ["local", "dev"]:
-            return f"http://{host}:{self.API_PORT}{self.API_V1_STR}"
+            return f"http://{self.API_HOST}:{self.API_PORT}{self.API_V1_STR}"
         else:
-            return f"https://{host}{self.API_V1_STR}"
+            return f"https://{self.API_HOST}{self.API_V1_STR}"
 
     CORS: Annotated[list[AnyUrl] | str, BeforeValidator(parse_cors)] = []
 
@@ -155,7 +150,7 @@ class Settings(BaseSettings):
 
     model_config = SettingsConfigDict(
         env_file_encoding="utf-8",
-        env_file=[".env", ".env.local.bridge"],
+        env_file=[".env"],
     )
 
 
