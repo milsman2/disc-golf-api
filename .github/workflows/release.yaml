@@ -7,11 +7,6 @@ on:
         description: 'Type of release (patch/minor/major)'
         required: true
         default: 'patch'
-      force_release:
-        description: 'Force release even if upstream has changed'
-        required: false
-        default: false
-        type: boolean
   push:
     branches:
       - main
@@ -48,38 +43,37 @@ jobs:
         run: |
           git reset --hard ${{ github.sha }}
 
-      # - name: Evaluate | Verify upstream has NOT changed
-      #   if: ${{ !inputs.force_release }}
-      #   shell: bash
-      #   run: |
-      #     set +o pipefail
+      - name: Evaluate | Verify upstream has NOT changed
+        shell: bash
+        run: |
+          set +o pipefail
 
-      #     UPSTREAM_BRANCH_NAME="$(git status -sb | head -n 1 | cut -d' ' -f2 | grep -E '\.{3}' | cut -d'.' -f4)"
-      #     printf '%s\n' "Upstream branch name: $UPSTREAM_BRANCH_NAME"
+          UPSTREAM_BRANCH_NAME="$(git status -sb | head -n 1 | cut -d' ' -f2 | grep -E '\.{3}' | cut -d'.' -f4)"
+          printf '%s\n' "Upstream branch name: $UPSTREAM_BRANCH_NAME"
 
-      #     set -o pipefail
+          set -o pipefail
 
-      #     if [ -z "$UPSTREAM_BRANCH_NAME" ]; then
-      #         printf >&2 '%s\n' "::error::Unable to determine upstream branch name!"
-      #         exit 1
-      #     fi
+          if [ -z "$UPSTREAM_BRANCH_NAME" ]; then
+              printf >&2 '%s\n' "::error::Unable to determine upstream branch name!"
+              exit 1
+          fi
 
-      #     git fetch "${UPSTREAM_BRANCH_NAME%%/*}"
+          git fetch "${UPSTREAM_BRANCH_NAME%%/*}"
 
-      #     if ! UPSTREAM_SHA="$(git rev-parse "$UPSTREAM_BRANCH_NAME")"; then
-      #         printf >&2 '%s\n' "::error::Unable to determine upstream branch sha!"
-      #         exit 1
-      #     fi
+          if ! UPSTREAM_SHA="$(git rev-parse "$UPSTREAM_BRANCH_NAME")"; then
+              printf >&2 '%s\n' "::error::Unable to determine upstream branch sha!"
+              exit 1
+          fi
 
-      #     HEAD_SHA="$(git rev-parse HEAD)"
+          HEAD_SHA="$(git rev-parse HEAD)"
 
-      #     if [ "$HEAD_SHA" != "$UPSTREAM_SHA" ]; then
-      #         printf >&2 '%s\n' "[HEAD SHA] $HEAD_SHA != $UPSTREAM_SHA [UPSTREAM SHA]"
-      #         printf >&2 '%s\n' "::error::Upstream has changed, aborting release..."
-      #         exit 1
-      #     fi
+          if [ "$HEAD_SHA" != "$UPSTREAM_SHA" ]; then
+              printf >&2 '%s\n' "[HEAD SHA] $HEAD_SHA != $UPSTREAM_SHA [UPSTREAM SHA]"
+              printf >&2 '%s\n' "::error::Upstream has changed, aborting release..."
+              exit 1
+          fi
 
-      #     printf '%s\n' "Verified upstream branch has not changed, continuing with release..."
+          printf '%s\n' "Verified upstream branch has not changed, continuing with release..."
 
       - name: Action | Semantic Version Release
         id: release
