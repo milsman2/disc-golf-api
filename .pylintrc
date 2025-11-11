@@ -254,6 +254,9 @@ ignored-classes=optparse.Values,thread._local,_thread._local
 # expressions are accepted.
 generated-members=
 
+# Suppress unsubscriptable-object for SQLAlchemy Mapped types
+extension-pkg-allow-list=sqlalchemy
+
 
 [FORMAT]
 
