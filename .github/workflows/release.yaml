@@ -16,7 +16,7 @@ jobs:
     uses: ./.github/workflows/build-and-test.yaml
     secrets: inherit
     with:
-      python_version: '3.10'
+      python_version: '3.13'
 
   Python-Release:
     needs: API-Build-And-Test
