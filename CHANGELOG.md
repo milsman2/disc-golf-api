@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.17.2 (2025-11-29)
+
+### Bug Fixes
+
+- Update POSTGRES_PASSWORD and refine env_file configuration
+  ([`a0d437b`](https://github.com/milsman2/disc-golf-api/commit/a0d437b42d3f639b5d5575331635af5172d1e1e9))
+
+
 ## v0.17.1 (2025-11-10)
 
 ### Bug Fixes
