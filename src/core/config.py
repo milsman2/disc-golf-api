@@ -82,7 +82,7 @@ class Settings(BaseSettings):
     POSTGRES_SERVER: str = "localhost"
     POSTGRES_PORT: int = 5432
     POSTGRES_USER: str = "postgres"
-    POSTGRES_PASSWORD: str = "changeme"
+    POSTGRES_PASSWORD: str = "changethis"
     POSTGRES_OWNER: str = "postgres"
     POSTGRES_DB: str = "postgres"
     SQLITE_URI: str = "sqlite:///./test.db"
@@ -155,7 +155,7 @@ class Settings(BaseSettings):
 
     model_config = SettingsConfigDict(
         env_file_encoding="utf-8",
-        env_file=[".env", ".env.local.bridge"],
+        env_file=[".env"],
     )
 
 
