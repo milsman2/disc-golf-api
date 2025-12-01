@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.17.3 (2025-12-01)
+
+### Bug Fixes
+
+- Update Python version to 3.13 and correct project version in pyproject.toml
+  ([`cbfd901`](https://github.com/milsman2/disc-golf-api/commit/cbfd90165a96b93134f8b6c04f37188dc3bd76e0))
+
+
 ## v0.17.2 (2025-11-29)
 
 ### Bug Fixes
