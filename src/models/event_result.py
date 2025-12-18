@@ -6,8 +6,9 @@ application. Each event result is tied to a specific course and course layout, a
 contains information about a player's performance in the event.
 """
 
-import datetime
+from __future__ import annotations
 from typing import TYPE_CHECKING
+import datetime
 
 from sqlalchemy import Float, ForeignKey, Integer, UniqueConstraint, String, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship

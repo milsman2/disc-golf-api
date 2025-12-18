@@ -5,13 +5,13 @@ This module defines the DiscEvent ORM class, representing
 disc golf events in the database.
 """
 
+from __future__ import annotations
 import datetime
-
-from typing import TYPE_CHECKING
 from sqlalchemy import DateTime, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 from src.models.base import Base
+
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from src.models.event_result import EventResult
