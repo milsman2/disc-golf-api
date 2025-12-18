@@ -3,12 +3,13 @@ CourseLayout model for disc golf course layouts
 """
 
 from __future__ import annotations
-from sqlalchemy import Float, ForeignKey, String, Integer
+
+from typing import TYPE_CHECKING
+
+from sqlalchemy import Float, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models.base import Base
-
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from src.models.course import Course

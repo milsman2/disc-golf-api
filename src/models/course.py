@@ -3,7 +3,9 @@ SQL model for disc golf courses
 """
 
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
+
 from sqlalchemy import Float, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 

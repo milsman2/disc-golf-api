@@ -7,10 +7,11 @@ contains information about a player's performance in the event.
 """
 
 from __future__ import annotations
-from typing import TYPE_CHECKING
-import datetime
 
-from sqlalchemy import Float, ForeignKey, Integer, UniqueConstraint, String, DateTime
+import datetime
+from typing import TYPE_CHECKING
+
+from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models.base import Base
