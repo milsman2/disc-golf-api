@@ -2,9 +2,10 @@
 Fetch course details from UDisc
 """
 
-from icecream import ic
-from playwright.async_api import async_playwright, Browser
 import asyncio
+
+from icecream import ic
+from playwright.async_api import Browser, async_playwright
 
 
 async def parse_course_details(browser: Browser, course_link):

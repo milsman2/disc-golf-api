@@ -3,12 +3,12 @@ Login routes
 """
 
 from datetime import timedelta
-from typing import Annotated, Any
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Response
 from fastapi.security import OAuth2PasswordRequestForm
 
-from src.api.deps import current_user_dep, session_dep
+from src.api.deps import SessionDep, get_current_user
 from src.core import create_access_token, get_password_hash, settings
 from src.crud import authenticate, get_user_by_email
 from src.schemas import Message, NewPassword, Token, UserPublic
@@ -19,8 +19,8 @@ router = APIRouter(prefix="/login", tags=["Login"])
 
 @router.post("/access-token")
 def login_access_token(
+    session: SessionDep,
     response: Response,
-    session: session_dep,
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ) -> Token:
     """
@@ -49,15 +49,18 @@ def login_access_token(
 
 
 @router.post("/test-token", response_model=UserPublic)
-def test_token(current_user: current_user_dep) -> Any:
+def test_token(current_user=Depends(get_current_user)):
     """
     Test access token
     """
-    return current_user
+    return UserPublic.model_validate(current_user)
 
 
 @router.post("/reset-password", response_model=Message)
-def reset_password(session: session_dep, body: NewPassword) -> Message:
+def reset_password(
+    session: SessionDep,
+    body: NewPassword,
+) -> Message:
     """
     Reset password
     """

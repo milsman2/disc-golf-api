@@ -7,10 +7,14 @@ disc golf events in the database.
 
 import datetime
 
+from typing import TYPE_CHECKING
 from sqlalchemy import DateTime, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models.base import Base
+
+if TYPE_CHECKING:
+    from src.models.event_result import EventResult
 
 
 class DiscEvent(Base):
@@ -50,7 +54,7 @@ class DiscEvent(Base):
         String, nullable=True, doc="A brief description of the event."
     )
 
-    event_results = relationship(
+    event_results: Mapped[list["EventResult"]] = relationship(
         "EventResult",
         back_populates="disc_event",
         cascade="all, delete-orphan",

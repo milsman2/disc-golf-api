@@ -16,14 +16,14 @@ Routes (grouped by endpoint path, ordered by HTTP method):
   - GET /courses/name/{course_name}: Retrieve a course by name
 
 Dependencies:
-- session_dep: Database session dependency injection
+- SessionDep: Database session dependency injection
 - Pydantic schemas for request/response validation
 - CRUD operations with proper error handling
 """
 
 from fastapi import APIRouter, HTTPException
 
-from src.api.deps import session_dep
+from src.api.deps import SessionDep
 from src.crud.course import (
     create_course,
     delete_course,
@@ -38,7 +38,7 @@ router = APIRouter(prefix="/courses", tags=["Courses"])
 
 
 @router.get("/", response_model=CoursesPublic)
-def read_courses(session: session_dep, skip: int = 0, limit: int = 100):
+def read_courses(session: SessionDep, skip: int = 0, limit: int = 100):
     """
     Retrieve all courses with optional pagination.
     """
@@ -47,7 +47,7 @@ def read_courses(session: session_dep, skip: int = 0, limit: int = 100):
 
 
 @router.post("/", response_model=CoursePublic, status_code=201)
-def create_new_course(session: session_dep, course: CourseCreate):
+def create_new_course(session: SessionDep, course: CourseCreate):
     """
     Create a new course.
     """
@@ -59,7 +59,7 @@ def create_new_course(session: session_dep, course: CourseCreate):
 
 
 @router.get("/id/{course_id}", response_model=CoursePublic)
-def read_course(session: session_dep, course_id: int):
+def read_course(session: SessionDep, course_id: int):
     """
     Retrieve a single course by ID.
     """
@@ -70,7 +70,7 @@ def read_course(session: session_dep, course_id: int):
 
 
 @router.put("/id/{course_id}", response_model=CoursePublic)
-def update_existing_course(session: session_dep, course_id: int, course: CourseUpdate):
+def update_existing_course(session: SessionDep, course_id: int, course: CourseUpdate):
     """
     Update an existing course by ID.
     """
@@ -82,7 +82,7 @@ def update_existing_course(session: session_dep, course_id: int, course: CourseU
 
 
 @router.delete("/id/{course_id}", response_model=None, status_code=204)
-def delete_existing_course(session: session_dep, course_id: int):
+def delete_existing_course(session: SessionDep, course_id: int):
     """
     Delete a course by ID.
     """
@@ -92,7 +92,7 @@ def delete_existing_course(session: session_dep, course_id: int):
 
 
 @router.get("/name/{course_name}", response_model=CoursePublic)
-def read_course_by_name(session: session_dep, course_name: str):
+def read_course_by_name(session: SessionDep, course_name: str):
     """
     Retrieve a course by name.
     """
