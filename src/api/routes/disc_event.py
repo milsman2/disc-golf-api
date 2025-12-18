@@ -14,14 +14,14 @@ Routes (grouped by endpoint path, ordered by HTTP method):
     - DELETE /disc-events/id/{disc_event_id}: Delete a disc event
 
 Dependencies:
-- session_dep: Database session dependency injection
+- SessionDep: Database session dependency injection
 - Pydantic schemas for request/response validation
 - CRUD operations with proper error handling
 """
 
 from fastapi import APIRouter, HTTPException
 
-from src.api.deps import session_dep
+from src.api.deps import SessionDep
 from src.crud import (
     create_disc_event,
     delete_disc_event,
@@ -36,40 +36,44 @@ router = APIRouter(prefix="/disc-events", tags=["Disc Events"])
 
 
 @router.get("/", response_model=list[DiscEventPublic])
-def get_disc_events_route(db: session_dep, skip: int = 0, limit: int = 100):
+def get_disc_events_route(
+    session: SessionDep,
+    skip: int = 0,
+    limit: int = 100,
+):
     """
     Get a list of disc events with pagination.
     """
-    return get_disc_events(db, skip=skip, limit=limit)
+    return get_disc_events(session, skip=skip, limit=limit)
 
 
 @router.post("/", response_model=DiscEventPublic, status_code=201)
 def create_disc_event_route(
+    session: SessionDep,
     disc_event: DiscEventCreate,
-    db: session_dep,
 ):
     """
     Create a new disc event.
     """
-    existing_event = get_disc_event_by_name(db, disc_event.name)
+    existing_event = get_disc_event_by_name(session, disc_event.name)
     if existing_event:
         raise HTTPException(
             status_code=409,
             detail=f"Disc event with name '{disc_event.name}' already exists",
         )
 
-    return create_disc_event(db, disc_event)
+    return create_disc_event(session, disc_event)
 
 
 @router.get("/id/{disc_event_id}", response_model=DiscEventPublic)
 def get_disc_event_route(
+    session: SessionDep,
     disc_event_id: int,
-    db: session_dep,
 ):
     """
     Get a disc event by ID.
     """
-    disc_event = get_disc_event(db, disc_event_id)
+    disc_event = get_disc_event(session, disc_event_id)
     if not disc_event:
         raise HTTPException(status_code=404, detail="Disc event not found")
     return disc_event
@@ -77,9 +81,9 @@ def get_disc_event_route(
 
 @router.put("/id/{disc_event_id}", response_model=DiscEventPublic)
 def update_disc_event_route(
+    session: SessionDep,
     disc_event_id: int,
     disc_event_data: DiscEventUpdate,
-    db: session_dep,
 ):
     """
     Update a disc event by ID.
@@ -92,20 +96,17 @@ def update_disc_event_route(
         current implementation treats `null` as "not provided"; explicit-clearing
         behavior can be added later if desired.
     """
-    disc_event = update_disc_event(db, disc_event_id, disc_event_data)
+    disc_event = update_disc_event(session, disc_event_id, disc_event_data)
     if not disc_event:
         raise HTTPException(status_code=404, detail="Disc event not found")
     return disc_event
 
 
 @router.delete("/id/{disc_event_id}", status_code=204)
-def delete_disc_event_route(
-    disc_event_id: int,
-    db: session_dep,
-):
+def delete_disc_event_route(session: SessionDep, disc_event_id: int):
     """
     Delete a disc event by ID.
     """
-    disc_event = delete_disc_event(db, disc_event_id)
+    disc_event = delete_disc_event(session, disc_event_id)
     if not disc_event:
         raise HTTPException(status_code=404, detail="Disc event not found")

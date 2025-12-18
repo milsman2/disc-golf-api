@@ -2,14 +2,14 @@
 Alembic environment configuration file.
 """
 
+import re
 from logging.config import fileConfig
 
 from alembic import context
+from icecream import ic
 from sqlalchemy import create_engine, pool
 
 from src.core import Base, settings
-from icecream import ic
-import re
 
 config = context.config
 
