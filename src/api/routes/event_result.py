@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, HTTPException
 
-from src.api.deps import session_dep
+from src.api.deps import SessionDep
 from src.crud import (
     create_event_result,
     delete_event_result,
@@ -18,14 +18,12 @@ from src.crud import (
 )
 from src.crud.event_result import get_event_results_by_username
 from src.schemas.event_results import (
-    DiscEventSummary,
     EventResultCreate,
     EventResultPublic,
     EventResultsGroupedPublic,
     EventResultsGroupedWithStatsPublic,
     EventResultsPublic,
     EventResultStats,
-    MultiEventSummaryPublic,
 )
 
 router = APIRouter(
@@ -41,7 +39,7 @@ router = APIRouter(
     | EventResultsGroupedWithStatsPublic,
 )
 def get_event_results_route(
-    session: session_dep,
+    session: SessionDep,
     skip: int = 0,
     limit: int = 100,
     disc_event_id: int | None = None,
@@ -118,7 +116,10 @@ def get_event_results_route(
 
 
 @router.post("/", response_model=EventResultPublic, status_code=201)
-def create_event_result_route(event_result: EventResultCreate, session: session_dep):
+def create_event_result_route(
+    session: SessionDep,
+    event_result: EventResultCreate,
+):
     """Create a new EventResult."""
     disc_event = get_disc_event(session, event_result.disc_event_id)
     if not disc_event:
@@ -138,13 +139,12 @@ def create_event_result_route(event_result: EventResultCreate, session: session_
                     detail=f"Event result for username '{event_result.username}' "
                     f"on date '{event_result.date.date()}' already exists",
                 )
-
     return create_event_result(db=session, event_result=event_result)
 
 
 @router.get("/aggregated", response_model=EventResultStats)
 def get_aggregated_event_results(
-    session: session_dep,
+    session: SessionDep,
     disc_event_id: int | None = None,
     division: str | None = None,
 ):
@@ -158,8 +158,8 @@ def get_aggregated_event_results(
 
 
 @router.get("/id/{event_result_id}", response_model=EventResultPublic)
-def get_event_result_route(event_result_id: int, session: session_dep):
-    """Retrieve an EventResult by ID."""
+def get_event_result_by_id(session: SessionDep, event_result_id: int):
+    """Retrieve an EventResult by its ID, or return 404 if not found."""
     db_event_result = get_event_result(db=session, event_result_id=event_result_id)
     if not db_event_result:
         raise HTTPException(status_code=404, detail="EventResult not found")
@@ -168,9 +168,9 @@ def get_event_result_route(event_result_id: int, session: session_dep):
 
 @router.put("/id/{event_result_id}", response_model=EventResultPublic)
 def update_event_result_route(
+    session: SessionDep,
     event_result_id: int,
     updated_event_result: EventResultCreate,
-    session: session_dep,
 ):
     """Update an EventResult by ID."""
     db_event_result = update_event_result(
@@ -183,22 +183,19 @@ def update_event_result_route(
     return db_event_result
 
 
-@router.delete("/id/{event_result_id}", status_code=204)
-def delete_event_result_route(event_result_id: int, session: session_dep):
+def delete_event_result_route(session: SessionDep, event_result_id: int):
     """Delete an EventResult by ID."""
     success = delete_event_result(db=session, event_result_id=event_result_id)
     if not success:
         raise HTTPException(status_code=404, detail="EventResult not found")
 
 
-@router.get("/event-summaries", response_model=MultiEventSummaryPublic)
 def get_multiple_event_summaries_route(
-    session: session_dep,
+    session: SessionDep,
     event_ids: str | None = None,
     skip: int = 0,
     limit: int = 20,
 ):
-    """Get summaries for multiple disc events with division statistics."""
     disc_event_ids = None
     if event_ids:
         try:
@@ -219,8 +216,7 @@ def get_multiple_event_summaries_route(
     return {"events": summaries}
 
 
-@router.get("/event-summary/{disc_event_id}", response_model=DiscEventSummary)
-def get_disc_event_summary_route(disc_event_id: int, session: session_dep):
+def get_disc_event_summary_route(session: SessionDep, disc_event_id: int):
     """Get comprehensive summary of a disc event including division statistics."""
     summary = get_disc_event_summary(db=session, disc_event_id=disc_event_id)
     if not summary:
@@ -232,7 +228,7 @@ def get_disc_event_summary_route(disc_event_id: int, session: session_dep):
 
 
 @router.get("/username/{event_user}", response_model=EventResultsPublic)
-def get_event_results_by_user_route(event_user: str, session: session_dep):
+def get_event_results_by_user_route(session: SessionDep, event_user: str):
     """Retrieve event results by username."""
     user_events = get_event_results_by_username(db=session, username=event_user)
     if not user_events:

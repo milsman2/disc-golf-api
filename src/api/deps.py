@@ -10,7 +10,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from pydantic import ValidationError
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, sessionmaker
 
 from src.core import engine, security, settings
 from src.models import User
@@ -20,22 +20,32 @@ reusable_oauth2 = OAuth2PasswordBearer(
     tokenUrl=f"{settings.API_V1_STR}/login/access-token"
 )
 
+session_local = sessionmaker(
+    bind=engine, autocommit=False, autoflush=False, future=True
+)
+
 
 def get_db() -> Generator[Session, None, None]:
     """
     Get a database connection.
     """
-    with Session(engine) as session:
-        yield session
+    db = session_local()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
-session_dep = Annotated[Session, Depends(get_db)]
-token_dep = Annotated[str, Depends(reusable_oauth2)]
+SessionDep = Annotated[Session, Depends(get_db)]
+TokenDep = Annotated[str, Depends(reusable_oauth2)]
 
 secret_key = settings.SECRET_KEY
 
 
-def get_current_user(session: session_dep, token: token_dep) -> User:
+def get_current_user(
+    session: Session = Depends(get_db),
+    token: str = Depends(reusable_oauth2),
+) -> User:
     """
     Get the current user from the token.
     """
@@ -55,10 +65,10 @@ def get_current_user(session: session_dep, token: token_dep) -> User:
     return user
 
 
-current_user_dep = Annotated[User, Depends(get_current_user)]
+CurrentUserDep = Annotated[User, Depends(get_current_user)]
 
 
-def get_current_active_superuser(current_user: current_user_dep) -> User:
+def get_current_active_superuser(current_user: CurrentUserDep) -> User:
     if not current_user.is_superuser:
         raise HTTPException(
             status_code=403, detail="The user doesn't have enough privileges"
