@@ -1,6 +1,23 @@
 # CHANGELOG
 
 
+## v0.17.4 (2025-12-18)
+
+### Bug Fixes
+
+- Reorder import statements for consistency across migration and model files
+  ([`4219560`](https://github.com/milsman2/disc-golf-api/commit/42195604b59fc335fefc100307e60ace7d22eb3a))
+
+- Reorder import statements to improve consistency across model files
+  ([`2a084e8`](https://github.com/milsman2/disc-golf-api/commit/2a084e8f9e1f0030225faf86e4edceb2edd5f5ea))
+
+- Update all pip packages
+  ([`b9e30f1`](https://github.com/milsman2/disc-golf-api/commit/b9e30f11484e4c23fb05faf1f4c33e15d47e1f1f))
+
+- Update dependencies and refactor session management in API routes
+  ([`19b888f`](https://github.com/milsman2/disc-golf-api/commit/19b888f911fc6788c297eda201a0e47073747ba6))
+
+
 ## v0.17.3 (2025-12-01)
 
 ### Bug Fixes
