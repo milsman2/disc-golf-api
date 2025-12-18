@@ -1,14 +1,14 @@
 """
-This module is used to check if the database is awake before starting the service.
+Pre-startup utilities for database readiness and retry logic.
 """
 
 from icecream import ic
-from sqlalchemy import Engine, select
+from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 from tenacity import retry, stop_after_attempt, wait_fixed
 
-from src.core import engine
+from src.api import session_local
 
 max_tries = 60 * 5
 wait_seconds = 1
@@ -28,22 +28,24 @@ def after_retry(retry_state):
     before=before_retry,
     after=after_retry,
 )
-def init(db_engine: Engine) -> None:
+def init() -> None:
     """
     Initialize the database connection and check if the database is awake.
     """
     ic()
+    session: Session = session_local()
     try:
-        with Session(db_engine) as session:
-            session.execute(select(1))
+        session.execute(text("SELECT 1"))
     except SQLAlchemyError as e:
         ic(e)
         raise e
+    finally:
+        session.close()
 
 
 def main() -> None:
     ic("Initializing service")
-    init(engine)
+    init()
     ic("Service finished initializing")
 
 

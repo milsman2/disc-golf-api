@@ -2,9 +2,10 @@
 Fetches the list of courses from UDisc for a given location.
 """
 
+import asyncio
+
 from icecream import ic
 from playwright.async_api import async_playwright
-import asyncio
 
 
 async def get_course_list(url: str):
