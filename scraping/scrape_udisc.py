@@ -3,11 +3,13 @@ Scrape UDisc for a list of disc golf courses.
 """
 
 import asyncio
+
 from icecream import ic
 from pydantic import ValidationError
-from scraping.schemas import generated_url
-from scraping.fetch_course_pages import get_course_list
+
 from scraping.fetch_course_details import get_course_details
+from scraping.fetch_course_pages import get_course_list
+from scraping.schemas import generated_url
 from src.schemas import CourseCreate
 
 

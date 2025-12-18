@@ -6,14 +6,19 @@ application. Each event result is tied to a specific course and course layout, a
 contains information about a player's performance in the event.
 """
 
+from __future__ import annotations
+
 import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.models.base import Base
-from src.models.course_layout import CourseLayout
-from src.models.disc_event import DiscEvent
+
+if TYPE_CHECKING:
+    from src.models.course_layout import CourseLayout
+    from src.models.disc_event import DiscEvent
 
 
 class EventResult(Base):
@@ -58,7 +63,7 @@ class EventResult(Base):
     round_points: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
 
     course_layout_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("course_layouts.id"), nullable=False
+        ForeignKey("course_layouts.id"), nullable=False
     )
     disc_event_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("disc_events.id"), nullable=False
