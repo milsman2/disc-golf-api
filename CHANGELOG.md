@@ -1,6 +1,19 @@
 # CHANGELOG
 
 
+## v0.17.5 (2025-12-19)
+
+### Bug Fixes
+
+- Add future annotations import to user model for compatibility
+  ([`ab58be5`](https://github.com/milsman2/disc-golf-api/commit/ab58be5ecef353b535cb7417c90405eb144f7e70))
+
+### Chores
+
+- Update actions/checkout to version 6 in build and release workflows
+  ([`07b5b37`](https://github.com/milsman2/disc-golf-api/commit/07b5b37edc43c880f985848cef717e87a7f26ef9))
+
+
 ## v0.17.4 (2025-12-18)
 
 ### Bug Fixes
