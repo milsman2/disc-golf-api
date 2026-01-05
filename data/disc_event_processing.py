@@ -10,11 +10,10 @@ and processes all JSON files in the directory.
 import json
 import os
 
-import httpx
+from data.client import post_json
 from icecream import ic
 from pydantic import ValidationError
 
-from src.core.config import settings
 from src.schemas.disc_events import DiscEventCreate
 
 
@@ -53,36 +52,10 @@ def create_disc_event(data_directory: str = "data/disc_events/") -> None:
                 except ValidationError as e:
                     ic(e)
                     continue
-                try:
-                    with httpx.Client(
-                        base_url=settings.api_base_url,
-                        timeout=30.0,  # 30 second timeout
-                    ) as client:
-                        ic(f"Posting to: {settings.api_base_url}/disc-events/")
-                        response = client.post(
-                            "/disc-events/",
-                            json=disc_event.model_dump(mode="json"),
-                            headers={"Content-Type": "application/json"},
-                        )
-                        response.raise_for_status()
-                        ic(
-                            "Successfully posted disc event from "
-                            f"{filename}: {response.json()}"
-                        )
-                except httpx.ConnectError as e:
-                    ic(f"Connection error posting {filename}: {e}")
-                    ic(f"Make sure API is running at: {settings.api_base_url}")
-                    continue
-                except httpx.TimeoutException as e:
-                    ic(f"Timeout error posting {filename}: {e}")
-                    continue
-                except httpx.HTTPStatusError as e:
-                    ic(f"HTTP error posting {filename}: {e}")
-                    ic(f"Response content: {e.response.text}")
-                    continue
-                except httpx.RequestError as e:
-                    ic(f"Request error posting {filename}: {e}")
-                    continue
+                post_json(
+                    url="/disc-events/",
+                    json=disc_event.model_dump(mode="json"),
+                )
 
 
 if __name__ == "__main__":

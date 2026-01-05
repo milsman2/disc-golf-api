@@ -15,6 +15,7 @@ from pydantic import ValidationError
 
 from src.core.config import settings
 from src.schemas.event_results import EventResultCreate
+import numpy as np
 
 
 def convert_xlsx_to_csv(folder_path):
@@ -170,7 +171,7 @@ def import_and_process_csv(file_path):
         df.insert(0, "date", date_val)
         df = df.loc[:, ~df.columns.str.startswith("hole_")]
         df = df.replace([float("inf"), -float("inf")], pd.NA)
-        df = df.where(pd.notnull(df), None)
+        df = df.where(pd.notnull(df), np.nan)
         df.loc[:, "position_raw"] = pd.to_numeric(
             df["position_raw"],
             errors="coerce",
