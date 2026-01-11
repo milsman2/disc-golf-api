@@ -1,5 +1,6 @@
 """
-Populate the database with initial data.
+Populate the database with initial data (schema and seed data).
+Run create_db_and_roles.py separately for DB/role creation if needed.
 """
 
 from icecream import ic
@@ -23,12 +24,9 @@ def init() -> None:
 
 def main() -> None:
     """
-    Main function to create initial data.
-
-    This function logs the start and end of the initial data creation process
-    and calls the init function to initialize the database.
+    Main function to initialize schema and seed data.
+    Run create_db_and_roles.py separately for DB/role creation if needed.
     """
-    ic("Creating initial data")
     init()
     ic("Initial data created")
     ic(settings.ENVIRONMENT)

@@ -11,6 +11,15 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "PGPASSWORD=$${POSTGRES_PASSWORD} pg_isready -U $${POSTGRES_OWNER}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   redis:
     image: redis:8-alpine
     container_name: discgolf_redis
@@ -20,6 +29,19 @@ services:
     volumes:
       - redis_data:/data
     command: redis-server --appendonly yes
+  pgadmin:
+    image: dpage/pgadmin4:8
+    container_name: discgolf_pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
   app:
     build:
       context: .
@@ -32,13 +54,8 @@ services:
       - .env
     ports:
       - "8000:8000"
-    command:
-      [
-        "/bin/bash",
-        "-c",
-        "/app/bash_scripts/pre_start.sh && uv run uvicorn src.main:app --host 0.0.0.0 --port 8000",
-      ]
 
 volumes:
   postgres_data:
   redis_data:
+  pgadmin_data:

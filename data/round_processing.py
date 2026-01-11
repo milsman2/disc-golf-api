@@ -15,6 +15,7 @@ from pydantic import ValidationError
 
 from src.core.config import settings
 from src.schemas.event_results import EventResultCreate
+import numpy as np
 
 
 def convert_xlsx_to_csv(folder_path):
@@ -129,10 +130,24 @@ def post_event_result(event_result: dict):
     Post an event result to the API endpoint.
     :param event_result: Dictionary containing event result data.
     """
+
+    def clean_nans(obj):
+        if isinstance(obj, dict):
+            return {k: clean_nans(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [clean_nans(v) for v in obj]
+        elif isinstance(obj, float):
+            if math.isnan(obj) or math.isinf(obj):
+                return None
+            return obj
+        else:
+            return obj
+
+    cleaned_event_result = clean_nans(event_result)
     ic(f"Posting event result to {settings.api_base_url}/event-results/")
     try:
         with httpx.Client(base_url=settings.api_base_url, timeout=30.0) as client:
-            response = client.post("/event-results/", json=event_result)
+            response = client.post("/event-results/", json=cleaned_event_result)
             response.raise_for_status()
             ic(f"Successfully posted event result: {response.json()}")
     except httpx.ConnectError as e:
@@ -170,7 +185,7 @@ def import_and_process_csv(file_path):
         df.insert(0, "date", date_val)
         df = df.loc[:, ~df.columns.str.startswith("hole_")]
         df = df.replace([float("inf"), -float("inf")], pd.NA)
-        df = df.where(pd.notnull(df), None)
+        df = df.where(pd.notnull(df), np.nan)
         df.loc[:, "position_raw"] = pd.to_numeric(
             df["position_raw"],
             errors="coerce",

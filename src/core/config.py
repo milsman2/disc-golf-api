@@ -39,7 +39,7 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     DOMAIN: str = "localhost"
     API_PORT: int = 8000
-    API_HOST: str = "localhost"  # Allow API_HOST from env
+    API_HOST: str = "localhost"
     API_BASE_URL: str | None = None
     ENVIRONMENT: Literal["local", "dev", "staging", "production"] = "local"
     FRONTEND_HOST: str = "http://localhost:3000"
