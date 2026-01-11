@@ -1,6 +1,34 @@
 # CHANGELOG
 
 
+## v0.18.0 (2026-01-11)
+
+### Bug Fixes
+
+- Downgrade bcrypt from 5.0.0 to 4.0.1 in pyproject.toml and uv.lock
+  ([`0980da1`](https://github.com/milsman2/disc-golf-api/commit/0980da15e4c7301d6278cde715debdb43980f67b))
+
+### Features
+
+- Add NaN and infinity handling for event result posting
+  ([`ec48806`](https://github.com/milsman2/disc-golf-api/commit/ec48806ff72df884ae59ed5247bac5ba6871dbb1))
+
+- Implement shared HTTP client for centralized request handling and refactor data processing scripts
+  to utilize it
+  ([`ce74f84`](https://github.com/milsman2/disc-golf-api/commit/ce74f84cdd7d313812d992befd246f4b99355eb4))
+
+- Refactor Docker build for robust uv/venv pattern, fix dependency install, and improve CI
+  compatibility
+  ([`ac8a791`](https://github.com/milsman2/disc-golf-api/commit/ac8a791341801181bde3cd4d01107eb1c73d67bd))
+
+- Rewrote Dockerfile to use multi-stage build with matching Python versions for builder and final
+  images - Ensured venv is created and populated in builder, then copied to final image - Set PATH
+  to use venv and updated entrypoint to use venv’s python - Removed invalid or redundant COPY and
+  RUN commands - Added instructions for updating uv.lock and using .env with Docker Compose - Added
+  debug and troubleshooting steps for dependency and environment issues - Improved compatibility
+  with both classic Docker and BuildKit workflows
+
+
 ## v0.17.5 (2025-12-19)
 
 ### Bug Fixes
