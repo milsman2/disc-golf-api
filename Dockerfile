@@ -15,7 +15,9 @@ FROM python:3.13-slim-bookworm
 RUN groupadd --system --gid 999 nonroot \
  && useradd --system --gid 999 --uid 999 --create-home nonroot
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends postgresql-client && \
+    apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends postgresql-client \
+    gpgv libpam-modules libpam-modules-bin libpam-runtime libpam0g && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 COPY --from=builder --chown=nonroot:nonroot /app /app
