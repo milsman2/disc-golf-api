@@ -1,6 +1,17 @@
 # CHANGELOG
 
 
+## v0.18.1 (2026-01-12)
+
+### Bug Fixes
+
+- Mitigate cve's
+  ([`ea23b50`](https://github.com/milsman2/disc-golf-api/commit/ea23b50d5621766dd628e5367293d779572a6b68))
+
+- Update Dockerfile to include additional packages for security
+  ([`1e7728b`](https://github.com/milsman2/disc-golf-api/commit/1e7728b8a1945cebe24274d708229cc8ad4bf9a9))
+
+
 ## v0.18.0 (2026-01-11)
 
 ### Bug Fixes
