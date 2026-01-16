@@ -114,3 +114,6 @@ dev = []
 
 [tool.semantic_release]
 version_source = "pyproject.toml"
+changelog_file = "CHANGELOG.md"
+changelog_sections = "all"
+commit_author = "github-actions <actions@users.noreply.github.com>"
