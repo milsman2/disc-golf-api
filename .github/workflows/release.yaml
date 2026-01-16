@@ -1,12 +1,6 @@
 name: Automated Release
 
 on:
-  workflow_dispatch:
-    inputs:
-      release_type:
-        description: 'Type of release (patch/minor/major)'
-        required: true
-        default: 'patch'
   push:
     branches:
       - main
@@ -82,7 +76,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           git_committer_name: 'github-actions'
           git_committer_email: 'actions@users.noreply.github.com'
-          force: ${{ inputs.release_type }}
 
       - name: Publish | Upload to GitHub Release Assets
         uses: python-semantic-release/publish-action@v10.5.3
