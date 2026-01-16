@@ -1,5 +1,5 @@
 # disc-golf-api
-A disc golf REST API.
+A disc golf REST API. (Automated release test)
 
 ## API: Event Results
 
