@@ -388,7 +388,7 @@ wheels = [
 
 [[package]]
 name = "disc-golf-api"
-version = "1.0.3"
+version = "1.0.4"
 source = { virtual = "." }
 dependencies = [
     { name = "aiohappyeyeballs" },

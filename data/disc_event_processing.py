@@ -10,10 +10,10 @@ and processes all JSON files in the directory.
 import json
 import os
 
-from data.client import post_json
 from icecream import ic
 from pydantic import ValidationError
 
+from data.client import post_json
 from src.schemas.disc_events import DiscEventCreate
 
 

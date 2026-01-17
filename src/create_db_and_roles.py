@@ -6,6 +6,7 @@ Run this script only when provisioning a new environment or database.
 import psycopg
 from icecream import ic
 from psycopg import sql
+
 from src.core import settings
 
 
