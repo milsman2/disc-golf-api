@@ -4,9 +4,10 @@ data modules. Provides get_json and post_json helpers using a common
 base URL and consistent error handling.
 """
 
-from src.core.config import settings
 import httpx
 from icecream import ic
+
+from src.core.config import settings
 
 
 def _request_json(method, url, *, params=None, json=None, headers=None):

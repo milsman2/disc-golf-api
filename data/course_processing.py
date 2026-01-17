@@ -11,10 +11,10 @@ Intended for use in development and testing of the course creation API.
 import json
 import os
 
-from data.client import post_json
 from icecream import ic
 from pydantic import ValidationError
 
+from data.client import post_json
 from src.schemas.courses import CourseCreate
 
 

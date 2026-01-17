@@ -9,13 +9,13 @@ import re
 from pathlib import Path
 
 import httpx
+import numpy as np
 import pandas as pd
 from icecream import ic
 from pydantic import ValidationError
 
 from src.core.config import settings
 from src.schemas.event_results import EventResultCreate
-import numpy as np
 
 
 def convert_xlsx_to_csv(folder_path):
